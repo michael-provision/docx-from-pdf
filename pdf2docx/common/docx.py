@@ -362,9 +362,10 @@ def add_image(p, image_path_or_stream, x_pos, y_pos, width, height):
         width (float): Image width in Pt.
         height (float): Image height in Pt.
     '''
-    #docx_span = p.add_run()
+    docx_span = p.add_run()
     try:
-        #docx_span.add_picture(image_path_or_stream, width=Pt(width), height=Pt(height))
+        docx_span.add_picture(image_path_or_stream, width=Pt(width), height=Pt(height))
+        '''
         add_floating_picture_pt(
             paragraph=p,
             image_path=image_path_or_stream,
@@ -373,6 +374,7 @@ def add_image(p, image_path_or_stream, x_pos, y_pos, width, height):
             width_pt=width,  # 3 inches
             height_pt=height, # 2 inches
         )
+        '''
     except UnrecognizedImageError:
         print('Unrecognized Image.')
         return
