@@ -59,7 +59,7 @@ class ImageBlock(Image, Block):
         '''Plot image bbox with diagonal lines (for debug purpose).
         
         Args: 
-            page (fitz.Page): pdf page to plot.
+            page (PDF page): pdf page to plot.
         '''
         super().plot(page, color=(1,0,0))
 

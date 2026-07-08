@@ -174,7 +174,7 @@ class Shapes(ElementCollection):
         between Stroke and Fill related groups, some shapes are plot twice.
 
         Args:
-            page (fitz.Page): pdf page.
+            page (PDF page): pdf page.
         '''
         # Table based shapes
         # - table shading

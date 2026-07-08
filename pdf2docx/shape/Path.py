@@ -20,17 +20,17 @@ Data structure based on results of ``page.get_drawings()``::
     }
 
 References:
-    - https://pymupdf.readthedocs.io/en/latest/page.html#Page.get_drawings
-    - https://pymupdf.readthedocs.io/en/latest/faq.html#extracting-drawings
+    - PDF drawing extraction API#Page.get_drawings
+    - PDF drawing extraction notes#extracting-drawings
 
 .. note::
     The coordinates extracted by ``page.get_drawings()`` is based on **real** page CS,
     i.e. with rotation considered. This is different from ``page.get_text('rawdict')``.
 '''
 
-import fitz
 from ..common.share import rgb_value
 from ..common import constants
+from ..common.geometry import Rect
 
 
 class Segment:
@@ -193,7 +193,7 @@ class Segments:
         y1 = max(points, key=lambda point: point[1])[1]
 
         # bbox: `round()` is required to avoid float error
-        return fitz.Rect(
+        return Rect(
             round(x0, 2), round(y0, 2), round(x1, 2), round(y1, 2))
 
 
@@ -234,8 +234,8 @@ class Path:
         '''Init path in real page CS.
 
         Args:
-            raw (dict): Raw dict extracted with `PyMuPDF`, see link
-            https://pymupdf.readthedocs.io/en/latest/page.html#Page.get_drawings
+            raw (dict): Raw dict extracted with `PDFium`, see link
+            PDF drawing extraction API#Page.get_drawings
         '''
         # all path properties
         self.raw = raw
@@ -246,7 +246,7 @@ class Path:
 
         # path segments
         self.items = [] # type: list[Segments]
-        self.bbox = fitz.Rect()
+        self.bbox = Rect()
         w = raw.get('width', 0.0)
         for segments in self._group_segments(raw['items']):
             S = Segments(segments, close_path)
@@ -371,11 +371,11 @@ class Path:
         ''' Plot path for debug purpose.
 
         Args:
-            canvas: ``PyMuPDF`` drawing canvas by ``page.new_shape()``.
+            canvas: ``PDFium`` drawing canvas by ``page.new_shape()``.
 
         Reference:
 
-            https://pymupdf.readthedocs.io/en/latest/faq.html#extracting-drawings
+            PDF drawing extraction notes#extracting-drawings
         '''
         # draw each entry of the 'items' list
         for item in self.raw.get('items', []):

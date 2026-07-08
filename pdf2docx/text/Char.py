@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-'''Char object based on PDF raw dict extracted with ``PyMuPDF``.
+'''Char object based on PDF raw dict extracted with ``PDFium``.
 
-Data structure refer to this `link <https://pymupdf.readthedocs.io/en/latest/textpage.html>`_::
+Data structure refer to this `link <PDF text extraction schema>`_::
 
     {
         'bbox'  : (x0, y0, x1, y1), 

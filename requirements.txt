@@ -1,4 +1,5 @@
-PyMuPDF>=1.26.7
+pypdfium2>=5.11.0
+Pillow>=10.0.0
 python-docx>=0.8.10
 fonttools>=4.24.0
 numpy>=1.17.2

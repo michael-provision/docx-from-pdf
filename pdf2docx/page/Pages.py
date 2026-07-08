@@ -12,17 +12,17 @@ from ..font.Fonts import Fonts
 class Pages(BaseCollection):
     '''A collection of ``Page``.'''
 
-    def parse(self, fitz_doc, **settings):
+    def parse(self, pdf_doc, **settings):
         '''Analyze document structure, e.g. page section, header, footer.
 
         Args:
-            fitz_doc (fitz.Document): ``PyMuPDF`` Document instance.
+            pdf_doc: PDF document instance.
             settings (dict): Parsing parameters.
         '''
         # ---------------------------------------------
         # 0. extract fonts properties, especially line height ratio
         # ---------------------------------------------
-        fonts = Fonts.extract(fitz_doc)
+        fonts = Fonts.extract(pdf_doc)
 
         # ---------------------------------------------
         # 1. extract and then clean up raw page
@@ -33,7 +33,7 @@ class Pages(BaseCollection):
             if page.skip_parsing: continue
 
             # init and extract data from PDF
-            raw_page = RawPageFactory.create(page_engine=fitz_doc[page.id], backend='PyMuPDF')
+            raw_page = RawPageFactory.create(page_engine=pdf_doc[page.id], backend="pdfium")
             raw_page.restore(**settings)
 
             # check if any words are extracted since scanned pdf may be directed

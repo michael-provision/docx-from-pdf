@@ -14,7 +14,7 @@ class ImageSpan(Image):
         '''Create new ImageSpan object with image contained in given bbox.
         
         Args:
-            rect (fitz.Rect): Target bbox.
+            rect (Rect): Target bbox.
         
         Returns:
             ImageSpan: A copy of itself if intersects with target; otherwise empty ImageSpan. 

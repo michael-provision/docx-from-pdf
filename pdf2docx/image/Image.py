@@ -2,7 +2,7 @@
 
 '''Image object.
 
-Data structure defined in link https://pymupdf.readthedocs.io/en/latest/textpage.html::
+Data structure defined in link PDF text extraction schema::
 
     {
         'type': 1,
@@ -33,7 +33,7 @@ class Image(Element):
         self.height = raw.get('height', 0.0)
 
         # source image bytes
-        # - image bytes passed from PyMuPDF -> use it directly
+        # - image bytes passed from PDFium -> use it directly
         # - base64 encoded string restored from json file -> encode to bytes and decode with base64 -> image bytes 
         image = raw.get('image', b'')
         self.image = image if isinstance(image, bytes) else base64.b64decode(image.encode())
@@ -80,7 +80,7 @@ class Image(Element):
         '''Plot image bbox with diagonal lines (for debug purpose).
         
         Args: 
-            page (fitz.Page): Plotting page.
+            page (PDF page): Plotting page.
         '''
         x0, y0, x1, y1 = self.bbox
         page.draw_line((x0, y0), (x1, y1), color=color, width=0.5)

@@ -31,9 +31,10 @@ object. Did not convert`, it might be necessary to follow the instructions at:
 import glob
 import os
 import io
+from io import BytesIO
 import numpy as np
 import cv2 as cv
-import fitz
+import pypdfium2 as pdfium
 from pdf2docx import Converter, parse
 import subprocess
 import time
@@ -69,8 +70,12 @@ def get_page_similarity(page_a, page_b, diff_img_filename='diff.png'):
 
 
 def get_page_image(pdf_page):
-    '''Convert fitz page to opencv image.'''
-    img_byte = pdf_page.get_pixmap(clip=pdf_page.rect).tobytes()
+    '''Convert PDF page to opencv image.'''
+    bitmap = pdf_page.render(rev_byteorder=True)
+    image = bitmap.to_pil()
+    output = BytesIO()
+    image.save(output, format='PNG')
+    img_byte = output.getvalue()
     img = np.frombuffer(img_byte, np.uint8)
     return cv.imdecode(img, cv.IMREAD_COLOR)
 
@@ -174,7 +179,9 @@ def libreoffice_to(in_, out):
 
 def compare_pdf(pdf1, pdf2, num_pages=None):
     #print(f'Comparing {pdf1=} {pdf2=}')
-    with fitz.Document(pdf1) as doc1, fitz.Document(pdf2) as doc2:
+    doc1 = pdfium.PdfDocument(pdf1)
+    doc2 = pdfium.PdfDocument(pdf2)
+    try:
         if num_pages:
             n1 = num_pages
         else:
@@ -193,6 +200,9 @@ def compare_pdf(pdf1, pdf2, num_pages=None):
         sidx /= n1
         #print(f'{sidx=}')
         return sidx
+    finally:
+        doc1.close()
+        doc2.close()
 
 
 class TestConversion:
@@ -383,10 +393,13 @@ def test_one(path):
     if os.path.basename(path) == 'demo-whisper_2_3.pdf':
         pages = [25, 26, 27]
     else:
-        with fitz.Document(pdf) as doc:
+        doc = pdfium.PdfDocument(pdf)
+        try:
             if len(doc) > 1:
                 print(f'Not testing because more than one page: {path}')
                 return
+        finally:
+            doc.close()
     #print(f'Calling parse() {pdf=} {docx2=}')
     parse(pdf, docx2, pages=pages, raw_exceptions=True)
     assert os.path.isfile(docx2)

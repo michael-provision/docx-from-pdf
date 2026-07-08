@@ -8,7 +8,7 @@ So, detecting and parsing table block is the principle steps.
 The prerequisite work is done before this step:
 
 1. Clean up source blocks and shapes in Page level, e.g. convert source blocks to ``Line`` level,
-   because the block structure determined by ``PyMuPDF`` might be not reasonable.
+   because the block structure determined by ``PDFium`` might be not reasonable.
 #. Parse structure in document level, e.g. page header/footer.
 #. Parse Section and Column layout in Page level.
 

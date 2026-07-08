@@ -5,7 +5,7 @@
 * Stroke: consider only the horizontal or vertical path segments
 * Fill  : bbox of closed path filling area
 
-Hyperlink in ``PyMuPDF`` is represented as uri and its rectangular area (hot-area), while the
+Hyperlink in ``PDFium`` is represented as uri and its rectangular area (hot-area), while the
 applied text isn't extracted explicitly. To reuse the process that identifying applied text of
 text style shape (e.g. underline and highlight), hyperlink is also abstracted to be a ``Shape``.
 
@@ -45,8 +45,8 @@ Data structure::
     from source dict.
 '''
 
-import fitz
 from ..common.Element import Element
+from ..common.geometry import Point, Rect
 from ..common.share import RectType
 from ..common import constants
 
@@ -133,7 +133,7 @@ class Shape(Element):
 
 
     def plot(self, page, color):
-        '''Plot rectangle shapes with ``PyMuPDF``.'''
+        '''Plot rectangle shapes with ``PDFium``.'''
         page.draw_rect(self.bbox, color=color, fill=color, width=0, overlay=True)
 
 
@@ -144,8 +144,8 @@ class Stroke(Shape):
     def __init__(self, raw:dict=None):
         raw = raw or {}
         # NOTE: real page CS
-        self._start = fitz.Point(raw.get('start', (0.0, 0.0)))
-        self._end = fitz.Point(raw.get('end', (0.0, 0.0)))
+        self._start = Point(raw.get('start', (0.0, 0.0)))
+        self._end = Point(raw.get('end', (0.0, 0.0)))
 
         if self._start.x > self._end.x or self._start.y > self._end.y:
             self._start, self._end = self._end, self._start
@@ -184,17 +184,17 @@ class Stroke(Shape):
         * Ppdate bbox directly if ``rect.area!=0``.
 
         Args:
-            rect (fitz.Rect, tuple): ``(x0, y0, x1, y1)`` like data.
+            rect (Rect, tuple): ``(x0, y0, x1, y1)`` like data.
 
         Returns:
             Stroke: self
         '''
-        rect = fitz.Rect(rect)
+        rect = Rect(rect)
 
         # an empty area line
         if rect.get_area()==0.0:
-            self._start = fitz.Point(rect[0:2])
-            self._end = fitz.Point(rect[2:])
+            self._start = Point(rect[0:2])
+            self._end = Point(rect[2:])
             super().update_bbox(self._to_rect())
 
         # a rect 
@@ -204,14 +204,14 @@ class Stroke(Shape):
             # horizontal stroke
             if rect.width >= rect.height:
                 y = (rect.y0+rect.y1)/2.0
-                self._start = fitz.Point(rect.x0, y)
-                self._end   = fitz.Point(rect.x1, y)
+                self._start = Point(rect.x0, y)
+                self._end   = Point(rect.x1, y)
 
             # vertical stroke
             else: 
                 x = (rect.x0+rect.x1)/2.0
-                self._start = fitz.Point(x, rect.y0)
-                self._end   = fitz.Point(x, rect.y1)
+                self._start = Point(x, rect.y0)
+                self._end   = Point(x, rect.y1)
 
         return self
 
@@ -334,7 +334,7 @@ class Fill(Shape):
 class Hyperlink(Shape):
     '''Rectangular area, i.e. ``hot area`` for a hyperlink. 
     
-    Hyperlink in ``PyMuPDF`` is represented as uri and its hot area, while the applied text isn't extracted 
+    Hyperlink in ``PDFium`` is represented as uri and its hot area, while the applied text isn't extracted
     explicitly. To reuse the process that identifying applied text of text style shape (e.g. underline and 
     highlight), hyperlink is also abstracted to be a ``Shape``.
     '''

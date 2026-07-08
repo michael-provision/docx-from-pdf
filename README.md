@@ -14,7 +14,7 @@ Pull requests from the community are welcome, but [Artifex](https://artifex.com)
 
 ---
 
-If you are looking for a **full-featured PDF processing library**, consider using [PyMuPDF](https://github.com/pymupdf/PyMuPDF) or [MuPDF.NET](https://github.com/ArtifexSoftware/MuPDF.NET).
+If you are looking for a **full-featured PDF processing library**, consider using [PDFium](https://pdfium.googlesource.com/pdfium/) or [MuPDF.NET](https://github.com/ArtifexSoftware/MuPDF.NET).
 
 ## Documentation
 

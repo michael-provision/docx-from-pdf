@@ -3,7 +3,7 @@
 '''A group of instances, e.g. Blocks, Lines, Spans, Shapes.
 '''
 
-import fitz
+from .geometry import Rect
 from .Element import Element
 from .share import (IText, TextDirection)
 from .algorithm import (solve_rects_intersection, graph_bfs)
@@ -37,10 +37,10 @@ class BaseCollection:
     @property
     def bbox(self):
         '''bbox of combined collection.'''
-        rect = fitz.Rect()
+        rect = Rect()
         for instance in self._instances:
             rect |= instance.bbox
-        return fitz.Rect([round(x,1) for x in rect]) # NOTE: round to avoid digital error
+        return Rect([round(x,1) for x in rect]) # NOTE: round to avoid digital error
 
 
     def append(self, instance): 
@@ -327,18 +327,18 @@ class ElementCollection(Collection):
         '''Filter instances contained in target bbox.
 
         Args:
-            bbox  (fitz.Rect): target boundary box.
+            bbox  (Rect): target boundary box.
         '''
         instances = list(filter(
             lambda e: bbox.contains(e.bbox), self._instances))
         return self.__class__(instances)
 
 
-    def split_with_intersection(self, bbox:fitz.Rect, threshold:float=1e-3):
+    def split_with_intersection(self, bbox: Rect, threshold: float = 1e-3):
         """Split instances into two groups: one intersects with ``bbox``, the other not.
 
         Args:
-            bbox (fitz.Rect): target rect box.
+            bbox (Rect): target rect box.
             threshold (float): It's intersected when the overlap rate exceeds this threshold. Defaults to 0.
 
         Returns:

@@ -123,7 +123,7 @@ class Blocks(ElementCollection):
             line_overlap_threshold (float): remove line if the intersection exceeds this value.
 
         .. note::
-            The block structure extracted from ``PyMuPDF`` might be unreasonable, e.g. 
+            The block structure extracted from ``PDFium`` might be unreasonable, e.g.
             * one real paragraph is split into multiple blocks; or
             * one block consists of multiple real paragraphs
         '''
@@ -192,7 +192,7 @@ class Blocks(ElementCollection):
             list: A list of Lines. Each group of Lines represents a potential table.
         
         .. note::
-            ``PyMuPDF`` may group multi-lines in a row as a text block while each line belongs to different
+            ``PDFium`` may group multi-lines in a row as a text block while each line belongs to different
             cell. So, it's required to deep into line level.
         '''
         # group lines by row: any intersection would be counted as same group

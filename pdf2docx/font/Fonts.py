@@ -16,7 +16,7 @@ but more generic properties are required further:
       embedded font data might crash.
 
     * Then, we have to use the default properties, i.e. ascender and descender, extracted by
-      ``PyMuPDF`` directly, but this value isn't so accurate.
+      ``PDFium`` directly, but this value isn't so accurate.
 '''
 
 import os
@@ -56,20 +56,23 @@ class Fonts(BaseCollection):
 
 
     @classmethod
-    def extract(cls, fitz_doc):
+    def extract(cls, pdf_doc):
         '''Extract fonts from PDF and get properties.
         * Only embedded fonts (v.s. the base 14 fonts) can be extracted.
         * The extracted fonts may be invalid due to reason from PDF file itself.
         '''
+        if not hasattr(pdf_doc, "extract_font"):
+            return cls([])
+
         # get unique font references
         xrefs = set()
-        for page in fitz_doc:
+        for page in pdf_doc:
             for f in page.get_fonts(): xrefs.add(f[0])
 
         # process xref one by one
         fonts = []
         for xref in xrefs:
-            basename, ext, _, buffer = fitz_doc.extract_font(xref)
+            basename, ext, _, buffer = pdf_doc.extract_font(xref)
             if not basename: continue
 
             basename = decode(basename)

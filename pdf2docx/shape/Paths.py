@@ -1,17 +1,17 @@
 '''
 Objects representing PDF path (stroke and filling) extracted by ``page.get_drawings()``.
 
-This method is new since ``PyMuPDF`` 1.18.0, with both pdf raw path and annotations like Line,
+This method is new since ``PDFium`` 1.18.0, with both pdf raw path and annotations like Line,
 Square and Highlight considered.
 
-* https://pymupdf.readthedocs.io/en/latest/page.html#Page.get_drawings
-* https://pymupdf.readthedocs.io/en/latest/faq.html#extracting-drawings
+* PDF drawing extraction API#Page.get_drawings
+* PDF drawing extraction notes#extracting-drawings
 '''
 
-import fitz
 from ..image.ImagesExtractor import ImagesExtractor
 from ..common.share import lazyproperty
 from ..common.Collection import  Collection
+from ..common.geometry import Rect
 from .Path import Path
 
 
@@ -31,7 +31,7 @@ class Paths(Collection):
 
     @lazyproperty
     def bbox(self):
-        bbox = fitz.Rect()
+        bbox = Rect()
         for instance in self._instances: bbox |= instance.bbox
         return bbox
 
@@ -48,7 +48,7 @@ class Paths(Collection):
         '''Plot paths for debug purpose.
 
         Args:
-            page (fitz.Page): ``PyMuPDF`` page.
+            page (PDF page): ``PDFium`` page.
         '''
         if not self._instances: return
         # make a drawing canvas and plot path
@@ -112,7 +112,7 @@ class Paths(Collection):
         # * otherwise, it's a vector graphic -> clip page image (without any text) based on `bbox`
         def contained_in_inner_contours(path:Path, contours:list):
             for bbox in contours:
-                if fitz.Rect(bbox).contains(path.bbox): return True
+                if Rect(bbox).contains(path.bbox): return True
             return False
 
         # group every path to one of the detected bbox
@@ -129,13 +129,13 @@ class Paths(Collection):
             if paths.is_iso_oriented:
                 iso_shapes.extend(paths.to_shapes())
                 for svg_bbox in inner_bboxes:
-                    images.append(ie.clip_page_to_dict(bbox=fitz.Rect(svg_bbox),
+                    images.append(ie.clip_page_to_dict(bbox=Rect(svg_bbox),
                                                         rm_image=True,
                                                         clip_image_res_ratio=clip_image_res_ratio))
 
             # otherwise, it's a svg
             else:
-                images.append(ie.clip_page_to_dict(bbox=fitz.Rect(bbox),
+                images.append(ie.clip_page_to_dict(bbox=Rect(bbox),
                                                    rm_image=True,
                                                    clip_image_res_ratio=clip_image_res_ratio))
 

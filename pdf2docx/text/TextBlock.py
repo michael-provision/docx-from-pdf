@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-'''Text block objects based on PDF raw dict extracted with ``PyMuPDF``.
+'''Text block objects based on PDF raw dict extracted with ``PDFium``.
 
-Data structure based on this `link <https://pymupdf.readthedocs.io/en/latest/textpage.html>`_::
+Data structure based on this `link <PDF text extraction schema>`_::
 
     {
         # raw dict
@@ -120,7 +120,7 @@ class TextBlock(Block):
         '''Plot block/line/span area for debug purpose.
         
         Args:
-            page (fitz.Page): pdf page.
+            page (PDF page): pdf page.
         '''
         # block border in blue
         blue = rgb_component_from_name('blue')   
@@ -176,10 +176,10 @@ class TextBlock(Block):
         * The detailed spacing of block lines is determined by tab stops.
 
         Multiple alignment modes may exist in block (due to improper organized lines
-        from ``PyMuPDF``), e.g. some lines align left, and others right. In this case,
+        from ``PDFium``), e.g. some lines align left, and others right. In this case,
         **LEFT** alignment is set, and use ``TAB`` to position each line.
         '''
-        # NOTE: in PyMuPDF CS, horizontal text direction is same with positive x-axis,
+        # NOTE: in PDFium CS, horizontal text direction is same with positive x-axis,
         # while vertical text is on the contrary, so use f = -1 here
         idx0, idx1, f = (0, 2, 1.0) if self.is_horizontal_text else (3, 1, -1.0)
         

@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
 '''
-Text Line objects based on PDF raw dict extracted with ``PyMuPDF``.
+Text Line objects based on PDF raw dict extracted with ``PDFium``.
 
 Data structure of line in text block referring to this
-`link <https://pymupdf.readthedocs.io/en/latest/textpage.html>`_::
+`link <PDF text extraction schema>`_::
 
     {
         'bbox': (x0,y0,x1,y1),
@@ -14,7 +14,7 @@ Data structure of line in text block referring to this
     }
 '''
 
-from fitz import Point
+from ..common.geometry import Point
 try:
     # Python <= 3.9
     from collections import Iterable
@@ -143,7 +143,7 @@ class Line(Element):
         '''Create new Line object with spans contained in given bbox.
         
         Args:
-            rect (fitz.Rect): Target bbox.
+            rect (Rect): Target bbox.
         
         Returns:
             Line: The created Line instance.
