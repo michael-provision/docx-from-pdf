@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from ctypes import byref, c_double, c_float, c_int, c_uint, create_string_buffer
 from io import BytesIO
-from math import cos, pi, sin
+from math import cos, pi, sin, sqrt
 from pathlib import Path
 
 import pypdfium2 as pdfium
@@ -149,7 +149,7 @@ class PdfiumPage:
             origin_y = c_double()
             pdfium_c.FPDFText_GetCharOrigin(text_page, char_index, byref(origin_x), byref(origin_y))
             font_name = self._font_name(text_page, char_index)
-            font_size = float(pdfium_c.FPDFText_GetFontSize(text_page, char_index) or 12.0)
+            font_size = self._effective_font_size(text_page, char_index)
             chars.append(
                 {
                     "c": character,
@@ -294,6 +294,15 @@ class PdfiumPage:
     def _pdf_bounds_to_page_rect(self, bounds):
         left, bottom, right, top = bounds
         return Rect(left, self.height - top, right, self.height - bottom)
+
+    @staticmethod
+    def _effective_font_size(text_page, char_index: int):
+        font_size = float(pdfium_c.FPDFText_GetFontSize(text_page, char_index) or 12.0)
+        matrix = pdfium_c.FS_MATRIX()
+        if not pdfium_c.FPDFText_GetMatrix(text_page, char_index, byref(matrix)):
+            return font_size
+        vertical_scale = sqrt(matrix.c * matrix.c + matrix.d * matrix.d)
+        return font_size * vertical_scale if vertical_scale else font_size
 
     @staticmethod
     def _font_name(text_page, char_index: int):

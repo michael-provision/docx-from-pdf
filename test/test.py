@@ -42,12 +42,42 @@ import shutil
 import platform
 import pytest
 
+from pdf2docx.backend.pdfium import PdfiumDocument
+
 
 root_path = os.path.abspath(f'{__file__}/../..')
 script_path = os.path.abspath(__file__) # current script path
 test_dir = os.path.dirname(script_path)
 sample_path = os.path.join(test_dir, 'samples')
 output_path = os.path.join(test_dir, 'outputs')
+
+
+def build_pdf_bytes(content_stream):
+    objects = [
+        b'<< /Type /Catalog /Pages 2 0 R >>',
+        b'<< /Type /Pages /Kids [3 0 R] /Count 1 >>',
+        b'<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >>',
+        b'<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>',
+        b'<< /Length ' + str(len(content_stream)).encode() + b' >>\nstream\n' + content_stream + b'\nendstream',
+    ]
+    pdf = bytearray(b'%PDF-1.4\n')
+    offsets = [0]
+    for index, obj in enumerate(objects, start=1):
+        offsets.append(len(pdf))
+        pdf.extend(f'{index} 0 obj\n'.encode())
+        pdf.extend(obj)
+        pdf.extend(b'\nendobj\n')
+
+    xref_offset = len(pdf)
+    pdf.extend(f'xref\n0 {len(objects) + 1}\n'.encode())
+    pdf.extend(b'0000000000 65535 f \n')
+    for offset in offsets[1:]:
+        pdf.extend(f'{offset:010d} 00000 n \n'.encode())
+    pdf.extend(b'trailer\n')
+    pdf.extend(f'<< /Size {len(objects) + 1} /Root 1 0 R >>\n'.encode())
+    pdf.extend(b'startxref\n')
+    pdf.extend(f'{xref_offset}\n%%EOF\n'.encode())
+    return bytes(pdf)
 
 
 def get_page_similarity(page_a, page_b, diff_img_filename='diff.png'):
@@ -316,6 +346,25 @@ class TestConversion:
             docx_file = os.path.join(output_path, f'{filename}.docx')
             parse(pdf_file, docx_file, start=0, end=None)
             assert os.path.isfile(docx_file), f'Expected output {docx_file}'
+
+    def test_scaled_text_matrix_uses_effective_font_size(self):
+        '''Test extracting transformed text with effective font size.'''
+        content_stream = b'q 0.03 0 0 0.03 72 720 cm BT /F1 488 Tf 0 0 Td (SCALED) Tj ET Q'
+        doc = PdfiumDocument(stream=build_pdf_bytes(content_stream))
+        page = doc[0]
+        try:
+            blocks = page.extract_text_blocks()
+            sizes = [
+                span['size']
+                for block in blocks
+                for line in block['lines']
+                for span in line['spans']
+            ]
+        finally:
+            page.close()
+            doc.close()
+
+        assert max(sizes) == pytest.approx(14.64, abs=0.01)
 
 
 # We make a separate pytest test for each sample file.
