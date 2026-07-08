@@ -1,7 +1,7 @@
-'''Text Span object based on PDF raw dict extracted with ``PyMuPDF``.
+'''Text Span object based on PDF raw dict extracted with ``PDFium``.
 
 Data structure for Span refer to
-this `link <https://pymupdf.readthedocs.io/en/latest/textpage.html>`_::
+this `link <PDF text extraction schema>`_::
 
     {
         # raw dict
@@ -27,11 +27,11 @@ this `link <https://pymupdf.readthedocs.io/en/latest/textpage.html>`_::
     }
 '''
 
-import fitz
 from docx.shared import Pt, RGBColor
 from docx.oxml.ns import qn
 from .Char import Char
 from ..common.Element import Element
+from ..common.geometry import Rect
 from ..common.share import (RectType, rgb_value, rgb_component, decode)
 from ..common import constants
 from ..common import docx
@@ -49,7 +49,7 @@ class TextSpan(Element):
         chars = [Char(c) for c in raw.get('chars', [])] # type: list[Char]
         # ignore replacement character, see issue#256
         self.chars = [char for char in chars if char.c not in ('', '\ufffd')]
-        self._text = raw.get('text', '') # not an original key from PyMuPDF
+        self._text = raw.get('text', '') # not an original key from PDFium
 
         # font metrics
         # line_height is the standard single line height used in relative line spacing,
@@ -89,7 +89,7 @@ class TextSpan(Element):
 
     def cal_bbox(self):
         '''Calculate bbox based on contained instances.'''
-        bbox = fitz.Rect()
+        bbox = Rect()
         for char in self.chars: bbox |= char.bbox
         return bbox
 
@@ -101,14 +101,14 @@ class TextSpan(Element):
         '''Set new font, and update font size, span/char bbox accordingly.
 
         It's generally used for span with unnamed fonts.
-        See this `issue <https://github.com/pymupdf/PyMuPDF/issues/642>`_.
+        See this `issue <unnamed font issue>`_.
 
         In corner case, where the PDF file containing unnamed and not embedded fonts, the span bbox
-        extracted from ``PyMuPDF`` is not correct. ``PyMuPDF`` provides feature to replace these
+        extracted from ``PDFium`` is not correct. ``PDFium`` provides feature to replace these
         unnamed fonts with specified fonts, then extract correct bbox from the updated PDF. Since we
         care less about the original PDF itself but its layout, the idea here is to set a default
         font for text spans with unnamed fonts, and estimate the updated bbox with method from
-        ``fitz.TextWriter``.
+        ``TextWriter``.
 
         Args:
             font_name (str): Font name.
@@ -117,27 +117,14 @@ class TextSpan(Element):
         self.font = font_name
 
         # compute text length under new font with that size
-        font = fitz.Font(font_name)
-        new_length = font.text_length(self.text, fontsize=self.size)
+        new_length = len(self.text) * self.size * 0.5
         if new_length > self.bbox.width:
             self.size *= self.bbox.width / new_length
 
-        # estimate occupied rect when added with TextWriter
         x0, y0, x1, y1 = self.bbox
-        tw = fitz.TextWriter((0, 0, x1, y1))
-        rect, _ = tw.append(
-            self.chars[0].origin, # the bottom left point of the first character
-            self.text,
-            font=font,
-            fontsize=self.size
-        )
-
-        # update span bbox
-        # - x-direction: use original horizontal range
-        # - y-direction: centerline defined by estimated vertical range, and height by font size
-        buff = (rect.height-self.size)/2.0
-        y0 = rect.y0 + buff
-        y1 = rect.y1 - buff
+        center = (y0 + y1) / 2.0
+        y0 = center - self.size / 2.0
+        y1 = center + self.size / 2.0
         self.update_bbox((x0, y0, x1, y1))
 
         # update contained char bbox
@@ -335,7 +322,7 @@ class TextSpan(Element):
         '''Create new TextSpan object with chars contained in given bbox.
 
         Args:
-            rect (fitz.Rect): Target bbox.
+            rect (Rect): Target bbox.
         '''
         # add span directly if fully contained in bbox
         if rect.contains(self.bbox):

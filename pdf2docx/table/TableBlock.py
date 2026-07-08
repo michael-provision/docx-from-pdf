@@ -149,7 +149,7 @@ class TableBlock(Block):
         '''Plot table block, i.e. cell/line/span, for debug purpose.
         
         Args:
-            page (fitz.Page): pdf page.
+            page (PDF page): pdf page.
             content (bool): Plot text blocks contained in cells if True.
             style (bool): Plot cell style if True, e.g. border width, shading.
             color (bool): Plot border stroke color if ``style=False``.

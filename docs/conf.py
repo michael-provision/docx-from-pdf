@@ -86,7 +86,7 @@ html_static_path = ['_static']
 html_css_files = ["custom.css"]
 
 
-html_favicon = "_static/PyMuPDF.ico"
+html_favicon = None
 
 
 # -- Options for LaTeX output ---------------------------------------------
@@ -99,7 +99,7 @@ latex_elements = {
 latex_documents = [("index", "pdf2docx.tex", "pdf2docx Documentation", "Artifex", "manual")]
 # The name of an image file (relative to this directory) to place at the top of
 # the title page.
-#latex_logo = "images/pymupdf-logo.png"
+#latex_logo = None
 
 # For "manual" documents, if this is true, then toplevel headings are parts,
 # not chapters.
@@ -148,6 +148,5 @@ pdf_break_level = 2
 
 pdf_verbosity = 0
 pdf_invariant = True
-
 
 

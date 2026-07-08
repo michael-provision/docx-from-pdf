@@ -1,6 +1,6 @@
 .. meta::
    :author: Artifex
-   :description: pdf2docx is a Python library to extract data from PDF with PyMuPDF, parse layout with rule, and generate docx file with python-docx
+   :description: pdf2docx is a Python library to extract data from PDF with PDFium, parse layout with rule, and generate docx file with python-docx
    :keywords: PDF Text Extraction, PDF Image Extraction, PDF Conversion, PDF Tables
 
 
@@ -26,6 +26,5 @@
     </div>
 
     <div>
-        <a href="https://pymupdf.readthedocs.io" target=_blank><button class="cta orange" style="text-transform:none;">Try PyMuPDF</button></a>
+        <a href="https://pypdfium2.readthedocs.io/" target=_blank><button class="cta orange" style="text-transform:none;">Try pypdfium2</button></a>
     </div>
-

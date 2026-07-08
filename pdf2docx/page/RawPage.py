@@ -1,4 +1,4 @@
-'''A wrapper of pdf page engine (e.g. PyMuPDF, pdfminer) to do the following work:
+'''A wrapper of pdf page engine (e.g. PDFium, pdfminer) to do the following work:
 
 * extract source contents
 * clean up blocks/shapes, e.g. elements out of page
@@ -63,7 +63,7 @@ class RawPage(BasePage, ABC):
 
     @debug_plot('Source Text Blocks')
     def restore(self, **settings):
-        '''Initialize layout extracted with ``PyMuPDF``.'''
+        '''Initialize layout extracted with ``PDFium``.'''
         raw_dict = self.extract_raw_dict(**settings)
         self.blocks.restore(raw_dict.get('blocks', []))
         self.shapes.restore(raw_dict.get('shapes', []))

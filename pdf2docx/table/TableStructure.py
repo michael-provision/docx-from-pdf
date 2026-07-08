@@ -3,8 +3,8 @@
 '''Parsing table structure based on strokes and fills.
 '''
 
-import fitz
 from ..common.Element import Element
+from ..common.geometry import Rect
 from ..common.share import RectType
 from ..common import constants
 from ..shape.Shape import Shape, Stroke
@@ -18,8 +18,8 @@ class CellStructure:
     '''Cell structure with properties bbox, borders, shading, etc.'''
     def __init__(self, bbox:list):
         # bbox
-        self.bbox = fitz.Rect(bbox) # theoretical lattice bbox
-        self.merged_bbox = fitz.Rect(bbox) # cell bbox considering merged cells
+        self.bbox = Rect(bbox) # theoretical lattice bbox
+        self.merged_bbox = Rect(bbox) # cell bbox considering merged cells
 
         # stroke shapes around this cell: top, right, bottom, left
         self.borders = None # type: list[Shape]
@@ -199,12 +199,12 @@ class TableStructure:
         '''Table boundary bbox.
 
         Returns:
-            fitz.Rect: bbox of table.
+            Rect: bbox of table.
         '''
-        if not self.cells: return fitz.Rect()
+        if not self.cells: return Rect()
         x0, y0 = self.cells[0][0].bbox.tl
         x1, y1 = self.cells[-1][-1].bbox.br
-        return fitz.Rect(x0,y0,x1,y1)
+        return Rect(x0,y0,x1,y1)
 
     @property
     def num_rows(self): return len(self.cells)
@@ -448,7 +448,7 @@ class TableStructure:
                 cell = self.cells[i][j]               
                 n_row, n_col = cell.merged_cells
                 bbox = (x_cols[j], y_rows[i], x_cols[j+n_col], y_rows[i+n_row])
-                cell.merged_bbox = fitz.Rect(bbox)
+                cell.merged_bbox = Rect(bbox)
 
     
     @staticmethod
@@ -631,4 +631,3 @@ class TableStructure:
                 if not self.cells[i][j].is_merged:
                     return False
         return True
-

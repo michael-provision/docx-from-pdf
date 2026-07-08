@@ -3,7 +3,19 @@
 from enum import Enum
 import random
 from collections.abc import Iterable
-from fitz.utils import getColorList, getColorInfoList
+
+COLOR_COMPONENTS = {
+    "BLACK": (0.0, 0.0, 0.0),
+    "BLUE": (0.0, 0.0, 1.0),
+    "CYAN": (0.0, 1.0, 1.0),
+    "GRAY": (0.5, 0.5, 0.5),
+    "GREEN": (0.0, 0.5, 0.0),
+    "MAGENTA": (1.0, 0.0, 1.0),
+    "ORANGE": (1.0, 0.65, 0.0),
+    "RED": (1.0, 0.0, 0.0),
+    "WHITE": (1.0, 1.0, 1.0),
+    "YELLOW": (1.0, 1.0, 0.0),
+}
 
 
 class BlockType(Enum):
@@ -125,6 +137,8 @@ def lower_round(number:float, ndigits:int=0):
 
 def decode(s:str):
     '''Try to decode a unicode string.'''
+    if any(ord(c) > 255 for c in s):
+        return s
     b = bytes(ord(c) for c in s)
     for encoding in ['utf-8', 'gbk', 'gb2312', 'iso-8859-1']:
         try:
@@ -139,23 +153,14 @@ def decode(s:str):
 # color methods
 # -------------------------
 def rgb_component_from_name(name:str=''):
-    '''Get a named RGB color (or random color) from fitz predefined colors, e.g. 'red' -> (1.0,0.0,0.0).'''
-    # get color index
-    if name and name.upper() in getColorList():
-        pos = getColorList().index(name.upper())
-    else:
-        pos = random.randint(0, len(getColorList())-1)
-
-    c = getColorInfoList()[pos]
-    return (c[1] / 255.0, c[2] / 255.0, c[3] / 255.0)
+    '''Get a named RGB color or a random color.'''
+    if name and name.upper() in COLOR_COMPONENTS:
+        return COLOR_COMPONENTS[name.upper()]
+    return random.choice(list(COLOR_COMPONENTS.values()))
 
 
 def rgb_component(srgb:int):
     '''srgb value to R,G,B components, e.g. 16711680 -> (255, 0, 0).
-
-    Equal to PyMuPDF built-in method::
-
-        [int(255*x) for x in fitz.sRGB_to_pdf(x)]
     '''
     # decimal to hex: 0x...
     s = hex(srgb)[2:].zfill(6)
@@ -207,11 +212,14 @@ def new_page(doc, width:float, height:float, title:str):
     '''Insert a new page with given title.
 
     Args:
-        doc (fitz.Document): pdf document object.
+        doc (PDF document): pdf document object.
         width (float): Page width.
         height (float): Page height.
         title (str): Page title shown in page.
     '''
+    if not hasattr(doc, "new_page"):
+        return None
+
     # insert a new page
     page = doc.new_page(width=width, height=height)    
 
@@ -249,8 +257,9 @@ def debug_plot(title:str, show=True):
                 # create a new page
                 debug_page = new_page(doc, page.width, page.height, title)
                 # plot objects, e.g. text blocks, shapes, tables...
-                objects.plot(debug_page)
-                doc.save(filename)
+                if debug_page is not None:
+                    objects.plot(debug_page)
+                    doc.save(filename)
 
             return objects
         return inner

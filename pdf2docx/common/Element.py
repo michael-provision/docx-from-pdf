@@ -1,6 +1,6 @@
 '''Object with a bounding box, e.g. Block, Line, Span.
 
-Based on ``PyMuPDF``, the coordinates (e.g. bbox of ``page.get_text('rawdict')``) are generally
+Based on ``PDFium``, the coordinates (e.g. bbox of ``page.get_text('rawdict')``) are generally
 provided relative to the un-rotated page; while this ``pdf2docx`` library works under real page
 coordinate system, i.e. with rotation considered. So, any instances created by this Class are
 always applied a rotation matrix automatically.
@@ -15,17 +15,17 @@ CS. If final coordinates are provided, should update it after creating an empty 
 '''
 
 import copy
-import fitz
+from .geometry import Matrix, Rect
 from .share import IText
 from . import constants
 
 
 class Element(IText):
-    '''Boundary box with attribute in fitz.Rect type.'''
+    '''Boundary box with attribute in Rect type.'''
 
-    # all coordinates are related to un-rotated page in PyMuPDF
+    # all coordinates are related to un-rotated page in PDFium
     # e.g. Matrix(0.0, 1.0, -1.0, 0.0, 842.0, 0.0)
-    ROTATION_MATRIX = fitz.Matrix(0.0) # rotation angle = 0 degree by default
+    ROTATION_MATRIX = Matrix(0.0) # rotation angle = 0 degree by default
 
 
     @classmethod
@@ -33,9 +33,9 @@ class Element(IText):
         """Set global rotation matrix.
 
         Args:
-            Rotation_matrix (fitz.Matrix): target matrix
+            Rotation_matrix (Matrix): target matrix
         """
-        if rotation_matrix and isinstance(rotation_matrix, fitz.Matrix):
+        if rotation_matrix and isinstance(rotation_matrix, Matrix):
             cls.ROTATION_MATRIX = rotation_matrix
 
 
@@ -43,29 +43,24 @@ class Element(IText):
     def pure_rotation_matrix(cls):
         '''Pure rotation matrix used for calculating text direction after rotation.'''
         a,b,c,d,e,f = cls.ROTATION_MATRIX
-        return fitz.Matrix(a,b,c,d,0,0)
+        return Matrix(a,b,c,d,0,0)
 
 
     def __init__(self, raw:dict=None, parent=None):
         ''' Initialize Element and convert to the real (rotation considered) page CS.'''
-        self.bbox = fitz.Rect()  # type: fitz.Rect
+        self.bbox = Rect()
         self._parent = parent # type: Element
 
         # NOTE: Any coordinates provided in raw is in original page CS 
         # (without considering page rotation).
         if 'bbox' in (raw or {}):
-            rect = fitz.Rect(raw['bbox']) * Element.ROTATION_MATRIX
+            rect = Rect(raw['bbox']) * Element.ROTATION_MATRIX
             self.update_bbox(rect)
 
 
     def __bool__(self):
         '''Real object when bbox is defined.'''
-        # NOTE inconsistent results of fitz.Rect for different version of pymupdf, e.g.,
-        # a = fitz.Rect(3,3,2,2)
-        #                   bool(a)      a.get_area()       a.is_empty
-        # pymupdf 1.23.5      True            1.0              True
-        # pymupdf 1.23.8      True            0.0              True
-        # bool(fitz.Rect())==False
+        # A zero-width or zero-height line rectangle is still a valid layout element.
         # NOTE: do not use `return not self.bbox.is_empty` here
         return bool(self.bbox)
 
@@ -103,7 +98,7 @@ class Element(IText):
             dt (float): Expanding margin.
 
         Returns:
-            fitz.Rect: Expanded bbox.
+            Rect: Expanded bbox.
 
         .. note::
             This method creates a new bbox, rather than changing the bbox of itself.
@@ -115,10 +110,10 @@ class Element(IText):
         '''Update current bbox to specified ``rect``.
 
         Args:
-            rect (fitz.Rect or list): bbox-like ``(x0, y0, x1, y1)``,
+            rect (Rect or list): bbox-like ``(x0, y0, x1, y1)``,
                 in real page CS (with rotation considered).
         '''
-        self.bbox = fitz.Rect([round(x,1) for x in rect])
+        self.bbox = Rect([round(x,1) for x in rect])
         return self
 
 
@@ -174,10 +169,10 @@ class Element(IText):
             threshold (float, optional): Intersection rate. Defaults to 0.95.
 
         Returns:
-            fitz.Rect: Union bbox or None.
+            Rect: Union bbox or None.
         """
         bbox_1 = self.bbox
-        bbox_2 = e.bbox if hasattr(e, 'bbox') else fitz.Rect(e)
+        bbox_2 = e.bbox if hasattr(e, 'bbox') else Rect(e)
 
         # areas
         b = bbox_1 & bbox_2
@@ -289,7 +284,7 @@ class Element(IText):
 
         c1 = (self.bbox[idx] + self.bbox[idx+2]) / 2.0
         c2 = (e.bbox[idx] + e.bbox[idx+2]) / 2.0
-        res = c1<=e.bbox[idx+2] and c2<=self.bbox[idx+2] # Note y direction under PyMuPDF context
+        res = c1<=e.bbox[idx+2] and c2<=self.bbox[idx+2] # Note y direction under PDFium context
         return res
 
 

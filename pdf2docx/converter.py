@@ -6,17 +6,11 @@ from multiprocessing import Pool, cpu_count
 from time import perf_counter
 from typing import AnyStr, IO, Union
 
-import fitz
 from docx import Document
 
+from .backend.pdfium import PdfiumDocument
 from .page.Page import Page
 from .page.Pages import Pages
-
-# check PyMuPDF version
-# 1.19.0 <= v <= 1.23.8, or v>=1.23.16
-v = list(map(int, fitz.VersionBind.split(".")))
-if v < [1,19,0] or [1,23,8]<v<[1,23,16]:
-    raise SystemExit("1.19.0 <= PyMuPDF <= 1.23.8, or PyMuPDF>=1.23.16 is required for pdf2docx.")
 
 # logging
 logging.basicConfig(
@@ -27,7 +21,7 @@ logging.basicConfig(
 class Converter:
     '''The ``PDF`` to ``docx`` converter.
     
-    * Read PDF file with ``PyMuPDF`` to get raw layout data page by page, including text,
+    * Read PDF file to get raw layout data page by page, including text,
       image, drawing and its properties, e.g. boundary box, font, size, image width, height.
     * Analyze layout in document level, e.g. page header, footer and margin.
     * Parse page layout to docx structure, e.g. paragraph and its properties like indentation, 
@@ -38,14 +32,13 @@ class Converter:
     def __init__(
         self, pdf_file: str = None, password: str = None, stream: bytes = None
     ):
-        '''Initialize fitz object with given pdf file path.
+        '''Initialize PDF document object with given pdf file path.
 
         Args:
             pdf_file (str): pdf file path.
             stream   (bytes): pdf file in memory.
             password (str): Password for encrypted pdf. Default to None if not encrypted.
         '''
-        # fitz object
         self.filename_pdf = pdf_file
         self.password = str(password or "")
 
@@ -53,23 +46,23 @@ class Converter:
             raise ValueError("Either pdf_file or stream must be given.")
 
         if stream:
-            self._fitz_doc = fitz.Document(stream=stream)
+            self._pdf_doc = PdfiumDocument(stream=stream, password=self.password)
 
         else:
-            self._fitz_doc = fitz.Document(pdf_file)
+            self._pdf_doc = PdfiumDocument(pdf_file=pdf_file, password=self.password)
 
         # initialize empty pages container
         self._pages = Pages()
 
 
     @property
-    def fitz_doc(self): return self._fitz_doc    
+    def pdf_doc(self): return self._pdf_doc
 
     @property
     def pages(self): return self._pages
 
 
-    def close(self): self._fitz_doc.close()
+    def close(self): self._pdf_doc.close()
 
 
     @property
@@ -117,7 +110,7 @@ class Converter:
 
     def parse(self, start:int=0, end:int=None, pages:list=None, **kwargs):
         '''Parse pages in three steps:
-        * open PDF file with ``PyMuPDF``
+        * open PDF file
         * analyze whole document, e.g. page section, header/footer and margin
         * parse specified pages, e.g. paragraph, image and table
 
@@ -133,7 +126,7 @@ class Converter:
 
 
     def load_pages(self, start:int=0, end:int=None, pages:list=None):
-        '''Step 1 of converting process: open PDF file with ``PyMuPDF``, 
+        '''Step 1 of converting process: open PDF file,
         especially for password encrypted file.
         
         Args:
@@ -144,15 +137,15 @@ class Converter:
         logging.info(self._color_output('[1/4] Opening document...'))
 
         # encrypted pdf ?
-        if self._fitz_doc.needs_pass:
+        if self._pdf_doc.needs_pass:
             if not self.password:
                 raise ConversionException(f'Require password for {self.filename_pdf}.')
 
-            elif not self._fitz_doc.authenticate(self.password):
+            elif not self._pdf_doc.authenticate(self.password):
                 raise ConversionException('Incorrect password.')
 
         # initialize empty pages
-        num = len(self._fitz_doc)
+        num = len(self._pdf_doc)
         self._pages.reset([Page(id=i, skip_parsing=True) for i in range(num)])
 
         # set pages to parse
@@ -168,7 +161,7 @@ class Converter:
         header/footer and margin.'''
         logging.info(self._color_output('[2/4] Analyzing document...'))
         
-        self._pages.parse(self.fitz_doc, **kwargs)
+        self._pages.parse(self.pdf_doc, **kwargs)
         return self
 
     
@@ -292,14 +285,13 @@ class Converter:
             layout_file (str): New json file storing parsed layout data. Default to ``layout.json``.
         '''
         # include debug information
-        # fitz object in debug mode: plot page layout
         # file path for this debug pdf: demo.pdf -> debug_demo.pdf
         path, filename = os.path.split(self.filename_pdf)
         if not debug_pdf: debug_pdf = os.path.join(path, f'debug_{filename}')
         if not layout_file: layout_file  = os.path.join(path, 'layout.json')
         kwargs.update({
             'debug'         : True,
-            'debug_doc'     : fitz.Document(),
+            'debug_doc'     : None,
             'debug_filename': debug_pdf
         })
 
@@ -387,7 +379,7 @@ class Converter:
 
         Reference:
 
-            https://pymupdf.readthedocs.io/en/latest/faq.html#multiprocessing
+            PDF drawing extraction notes#multiprocessing
         '''
         # make vectors of arguments for the processes
         cpu = min(kwargs['cpu_count'], cpu_count()) if kwargs['cpu_count'] else cpu_count()        
@@ -433,7 +425,7 @@ class Converter:
         cv.load_pages()
 
         # the specified pages to process
-        e = e or len(cv.fitz_doc)
+        e = e or len(cv.pdf_doc)
         all_indexes = range(s, e)
         num_pages = len(all_indexes)
 
