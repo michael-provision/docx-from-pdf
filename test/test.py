@@ -35,6 +35,7 @@ from io import BytesIO
 import numpy as np
 import cv2 as cv
 import pypdfium2 as pdfium
+from docx import Document
 from pdf2docx import Converter, parse
 import subprocess
 import time
@@ -365,6 +366,45 @@ class TestConversion:
             doc.close()
 
         assert max(sizes) == pytest.approx(14.64, abs=0.01)
+
+    def test_extracted_images_are_docx_compatible(self):
+        '''Test extracted PDF images can be consumed by python-docx.'''
+        document = Document()
+        for filename in ['demo-text-hidden', 'demo-image-floating']:
+            pdf_file = os.path.join(sample_path, f'{filename}.pdf')
+            doc = PdfiumDocument(pdf_file)
+            page = doc[0]
+            try:
+                images = page.extract_images()
+            finally:
+                page.close()
+                doc.close()
+
+            assert images
+            for image in images:
+                document.add_picture(BytesIO(image['image']))
+
+    def test_cropbox_offset_normalizes_text_coordinates(self):
+        '''Test text coordinates are normalized to the visible crop box.'''
+        pdf_file = os.path.join(sample_path, 'demo-text-scaling.pdf')
+        doc = PdfiumDocument(pdf_file)
+        page = doc[0]
+        try:
+            blocks = page.extract_text_blocks()
+        finally:
+            page.close()
+            doc.close()
+
+        first_char = next(
+            char
+            for block in blocks
+            for line in block['lines']
+            for span in line['spans']
+            for char in span['chars']
+            if char['c'].strip()
+        )
+        assert first_char['bbox'][0] == pytest.approx(66.83, abs=0.01)
+        assert first_char['bbox'][1] == pytest.approx(41.18, abs=0.01)
 
 
 # We make a separate pytest test for each sample file.

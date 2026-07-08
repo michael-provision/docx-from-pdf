@@ -31,7 +31,7 @@ class ImagesExtractor:
         return self._to_raw_dict(pixmap, bbox)
 
     def extract_images(self, clip_image_res_ratio: float = 3.0):
-        return self._page.extract_images()
+        return self._page.extract_images(clip_image_res_ratio)
 
     def detect_svg_contours(
         self, min_svg_gap_dx: float, min_svg_gap_dy: float, min_w: float, min_h: float

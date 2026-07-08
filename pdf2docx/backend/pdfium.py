@@ -44,7 +44,10 @@ class PdfiumPage:
         self.parent = document
         self.page_index = page_index
         self._page = document._document[page_index]
-        self.width, self.height = self._page.get_size()
+        self._pdf_cropbox = self._page.get_cropbox()
+        crop_left, crop_bottom, crop_right, crop_top = self._pdf_cropbox
+        self.width = crop_right - crop_left
+        self.height = crop_top - crop_bottom
         self.rect = Rect(0.0, 0.0, self.width, self.height)
         self.cropbox = self.rect
         self.rotation = self._page.get_rotation()
@@ -61,27 +64,24 @@ class PdfiumPage:
         lines = self._group_chars_into_lines(chars)
         return [{"type": 0, "bbox": self._bbox_for_lines(lines), "lines": lines}] if lines else []
 
-    def extract_images(self):
+    def extract_images(self, clip_image_res_ratio: float = 3.0):
         images = []
         for image_object in self._page.get_objects(filter=[pdfium_c.FPDF_PAGEOBJ_IMAGE], max_depth=3):
             bbox = self._pdf_bounds_to_page_rect(image_object.get_bounds())
             if bbox.get_area() <= 4:
                 continue
-            destination = BytesIO()
-            image_object.extract(destination)
-            image_bytes = destination.getvalue()
-            if not image_bytes:
-                bitmap = image_object.get_bitmap()
-                pil_image = bitmap.to_pil()
-                png_destination = BytesIO()
-                pil_image.save(png_destination, format="PNG")
-                image_bytes = png_destination.getvalue()
+            image_bytes, width, height = self.render_clip_to_png(
+                bbox,
+                zoom=clip_image_res_ratio,
+                rm_text=True,
+                rm_image=False,
+            )
             images.append(
                 {
                     "type": 1,
                     "bbox": tuple(bbox),
-                    "width": max(1, int(bbox.width)),
-                    "height": max(1, int(bbox.height)),
+                    "width": width,
+                    "height": height,
                     "image": image_bytes,
                 }
             )
@@ -289,11 +289,13 @@ class PdfiumPage:
     def _matrix_point_to_page_point(self, matrix, x: float, y: float):
         page_x = x * matrix.a + y * matrix.c + matrix.e
         page_y = x * matrix.b + y * matrix.d + matrix.f
-        return (float(page_x), float(self.height - page_y))
+        crop_left, _, _, crop_top = self._pdf_cropbox
+        return (float(page_x - crop_left), float(crop_top - page_y))
 
     def _pdf_bounds_to_page_rect(self, bounds):
         left, bottom, right, top = bounds
-        return Rect(left, self.height - top, right, self.height - bottom)
+        crop_left, _, _, crop_top = self._pdf_cropbox
+        return Rect(left - crop_left, crop_top - top, right - crop_left, crop_top - bottom)
 
     @staticmethod
     def _effective_font_size(text_page, char_index: int):
