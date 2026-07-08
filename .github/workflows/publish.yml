@@ -4,6 +4,12 @@ on:
   push:
     tags:
       - "*"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Version to publish
+        required: true
+        default: "0.1"
 
 permissions:
   contents: read
@@ -32,7 +38,11 @@ jobs:
 
       - name: Set version from tag
         run: |
-          VERSION="${GITHUB_REF_NAME#v}"
+          if [ "${GITHUB_EVENT_NAME}" = "workflow_dispatch" ]; then
+            VERSION="${{ inputs.version }}"
+          else
+            VERSION="${GITHUB_REF_NAME#v}"
+          fi
           printf '%s\n' "$VERSION" > version.txt
           cat version.txt
 
