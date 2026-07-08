@@ -1,0 +1,22 @@
+docx\_from\_pdf.table package
+=============================
+
+.. automodule:: docx_from_pdf.table
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   docx_from_pdf.table.Border
+   docx_from_pdf.table.Cell
+   docx_from_pdf.table.Cells
+   docx_from_pdf.table.Row
+   docx_from_pdf.table.Rows
+   docx_from_pdf.table.TableBlock
+   docx_from_pdf.table.TableStructure
+   docx_from_pdf.table.TablesConstructor

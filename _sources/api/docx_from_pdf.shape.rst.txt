@@ -1,0 +1,18 @@
+docx\_from\_pdf.shape package
+=============================
+
+.. automodule:: docx_from_pdf.shape
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   docx_from_pdf.shape.Path
+   docx_from_pdf.shape.Paths
+   docx_from_pdf.shape.Shape
+   docx_from_pdf.shape.Shapes

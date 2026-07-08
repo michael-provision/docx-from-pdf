@@ -1,0 +1,7 @@
+docx\_from\_pdf.image.ImageSpan module
+======================================
+
+.. automodule:: docx_from_pdf.image.ImageSpan
+   :members:
+   :show-inheritance:
+   :undoc-members:

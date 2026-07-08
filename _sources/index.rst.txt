@@ -1,31 +1,22 @@
-Welcome to pdf2docx's documentation!
-====================================
+docx-from-pdf
+=============
 
-`pdf2docx <https://github.com/dothinking/pdf2docx>`_ is a Python library 
-to extract data from PDF with ``PyMuPDF``, parse layout with rule, and 
-generate docx file with ``python-docx``.
+``docx-from-pdf`` is a Python library and CLI for converting PDF files into
+editable DOCX documents.
 
-.. image:: https://s1.ax1x.com/2020/08/04/aDryx1.png
+The package uses PDFium through ``pypdfium2`` for PDF parsing and rendering,
+then writes DOCX output with ``python-docx``. It is published as
+``docx-from-pdf`` and imported from Python as ``docx_from_pdf``.
 
 .. toctree::
    :maxdepth: 2
-   :caption: USER GUIDE
+   :caption: User Guide
 
    installation
    quickstart
-   techdoc
-
 
 .. toctree::
    :maxdepth: 2
-   :caption: API DOCUMENTATION
+   :caption: API Documentation
 
    api/modules
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`

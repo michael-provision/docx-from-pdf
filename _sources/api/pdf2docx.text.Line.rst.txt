@@ -1,7 +1,0 @@
-pdf2docx.text.Line module
-=========================
-
-.. automodule:: pdf2docx.text.Line
-   :members:
-   :undoc-members:
-   :show-inheritance:

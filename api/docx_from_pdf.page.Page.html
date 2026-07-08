@@ -1,0 +1,263 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>docx_from_pdf.page.Page module &mdash; docx-from-pdf documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+
+
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=92734c54"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="docx_from_pdf.page.Pages module" href="docx_from_pdf.page.Pages.html" />
+    <link rel="prev" title="docx_from_pdf.page.BasePage module" href="docx_from_pdf.page.BasePage.html" />
+</head>
+
+<body class="wy-body-for-nav">
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+
+
+          <a href="../index.html" class="icon icon-home">
+            docx-from-pdf
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">docx_from_pdf</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="docx_from_pdf.html">docx_from_pdf package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="docx_from_pdf.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="docx_from_pdf.backend.html">docx_from_pdf.backend package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="docx_from_pdf.common.html">docx_from_pdf.common package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="docx_from_pdf.font.html">docx_from_pdf.font package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="docx_from_pdf.image.html">docx_from_pdf.image package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="docx_from_pdf.layout.html">docx_from_pdf.layout package</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="docx_from_pdf.page.html">docx_from_pdf.page package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="docx_from_pdf.shape.html">docx_from_pdf.shape package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="docx_from_pdf.table.html">docx_from_pdf.table package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="docx_from_pdf.text.html">docx_from_pdf.text package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="docx_from_pdf.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">docx-from-pdf</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">docx_from_pdf</a></li>
+          <li class="breadcrumb-item"><a href="docx_from_pdf.html">docx_from_pdf package</a></li>
+          <li class="breadcrumb-item"><a href="docx_from_pdf.page.html">docx_from_pdf.page package</a></li>
+      <li class="breadcrumb-item active">docx_from_pdf.page.Page module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/docx_from_pdf.page.Page.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+
+  <section id="module-docx_from_pdf.page.Page">
+<span id="docx-from-pdf-page-page-module"></span><h1>docx_from_pdf.page.Page module<a class="headerlink" href="#module-docx_from_pdf.page.Page" title="Link to this heading"></a></h1>
+<p>Page object parsed with PDF raw dict.</p>
+<p>In addition to base structure described in <a class="reference internal" href="docx_from_pdf.page.RawPage.html#module-docx_from_pdf.page.RawPage" title="docx_from_pdf.page.RawPage"><code class="xref py py-class docutils literal notranslate"><span class="pre">RawPage</span></code></a>,
+some new features, e.g. sections, table block, are also included.
+Page elements structure:</p>
+<ul>
+<li><dl>
+<dt><a class="reference internal" href="#module-docx_from_pdf.page.Page" title="docx_from_pdf.page.Page"><code class="xref py py-class docutils literal notranslate"><span class="pre">Page</span></code></a> &gt;&gt; <a class="reference internal" href="docx_from_pdf.layout.Section.html#module-docx_from_pdf.layout.Section" title="docx_from_pdf.layout.Section"><code class="xref py py-class docutils literal notranslate"><span class="pre">Section</span></code></a> &gt;&gt; <a class="reference internal" href="docx_from_pdf.layout.Column.html#module-docx_from_pdf.layout.Column" title="docx_from_pdf.layout.Column"><code class="xref py py-class docutils literal notranslate"><span class="pre">Column</span></code></a></dt><dd><ul>
+<li><dl>
+<dt><a class="reference internal" href="docx_from_pdf.layout.Blocks.html#module-docx_from_pdf.layout.Blocks" title="docx_from_pdf.layout.Blocks"><code class="xref py py-class docutils literal notranslate"><span class="pre">Blocks</span></code></a></dt><dd><ul>
+<li><p><a class="reference internal" href="docx_from_pdf.text.TextBlock.html#module-docx_from_pdf.text.TextBlock" title="docx_from_pdf.text.TextBlock"><code class="xref py py-class docutils literal notranslate"><span class="pre">TextBlock</span></code></a> &gt;&gt;
+<a class="reference internal" href="docx_from_pdf.text.Line.html#module-docx_from_pdf.text.Line" title="docx_from_pdf.text.Line"><code class="xref py py-class docutils literal notranslate"><span class="pre">Line</span></code></a> &gt;&gt;
+<a class="reference internal" href="docx_from_pdf.text.TextSpan.html#module-docx_from_pdf.text.TextSpan" title="docx_from_pdf.text.TextSpan"><code class="xref py py-class docutils literal notranslate"><span class="pre">TextSpan</span></code></a> / <a class="reference internal" href="docx_from_pdf.image.ImageSpan.html#module-docx_from_pdf.image.ImageSpan" title="docx_from_pdf.image.ImageSpan"><code class="xref py py-class docutils literal notranslate"><span class="pre">ImageSpan</span></code></a> &gt;&gt;
+<a class="reference internal" href="docx_from_pdf.text.Char.html#module-docx_from_pdf.text.Char" title="docx_from_pdf.text.Char"><code class="xref py py-class docutils literal notranslate"><span class="pre">Char</span></code></a></p></li>
+<li><p><a class="reference internal" href="docx_from_pdf.table.TableBlock.html#module-docx_from_pdf.table.TableBlock" title="docx_from_pdf.table.TableBlock"><code class="xref py py-class docutils literal notranslate"><span class="pre">TableBlock</span></code></a> &gt;&gt;
+<a class="reference internal" href="docx_from_pdf.table.Row.html#module-docx_from_pdf.table.Row" title="docx_from_pdf.table.Row"><code class="xref py py-class docutils literal notranslate"><span class="pre">Row</span></code></a> &gt;&gt;
+<a class="reference internal" href="docx_from_pdf.table.Cell.html#module-docx_from_pdf.table.Cell" title="docx_from_pdf.table.Cell"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cell</span></code></a></p>
+<blockquote>
+<div><ul class="simple">
+<li><p><a class="reference internal" href="docx_from_pdf.layout.Blocks.html#module-docx_from_pdf.layout.Blocks" title="docx_from_pdf.layout.Blocks"><code class="xref py py-class docutils literal notranslate"><span class="pre">Blocks</span></code></a></p></li>
+<li><p><a class="reference internal" href="docx_from_pdf.shape.Shapes.html#module-docx_from_pdf.shape.Shapes" title="docx_from_pdf.shape.Shapes"><code class="xref py py-class docutils literal notranslate"><span class="pre">Shapes</span></code></a></p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><a class="reference internal" href="docx_from_pdf.shape.Shapes.html#module-docx_from_pdf.shape.Shapes" title="docx_from_pdf.shape.Shapes"><code class="xref py py-class docutils literal notranslate"><span class="pre">Shapes</span></code></a></dt><dd><ul class="simple">
+<li><p><a class="reference internal" href="docx_from_pdf.shape.Shape.html#docx_from_pdf.shape.Shape.Stroke" title="docx_from_pdf.shape.Shape.Stroke"><code class="xref py py-class docutils literal notranslate"><span class="pre">Stroke</span></code></a></p></li>
+<li><p><a class="reference internal" href="docx_from_pdf.shape.Shape.html#docx_from_pdf.shape.Shape.Fill" title="docx_from_pdf.shape.Shape.Fill"><code class="xref py py-class docutils literal notranslate"><span class="pre">Fill</span></code></a></p></li>
+<li><p><a class="reference internal" href="docx_from_pdf.shape.Shape.html#docx_from_pdf.shape.Shape.Hyperlink" title="docx_from_pdf.shape.Shape.Hyperlink"><code class="xref py py-class docutils literal notranslate"><span class="pre">Hyperlink</span></code></a></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="c1"># page index</span>
+    <span class="s2">&quot;width&quot;</span> <span class="p">:</span> <span class="n">w</span><span class="p">,</span>
+    <span class="s2">&quot;height&quot;</span><span class="p">:</span> <span class="n">h</span><span class="p">,</span>
+    <span class="s2">&quot;margin&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">top</span><span class="p">,</span> <span class="n">bottom</span><span class="p">],</span>
+    <span class="s2">&quot;sections&quot;</span><span class="p">:</span> <span class="p">[{</span>
+        <span class="o">...</span> <span class="c1"># section properties</span>
+    <span class="p">},</span> <span class="o">...</span><span class="p">],</span>
+    <span class="s2">&quot;floats&quot;</span><span class="p">:</span> <span class="p">[{</span>
+        <span class="o">...</span> <span class="c1"># floating picture</span>
+    <span class="p">},</span> <span class="o">...</span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<dl class="py class">
+<dt class="sig sig-object py" id="docx_from_pdf.page.Page.Page">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">docx_from_pdf.page.Page.</span></span><span class="sig-name descname"><span class="pre">Page</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_parsing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">footer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">margin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sections</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">float_images</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#docx_from_pdf.page.Page.Page" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="docx_from_pdf.page.BasePage.html#docx_from_pdf.page.BasePage.BasePage" title="docx_from_pdf.page.BasePage.BasePage"><code class="xref py py-class docutils literal notranslate"><span class="pre">BasePage</span></code></a></p>
+<p>Object representing the whole page, e.g. margins, sections.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id</strong> (<em>int</em>)</p></li>
+<li><p><strong>skip_parsing</strong> (<em>bool</em>)</p></li>
+<li><p><strong>width</strong> (<em>float</em>)</p></li>
+<li><p><strong>height</strong> (<em>float</em>)</p></li>
+<li><p><strong>header</strong> (<em>str</em>)</p></li>
+<li><p><strong>footer</strong> (<em>str</em>)</p></li>
+<li><p><strong>margin</strong> (<em>tuple</em>)</p></li>
+<li><p><strong>sections</strong> (<a class="reference internal" href="docx_from_pdf.layout.Sections.html#docx_from_pdf.layout.Sections.Sections" title="docx_from_pdf.layout.Sections.Sections"><em>Sections</em></a>)</p></li>
+<li><p><strong>float_images</strong> (<a class="reference internal" href="docx_from_pdf.common.Collection.html#docx_from_pdf.common.Collection.BaseCollection" title="docx_from_pdf.common.Collection.BaseCollection"><em>BaseCollection</em></a>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="docx_from_pdf.page.Page.Page.finalized">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">finalized</span></span><a class="headerlink" href="#docx_from_pdf.page.Page.Page.finalized" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="docx_from_pdf.page.Page.Page.store">
+<span class="sig-name descname"><span class="pre">store</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#docx_from_pdf.page.Page.Page.store" title="Link to this definition"></a></dt>
+<dd><p>Store parsed layout in dict format.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="docx_from_pdf.page.Page.Page.restore">
+<span class="sig-name descname"><span class="pre">restore</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#docx_from_pdf.page.Page.Page.restore" title="Link to this definition"></a></dt>
+<dd><p>Restore Layout from parsed results.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>dict</em>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="docx_from_pdf.page.Page.Page.parse">
+<span class="sig-name descname"><span class="pre">parse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#docx_from_pdf.page.Page.Page.parse" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="docx_from_pdf.page.Page.Page.extract_tables">
+<span class="sig-name descname"><span class="pre">extract_tables</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">settings</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#docx_from_pdf.page.Page.Page.extract_tables" title="Link to this definition"></a></dt>
+<dd><p>Extract content from tables (top layout only).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Before running this method, the page layout must be either parsed from source
+page or restored from parsed data.</p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="docx_from_pdf.page.Page.Page.make_docx">
+<span class="sig-name descname"><span class="pre">make_docx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#docx_from_pdf.page.Page.Page.make_docx" title="Link to this definition"></a></dt>
+<dd><p>Set page size, margin, and create page.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Before running this method, the page layout must be either parsed from source
+page or restored from parsed data.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Document</em>) – <code class="docutils literal notranslate"><span class="pre">python-docx</span></code> document object</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="docx_from_pdf.page.BasePage.html" class="btn btn-neutral float-left" title="docx_from_pdf.page.BasePage module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="docx_from_pdf.page.Pages.html" class="btn btn-neutral float-right" title="docx_from_pdf.page.Pages module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Michael Ellis.</p>
+  </div>
+
+
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+</body>
+</html>

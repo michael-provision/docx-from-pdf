@@ -1,0 +1,19 @@
+docx\_from\_pdf.layout package
+==============================
+
+.. automodule:: docx_from_pdf.layout
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   docx_from_pdf.layout.Blocks
+   docx_from_pdf.layout.Column
+   docx_from_pdf.layout.Layout
+   docx_from_pdf.layout.Section
+   docx_from_pdf.layout.Sections

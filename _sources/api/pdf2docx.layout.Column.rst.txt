@@ -1,7 +1,0 @@
-pdf2docx.layout.Column module
-=============================
-
-.. automodule:: pdf2docx.layout.Column
-   :members:
-   :undoc-members:
-   :show-inheritance:

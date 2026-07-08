@@ -1,7 +1,7 @@
-pdf2docx
-========
+docx_from_pdf
+=============
 
 .. toctree::
    :maxdepth: 4
 
-   pdf2docx
+   docx_from_pdf

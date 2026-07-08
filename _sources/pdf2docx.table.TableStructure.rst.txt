@@ -1,7 +1,0 @@
-pdf2docx.table.TableStructure module
-====================================
-
-.. automodule:: pdf2docx.table.TableStructure
-   :members:
-   :undoc-members:
-   :show-inheritance:

@@ -1,7 +1,0 @@
-pdf2docx.image.Image module
-===========================
-
-.. automodule:: pdf2docx.image.Image
-   :members:
-   :undoc-members:
-   :show-inheritance:

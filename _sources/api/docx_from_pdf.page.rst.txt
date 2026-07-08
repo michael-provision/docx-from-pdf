@@ -1,0 +1,20 @@
+docx\_from\_pdf.page package
+============================
+
+.. automodule:: docx_from_pdf.page
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   docx_from_pdf.page.BasePage
+   docx_from_pdf.page.Page
+   docx_from_pdf.page.Pages
+   docx_from_pdf.page.RawPage
+   docx_from_pdf.page.RawPageFactory
+   docx_from_pdf.page.RawPagePdfium

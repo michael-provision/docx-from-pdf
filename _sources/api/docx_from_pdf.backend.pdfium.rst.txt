@@ -1,0 +1,7 @@
+docx\_from\_pdf.backend.pdfium module
+=====================================
+
+.. automodule:: docx_from_pdf.backend.pdfium
+   :members:
+   :show-inheritance:
+   :undoc-members:

@@ -1,0 +1,238 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>docx_from_pdf.shape package &mdash; docx-from-pdf documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+
+
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=92734c54"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="docx_from_pdf.shape.Path module" href="docx_from_pdf.shape.Path.html" />
+    <link rel="prev" title="docx_from_pdf.page.RawPagePdfium module" href="docx_from_pdf.page.RawPagePdfium.html" />
+</head>
+
+<body class="wy-body-for-nav">
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+
+
+          <a href="../index.html" class="icon icon-home">
+            docx-from-pdf
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">docx_from_pdf</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="docx_from_pdf.html">docx_from_pdf package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="docx_from_pdf.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="docx_from_pdf.backend.html">docx_from_pdf.backend package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="docx_from_pdf.common.html">docx_from_pdf.common package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="docx_from_pdf.font.html">docx_from_pdf.font package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="docx_from_pdf.image.html">docx_from_pdf.image package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="docx_from_pdf.layout.html">docx_from_pdf.layout package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="docx_from_pdf.page.html">docx_from_pdf.page package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">docx_from_pdf.shape package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="docx_from_pdf.table.html">docx_from_pdf.table package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="docx_from_pdf.text.html">docx_from_pdf.text package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="docx_from_pdf.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">docx-from-pdf</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">docx_from_pdf</a></li>
+          <li class="breadcrumb-item"><a href="docx_from_pdf.html">docx_from_pdf package</a></li>
+      <li class="breadcrumb-item active">docx_from_pdf.shape package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/docx_from_pdf.shape.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+
+  <section id="module-docx_from_pdf.shape">
+<span id="docx-from-pdf-shape-package"></span><h1>docx_from_pdf.shape package<a class="headerlink" href="#module-docx_from_pdf.shape" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="docx_from_pdf.shape.Path.html">docx_from_pdf.shape.Path module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="docx_from_pdf.shape.Path.html#docx_from_pdf.shape.Path.Segment"><code class="docutils literal notranslate"><span class="pre">Segment</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="docx_from_pdf.shape.Path.html#docx_from_pdf.shape.Path.Segment.to_strokes"><code class="docutils literal notranslate"><span class="pre">Segment.to_strokes()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="docx_from_pdf.shape.Path.html#docx_from_pdf.shape.Path.L"><code class="docutils literal notranslate"><span class="pre">L</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="docx_from_pdf.shape.Path.html#docx_from_pdf.shape.Path.L.length"><code class="docutils literal notranslate"><span class="pre">L.length</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="docx_from_pdf.shape.Path.html#docx_from_pdf.shape.Path.L.to_strokes"><code class="docutils literal notranslate"><span class="pre">L.to_strokes()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="docx_from_pdf.shape.Path.html#docx_from_pdf.shape.Path.R"><code class="docutils literal notranslate"><span class="pre">R</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="docx_from_pdf.shape.Path.html#docx_from_pdf.shape.Path.R.to_strokes"><code class="docutils literal notranslate"><span class="pre">R.to_strokes()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="docx_from_pdf.shape.Path.html#docx_from_pdf.shape.Path.Q"><code class="docutils literal notranslate"><span class="pre">Q</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="docx_from_pdf.shape.Path.html#docx_from_pdf.shape.Path.C"><code class="docutils literal notranslate"><span class="pre">C</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="docx_from_pdf.shape.Path.html#docx_from_pdf.shape.Path.Segments"><code class="docutils literal notranslate"><span class="pre">Segments</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="docx_from_pdf.shape.Path.html#docx_from_pdf.shape.Path.Segments.points"><code class="docutils literal notranslate"><span class="pre">Segments.points</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="docx_from_pdf.shape.Path.html#docx_from_pdf.shape.Path.Segments.is_iso_oriented"><code class="docutils literal notranslate"><span class="pre">Segments.is_iso_oriented</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="docx_from_pdf.shape.Path.html#docx_from_pdf.shape.Path.Segments.area"><code class="docutils literal notranslate"><span class="pre">Segments.area</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="docx_from_pdf.shape.Path.html#docx_from_pdf.shape.Path.Segments.bbox"><code class="docutils literal notranslate"><span class="pre">Segments.bbox</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="docx_from_pdf.shape.Path.html#docx_from_pdf.shape.Path.Segments.to_strokes"><code class="docutils literal notranslate"><span class="pre">Segments.to_strokes()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="docx_from_pdf.shape.Path.html#docx_from_pdf.shape.Path.Segments.to_fill"><code class="docutils literal notranslate"><span class="pre">Segments.to_fill()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="docx_from_pdf.shape.Path.html#docx_from_pdf.shape.Path.Path"><code class="docutils literal notranslate"><span class="pre">Path</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="docx_from_pdf.shape.Path.html#docx_from_pdf.shape.Path.Path.is_stroke"><code class="docutils literal notranslate"><span class="pre">Path.is_stroke</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="docx_from_pdf.shape.Path.html#docx_from_pdf.shape.Path.Path.is_fill"><code class="docutils literal notranslate"><span class="pre">Path.is_fill</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="docx_from_pdf.shape.Path.html#docx_from_pdf.shape.Path.Path.is_iso_oriented"><code class="docutils literal notranslate"><span class="pre">Path.is_iso_oriented</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="docx_from_pdf.shape.Path.html#docx_from_pdf.shape.Path.Path.to_shapes"><code class="docutils literal notranslate"><span class="pre">Path.to_shapes()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="docx_from_pdf.shape.Path.html#docx_from_pdf.shape.Path.Path.plot"><code class="docutils literal notranslate"><span class="pre">Path.plot()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="docx_from_pdf.shape.Paths.html">docx_from_pdf.shape.Paths module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="docx_from_pdf.shape.Paths.html#docx_from_pdf.shape.Paths.Paths"><code class="docutils literal notranslate"><span class="pre">Paths</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="docx_from_pdf.shape.Paths.html#docx_from_pdf.shape.Paths.Paths.restore"><code class="docutils literal notranslate"><span class="pre">Paths.restore()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="docx_from_pdf.shape.Paths.html#docx_from_pdf.shape.Paths.Paths.bbox"><code class="docutils literal notranslate"><span class="pre">Paths.bbox</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="docx_from_pdf.shape.Paths.html#docx_from_pdf.shape.Paths.Paths.is_iso_oriented"><code class="docutils literal notranslate"><span class="pre">Paths.is_iso_oriented</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="docx_from_pdf.shape.Paths.html#docx_from_pdf.shape.Paths.Paths.plot"><code class="docutils literal notranslate"><span class="pre">Paths.plot()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="docx_from_pdf.shape.Paths.html#docx_from_pdf.shape.Paths.Paths.to_shapes"><code class="docutils literal notranslate"><span class="pre">Paths.to_shapes()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="docx_from_pdf.shape.Paths.html#docx_from_pdf.shape.Paths.Paths.to_shapes_and_images"><code class="docutils literal notranslate"><span class="pre">Paths.to_shapes_and_images()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="docx_from_pdf.shape.Shape.html">docx_from_pdf.shape.Shape module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="docx_from_pdf.shape.Shape.html#docx_from_pdf.shape.Shape.Shape"><code class="docutils literal notranslate"><span class="pre">Shape</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="docx_from_pdf.shape.Shape.html#docx_from_pdf.shape.Shape.Shape.type"><code class="docutils literal notranslate"><span class="pre">Shape.type</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="docx_from_pdf.shape.Shape.html#docx_from_pdf.shape.Shape.Shape.is_determined"><code class="docutils literal notranslate"><span class="pre">Shape.is_determined</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="docx_from_pdf.shape.Shape.html#docx_from_pdf.shape.Shape.Shape.equal_to_type"><code class="docutils literal notranslate"><span class="pre">Shape.equal_to_type()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="docx_from_pdf.shape.Shape.html#docx_from_pdf.shape.Shape.Shape.has_potential_type"><code class="docutils literal notranslate"><span class="pre">Shape.has_potential_type()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="docx_from_pdf.shape.Shape.html#docx_from_pdf.shape.Shape.Shape.default_type"><code class="docutils literal notranslate"><span class="pre">Shape.default_type</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="docx_from_pdf.shape.Shape.html#docx_from_pdf.shape.Shape.Shape.store"><code class="docutils literal notranslate"><span class="pre">Shape.store()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="docx_from_pdf.shape.Shape.html#docx_from_pdf.shape.Shape.Shape.parse_semantic_type"><code class="docutils literal notranslate"><span class="pre">Shape.parse_semantic_type()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="docx_from_pdf.shape.Shape.html#docx_from_pdf.shape.Shape.Shape.plot"><code class="docutils literal notranslate"><span class="pre">Shape.plot()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="docx_from_pdf.shape.Shape.html#docx_from_pdf.shape.Shape.Stroke"><code class="docutils literal notranslate"><span class="pre">Stroke</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="docx_from_pdf.shape.Shape.html#docx_from_pdf.shape.Shape.Stroke.horizontal"><code class="docutils literal notranslate"><span class="pre">Stroke.horizontal</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="docx_from_pdf.shape.Shape.html#docx_from_pdf.shape.Shape.Stroke.vertical"><code class="docutils literal notranslate"><span class="pre">Stroke.vertical</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="docx_from_pdf.shape.Shape.html#docx_from_pdf.shape.Shape.Stroke.x0"><code class="docutils literal notranslate"><span class="pre">Stroke.x0</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="docx_from_pdf.shape.Shape.html#docx_from_pdf.shape.Shape.Stroke.x1"><code class="docutils literal notranslate"><span class="pre">Stroke.x1</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="docx_from_pdf.shape.Shape.html#docx_from_pdf.shape.Shape.Stroke.y0"><code class="docutils literal notranslate"><span class="pre">Stroke.y0</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="docx_from_pdf.shape.Shape.html#docx_from_pdf.shape.Shape.Stroke.y1"><code class="docutils literal notranslate"><span class="pre">Stroke.y1</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="docx_from_pdf.shape.Shape.html#docx_from_pdf.shape.Shape.Stroke.update_bbox"><code class="docutils literal notranslate"><span class="pre">Stroke.update_bbox()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="docx_from_pdf.shape.Shape.html#docx_from_pdf.shape.Shape.Stroke.default_type"><code class="docutils literal notranslate"><span class="pre">Stroke.default_type</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="docx_from_pdf.shape.Shape.html#docx_from_pdf.shape.Shape.Stroke.store"><code class="docutils literal notranslate"><span class="pre">Stroke.store()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="docx_from_pdf.shape.Shape.html#docx_from_pdf.shape.Shape.Fill"><code class="docutils literal notranslate"><span class="pre">Fill</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="docx_from_pdf.shape.Shape.html#docx_from_pdf.shape.Shape.Fill.to_stroke"><code class="docutils literal notranslate"><span class="pre">Fill.to_stroke()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="docx_from_pdf.shape.Shape.html#docx_from_pdf.shape.Shape.Fill.default_type"><code class="docutils literal notranslate"><span class="pre">Fill.default_type</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="docx_from_pdf.shape.Shape.html#docx_from_pdf.shape.Shape.Hyperlink"><code class="docutils literal notranslate"><span class="pre">Hyperlink</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="docx_from_pdf.shape.Shape.html#docx_from_pdf.shape.Shape.Hyperlink.store"><code class="docutils literal notranslate"><span class="pre">Hyperlink.store()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="docx_from_pdf.shape.Shape.html#docx_from_pdf.shape.Shape.Hyperlink.default_type"><code class="docutils literal notranslate"><span class="pre">Hyperlink.default_type</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="docx_from_pdf.shape.Shape.html#docx_from_pdf.shape.Shape.Hyperlink.parse_semantic_type"><code class="docutils literal notranslate"><span class="pre">Hyperlink.parse_semantic_type()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="docx_from_pdf.shape.Shapes.html">docx_from_pdf.shape.Shapes module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="docx_from_pdf.shape.Shapes.html#docx_from_pdf.shape.Shapes.Shapes"><code class="docutils literal notranslate"><span class="pre">Shapes</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="docx_from_pdf.shape.Shapes.html#docx_from_pdf.shape.Shapes.Shapes.restore"><code class="docutils literal notranslate"><span class="pre">Shapes.restore()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="docx_from_pdf.shape.Shapes.html#docx_from_pdf.shape.Shapes.Shapes.strokes"><code class="docutils literal notranslate"><span class="pre">Shapes.strokes</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="docx_from_pdf.shape.Shapes.html#docx_from_pdf.shape.Shapes.Shapes.fillings"><code class="docutils literal notranslate"><span class="pre">Shapes.fillings</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="docx_from_pdf.shape.Shapes.html#docx_from_pdf.shape.Shapes.Shapes.hyperlinks"><code class="docutils literal notranslate"><span class="pre">Shapes.hyperlinks</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="docx_from_pdf.shape.Shapes.html#docx_from_pdf.shape.Shapes.Shapes.table_strokes"><code class="docutils literal notranslate"><span class="pre">Shapes.table_strokes</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="docx_from_pdf.shape.Shapes.html#docx_from_pdf.shape.Shapes.Shapes.table_fillings"><code class="docutils literal notranslate"><span class="pre">Shapes.table_fillings</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="docx_from_pdf.shape.Shapes.html#docx_from_pdf.shape.Shapes.Shapes.text_style_shapes"><code class="docutils literal notranslate"><span class="pre">Shapes.text_style_shapes</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="docx_from_pdf.shape.Shapes.html#docx_from_pdf.shape.Shapes.Shapes.clean_up"><code class="docutils literal notranslate"><span class="pre">Shapes.clean_up()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="docx_from_pdf.shape.Shapes.html#docx_from_pdf.shape.Shapes.Shapes.assign_to_tables"><code class="docutils literal notranslate"><span class="pre">Shapes.assign_to_tables()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="docx_from_pdf.shape.Shapes.html#docx_from_pdf.shape.Shapes.Shapes.plot"><code class="docutils literal notranslate"><span class="pre">Shapes.plot()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="docx_from_pdf.page.RawPagePdfium.html" class="btn btn-neutral float-left" title="docx_from_pdf.page.RawPagePdfium module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="docx_from_pdf.shape.Path.html" class="btn btn-neutral float-right" title="docx_from_pdf.shape.Path module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Michael Ellis.</p>
+  </div>
+
+
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+</body>
+</html>

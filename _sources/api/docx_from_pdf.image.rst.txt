@@ -1,0 +1,18 @@
+docx\_from\_pdf.image package
+=============================
+
+.. automodule:: docx_from_pdf.image
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   docx_from_pdf.image.Image
+   docx_from_pdf.image.ImageBlock
+   docx_from_pdf.image.ImageSpan
+   docx_from_pdf.image.ImagesExtractor

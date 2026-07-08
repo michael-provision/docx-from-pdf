@@ -1,7 +1,0 @@
-pdf2docx.shape.Path module
-==========================
-
-.. automodule:: pdf2docx.shape.Path
-   :members:
-   :undoc-members:
-   :show-inheritance:

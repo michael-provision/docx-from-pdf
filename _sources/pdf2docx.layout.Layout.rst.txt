@@ -1,7 +1,0 @@
-pdf2docx.layout.Layout module
-=============================
-
-.. automodule:: pdf2docx.layout.Layout
-   :members:
-   :undoc-members:
-   :show-inheritance:

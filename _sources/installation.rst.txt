@@ -1,47 +1,33 @@
 Installation
-====================
+============
 
-``pdf2docx`` can be installed from either Pypi or the source code.
+Install from PyPI:
 
+.. code-block:: bash
 
-Install from Pypi
--------------------
+   pip install docx-from-pdf
 
-Type the command below for a new installation::
+Upgrade from PyPI:
 
-  $ pip install pdf2docx
+.. code-block:: bash
 
-Or, upgrade this library with::
+   pip install --upgrade docx-from-pdf
 
-  $ pip install --upgrade pdf2docx
+Install from source:
 
+.. code-block:: bash
 
-Install from source code remotely
---------------------------------------
+   pip install git+https://github.com/michael-provision/docx-from-pdf.git
 
-Install ``pdf2docx`` directly from the ``master`` branch::
+Install local development dependencies:
 
-  $ pip install git+git://github.com/dothinking/pdf2docx.git@master --upgrade
+.. code-block:: bash
 
-.. note::
-  In this way, ``pdf2docx`` might have a higher version than Pypi, which is not released yet.
+   uv venv
+   uv pip install -r requirements.txt
 
+Uninstall:
 
-Install from source code locally
----------------------------------------
+.. code-block:: bash
 
-Clone or download `pdf2docx <https://github.com/dothinking/pdf2docx>`_, navigate to the root directory and run::
-
-  $ python setup.py install 
-
-Or, install it in developing mode::
-
-  $ python setup.py develop
-
-
-Uninstall
---------------
-
-::
-
-  $ pip uninstall pdf2docx
+   pip uninstall docx-from-pdf

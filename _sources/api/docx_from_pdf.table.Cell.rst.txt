@@ -1,0 +1,7 @@
+docx\_from\_pdf.table.Cell module
+=================================
+
+.. automodule:: docx_from_pdf.table.Cell
+   :members:
+   :show-inheritance:
+   :undoc-members:

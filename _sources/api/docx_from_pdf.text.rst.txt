@@ -1,0 +1,20 @@
+docx\_from\_pdf.text package
+============================
+
+.. automodule:: docx_from_pdf.text
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   docx_from_pdf.text.Char
+   docx_from_pdf.text.Line
+   docx_from_pdf.text.Lines
+   docx_from_pdf.text.Spans
+   docx_from_pdf.text.TextBlock
+   docx_from_pdf.text.TextSpan

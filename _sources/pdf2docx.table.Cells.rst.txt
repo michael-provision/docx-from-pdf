@@ -1,7 +1,0 @@
-pdf2docx.table.Cells module
-===========================
-
-.. automodule:: pdf2docx.table.Cells
-   :members:
-   :undoc-members:
-   :show-inheritance:

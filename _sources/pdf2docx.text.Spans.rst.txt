@@ -1,7 +1,0 @@
-pdf2docx.text.Spans module
-==========================
-
-.. automodule:: pdf2docx.text.Spans
-   :members:
-   :undoc-members:
-   :show-inheritance:

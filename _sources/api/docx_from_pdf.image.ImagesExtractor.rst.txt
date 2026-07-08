@@ -1,0 +1,7 @@
+docx\_from\_pdf.image.ImagesExtractor module
+============================================
+
+.. automodule:: docx_from_pdf.image.ImagesExtractor
+   :members:
+   :show-inheritance:
+   :undoc-members:

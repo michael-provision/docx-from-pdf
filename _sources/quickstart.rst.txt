@@ -1,13 +1,38 @@
 Quickstart
-=============
+==========
 
-``pdf2docx`` can be used as either a Python library or a CLI tool. In addition, it has a simple GUI.
+Convert a PDF from Python:
 
+.. code-block:: python
 
-.. toctree::
-   :maxdepth: 1
+   from docx_from_pdf import Converter
 
-   quickstart.convert
-   quickstart.table
-   quickstart.cli
-   quickstart.gui
+   converter = Converter("input.pdf")
+   try:
+       converter.convert("output.docx")
+   finally:
+       converter.close()
+
+Convert a PDF from the command line:
+
+.. code-block:: bash
+
+   docx-from-pdf convert input.pdf output.docx
+
+Convert a page range:
+
+.. code-block:: bash
+
+   docx-from-pdf convert input.pdf output.docx --start=0 --end=3
+
+Extract tables:
+
+.. code-block:: python
+
+   from docx_from_pdf import Converter
+
+   converter = Converter("input.pdf")
+   try:
+       tables = converter.extract_tables()
+   finally:
+       converter.close()

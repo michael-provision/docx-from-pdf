@@ -1,0 +1,218 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>docx_from_pdf.backend.pdfium module &mdash; docx-from-pdf documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+
+
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=92734c54"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="docx_from_pdf.common package" href="docx_from_pdf.common.html" />
+    <link rel="prev" title="docx_from_pdf.backend package" href="docx_from_pdf.backend.html" />
+</head>
+
+<body class="wy-body-for-nav">
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+
+
+          <a href="../index.html" class="icon icon-home">
+            docx-from-pdf
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">docx_from_pdf</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="docx_from_pdf.html">docx_from_pdf package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="docx_from_pdf.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="docx_from_pdf.backend.html">docx_from_pdf.backend package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="docx_from_pdf.common.html">docx_from_pdf.common package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="docx_from_pdf.font.html">docx_from_pdf.font package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="docx_from_pdf.image.html">docx_from_pdf.image package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="docx_from_pdf.layout.html">docx_from_pdf.layout package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="docx_from_pdf.page.html">docx_from_pdf.page package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="docx_from_pdf.shape.html">docx_from_pdf.shape package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="docx_from_pdf.table.html">docx_from_pdf.table package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="docx_from_pdf.text.html">docx_from_pdf.text package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="docx_from_pdf.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">docx-from-pdf</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">docx_from_pdf</a></li>
+          <li class="breadcrumb-item"><a href="docx_from_pdf.html">docx_from_pdf package</a></li>
+          <li class="breadcrumb-item"><a href="docx_from_pdf.backend.html">docx_from_pdf.backend package</a></li>
+      <li class="breadcrumb-item active">docx_from_pdf.backend.pdfium module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/docx_from_pdf.backend.pdfium.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+
+  <section id="module-docx_from_pdf.backend.pdfium">
+<span id="docx-from-pdf-backend-pdfium-module"></span><h1>docx_from_pdf.backend.pdfium module<a class="headerlink" href="#module-docx_from_pdf.backend.pdfium" title="Link to this heading"></a></h1>
+<p>PDFium-backed document and page primitives.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="docx_from_pdf.backend.pdfium.PdfiumDocument">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">docx_from_pdf.backend.pdfium.</span></span><span class="sig-name descname"><span class="pre">PdfiumDocument</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pdf_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stream</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#docx_from_pdf.backend.pdfium.PdfiumDocument" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Document wrapper exposing the subset of behavior used by the converter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pdf_file</strong> (<em>str</em><em> | </em><em>None</em>)</p></li>
+<li><p><strong>password</strong> (<em>str</em><em> | </em><em>None</em>)</p></li>
+<li><p><strong>stream</strong> (<em>bytes</em><em> | </em><em>None</em>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="docx_from_pdf.backend.pdfium.PdfiumDocument.authenticate">
+<span class="sig-name descname"><span class="pre">authenticate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">password</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#docx_from_pdf.backend.pdfium.PdfiumDocument.authenticate" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>password</strong> (<em>str</em>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="docx_from_pdf.backend.pdfium.PdfiumDocument.close">
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#docx_from_pdf.backend.pdfium.PdfiumDocument.close" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="docx_from_pdf.backend.pdfium.PdfiumPage">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">docx_from_pdf.backend.pdfium.</span></span><span class="sig-name descname"><span class="pre">PdfiumPage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">document</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">page_index</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#docx_from_pdf.backend.pdfium.PdfiumPage" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Page wrapper with extraction helpers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>document</strong> (<a class="reference internal" href="#docx_from_pdf.backend.pdfium.PdfiumDocument" title="docx_from_pdf.backend.pdfium.PdfiumDocument"><em>PdfiumDocument</em></a>)</p></li>
+<li><p><strong>page_index</strong> (<em>int</em>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="docx_from_pdf.backend.pdfium.PdfiumPage.close">
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#docx_from_pdf.backend.pdfium.PdfiumPage.close" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="docx_from_pdf.backend.pdfium.PdfiumPage.extract_text_blocks">
+<span class="sig-name descname"><span class="pre">extract_text_blocks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sort</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#docx_from_pdf.backend.pdfium.PdfiumPage.extract_text_blocks" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="docx_from_pdf.backend.pdfium.PdfiumPage.extract_images">
+<span class="sig-name descname"><span class="pre">extract_images</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">clip_image_res_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#docx_from_pdf.backend.pdfium.PdfiumPage.extract_images" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>clip_image_res_ratio</strong> (<em>float</em>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="docx_from_pdf.backend.pdfium.PdfiumPage.extract_paths">
+<span class="sig-name descname"><span class="pre">extract_paths</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#docx_from_pdf.backend.pdfium.PdfiumPage.extract_paths" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="docx_from_pdf.backend.pdfium.PdfiumPage.render_clip_to_png">
+<span class="sig-name descname"><span class="pre">render_clip_to_png</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bbox</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zoom</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rm_text</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rm_image</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#docx_from_pdf.backend.pdfium.PdfiumPage.render_clip_to_png" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>zoom</strong> (<em>float</em>)</p></li>
+<li><p><strong>rm_text</strong> (<em>bool</em>)</p></li>
+<li><p><strong>rm_image</strong> (<em>bool</em>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="docx_from_pdf.backend.html" class="btn btn-neutral float-left" title="docx_from_pdf.backend package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="docx_from_pdf.common.html" class="btn btn-neutral float-right" title="docx_from_pdf.common package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Michael Ellis.</p>
+  </div>
+
+
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+</body>
+</html>

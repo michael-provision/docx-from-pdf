@@ -1,0 +1,15 @@
+docx\_from\_pdf.font package
+============================
+
+.. automodule:: docx_from_pdf.font
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   docx_from_pdf.font.Fonts

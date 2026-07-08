@@ -1,0 +1,7 @@
+docx\_from\_pdf.text.Spans module
+=================================
+
+.. automodule:: docx_from_pdf.text.Spans
+   :members:
+   :show-inheritance:
+   :undoc-members:

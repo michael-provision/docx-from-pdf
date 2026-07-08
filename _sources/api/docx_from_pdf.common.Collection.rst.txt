@@ -1,0 +1,7 @@
+docx\_from\_pdf.common.Collection module
+========================================
+
+.. automodule:: docx_from_pdf.common.Collection
+   :members:
+   :show-inheritance:
+   :undoc-members:

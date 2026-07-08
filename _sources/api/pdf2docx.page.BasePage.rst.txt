@@ -1,7 +1,0 @@
-pdf2docx.page.BasePage module
-=============================
-
-.. automodule:: pdf2docx.page.BasePage
-   :members:
-   :undoc-members:
-   :show-inheritance:

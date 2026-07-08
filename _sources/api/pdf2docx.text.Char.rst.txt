@@ -1,7 +1,0 @@
-pdf2docx.text.Char module
-=========================
-
-.. automodule:: pdf2docx.text.Char
-   :members:
-   :undoc-members:
-   :show-inheritance:

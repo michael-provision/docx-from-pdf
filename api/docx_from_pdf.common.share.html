@@ -1,0 +1,470 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>docx_from_pdf.common.share module &mdash; docx-from-pdf documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+
+
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=92734c54"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="docx_from_pdf.font package" href="docx_from_pdf.font.html" />
+    <link rel="prev" title="docx_from_pdf.common.geometry module" href="docx_from_pdf.common.geometry.html" />
+</head>
+
+<body class="wy-body-for-nav">
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+
+
+          <a href="../index.html" class="icon icon-home">
+            docx-from-pdf
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">docx_from_pdf</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="docx_from_pdf.html">docx_from_pdf package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="docx_from_pdf.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="docx_from_pdf.backend.html">docx_from_pdf.backend package</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="docx_from_pdf.common.html">docx_from_pdf.common package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="docx_from_pdf.font.html">docx_from_pdf.font package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="docx_from_pdf.image.html">docx_from_pdf.image package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="docx_from_pdf.layout.html">docx_from_pdf.layout package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="docx_from_pdf.page.html">docx_from_pdf.page package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="docx_from_pdf.shape.html">docx_from_pdf.shape package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="docx_from_pdf.table.html">docx_from_pdf.table package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="docx_from_pdf.text.html">docx_from_pdf.text package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="docx_from_pdf.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">docx-from-pdf</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">docx_from_pdf</a></li>
+          <li class="breadcrumb-item"><a href="docx_from_pdf.html">docx_from_pdf package</a></li>
+          <li class="breadcrumb-item"><a href="docx_from_pdf.common.html">docx_from_pdf.common package</a></li>
+      <li class="breadcrumb-item active">docx_from_pdf.common.share module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/docx_from_pdf.common.share.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+
+  <section id="module-docx_from_pdf.common.share">
+<span id="docx-from-pdf-common-share-module"></span><h1>docx_from_pdf.common.share module<a class="headerlink" href="#module-docx_from_pdf.common.share" title="Link to this heading"></a></h1>
+<p>Common methods.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="docx_from_pdf.common.share.BlockType">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">docx_from_pdf.common.share.</span></span><span class="sig-name descname"><span class="pre">BlockType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#docx_from_pdf.common.share.BlockType" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<p>Block types.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="docx_from_pdf.common.share.BlockType.UNDEFINED">
+<span class="sig-name descname"><span class="pre">UNDEFINED</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">-1</span></span><a class="headerlink" href="#docx_from_pdf.common.share.BlockType.UNDEFINED" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="docx_from_pdf.common.share.BlockType.TEXT">
+<span class="sig-name descname"><span class="pre">TEXT</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></span><a class="headerlink" href="#docx_from_pdf.common.share.BlockType.TEXT" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="docx_from_pdf.common.share.BlockType.IMAGE">
+<span class="sig-name descname"><span class="pre">IMAGE</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></span><a class="headerlink" href="#docx_from_pdf.common.share.BlockType.IMAGE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="docx_from_pdf.common.share.BlockType.LATTICE_TABLE">
+<span class="sig-name descname"><span class="pre">LATTICE_TABLE</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></span><a class="headerlink" href="#docx_from_pdf.common.share.BlockType.LATTICE_TABLE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="docx_from_pdf.common.share.BlockType.STREAM_TABLE">
+<span class="sig-name descname"><span class="pre">STREAM_TABLE</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></span><a class="headerlink" href="#docx_from_pdf.common.share.BlockType.STREAM_TABLE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="docx_from_pdf.common.share.BlockType.FLOAT_IMAGE">
+<span class="sig-name descname"><span class="pre">FLOAT_IMAGE</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">4</span></span><a class="headerlink" href="#docx_from_pdf.common.share.BlockType.FLOAT_IMAGE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="docx_from_pdf.common.share.RectType">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">docx_from_pdf.common.share.</span></span><span class="sig-name descname"><span class="pre">RectType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#docx_from_pdf.common.share.RectType" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<p>Shape type in context.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="docx_from_pdf.common.share.RectType.HIGHLIGHT">
+<span class="sig-name descname"><span class="pre">HIGHLIGHT</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></span><a class="headerlink" href="#docx_from_pdf.common.share.RectType.HIGHLIGHT" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="docx_from_pdf.common.share.RectType.UNDERLINE">
+<span class="sig-name descname"><span class="pre">UNDERLINE</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></span><a class="headerlink" href="#docx_from_pdf.common.share.RectType.UNDERLINE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="docx_from_pdf.common.share.RectType.STRIKE">
+<span class="sig-name descname"><span class="pre">STRIKE</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">4</span></span><a class="headerlink" href="#docx_from_pdf.common.share.RectType.STRIKE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="docx_from_pdf.common.share.RectType.HYPERLINK">
+<span class="sig-name descname"><span class="pre">HYPERLINK</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">8</span></span><a class="headerlink" href="#docx_from_pdf.common.share.RectType.HYPERLINK" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="docx_from_pdf.common.share.RectType.BORDER">
+<span class="sig-name descname"><span class="pre">BORDER</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">16</span></span><a class="headerlink" href="#docx_from_pdf.common.share.RectType.BORDER" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="docx_from_pdf.common.share.RectType.SHADING">
+<span class="sig-name descname"><span class="pre">SHADING</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">32</span></span><a class="headerlink" href="#docx_from_pdf.common.share.RectType.SHADING" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="docx_from_pdf.common.share.TextDirection">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">docx_from_pdf.common.share.</span></span><span class="sig-name descname"><span class="pre">TextDirection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#docx_from_pdf.common.share.TextDirection" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<p>Text direction.
+* LEFT_RIGHT: from left to right within a line, and lines go from top to bottom
+* BOTTOM_TOP: from bottom to top within a line, and lines go from left to right
+* MIX       : a mixture if LEFT_RIGHT and BOTTOM_TOP
+* IGNORE    : neither LEFT_RIGHT nor BOTTOM_TOP</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="docx_from_pdf.common.share.TextDirection.IGNORE">
+<span class="sig-name descname"><span class="pre">IGNORE</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">-1</span></span><a class="headerlink" href="#docx_from_pdf.common.share.TextDirection.IGNORE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="docx_from_pdf.common.share.TextDirection.LEFT_RIGHT">
+<span class="sig-name descname"><span class="pre">LEFT_RIGHT</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></span><a class="headerlink" href="#docx_from_pdf.common.share.TextDirection.LEFT_RIGHT" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="docx_from_pdf.common.share.TextDirection.BOTTOM_TOP">
+<span class="sig-name descname"><span class="pre">BOTTOM_TOP</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></span><a class="headerlink" href="#docx_from_pdf.common.share.TextDirection.BOTTOM_TOP" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="docx_from_pdf.common.share.TextDirection.MIX">
+<span class="sig-name descname"><span class="pre">MIX</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></span><a class="headerlink" href="#docx_from_pdf.common.share.TextDirection.MIX" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="docx_from_pdf.common.share.TextAlignment">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">docx_from_pdf.common.share.</span></span><span class="sig-name descname"><span class="pre">TextAlignment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#docx_from_pdf.common.share.TextAlignment" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<p>Text alignment.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The difference between <code class="docutils literal notranslate"><span class="pre">NONE</span></code> and <code class="docutils literal notranslate"><span class="pre">UNKNOWN</span></code>:</p>
+<ul class="simple">
+<li><p>NONE: none of left/right/center align -&gt; need TAB stop</p></li>
+<li><p>UNKNOWN: can’t decide, e.g. single line only</p></li>
+</ul>
+</div>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="docx_from_pdf.common.share.TextAlignment.NONE">
+<span class="sig-name descname"><span class="pre">NONE</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">-1</span></span><a class="headerlink" href="#docx_from_pdf.common.share.TextAlignment.NONE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="docx_from_pdf.common.share.TextAlignment.UNKNOWN">
+<span class="sig-name descname"><span class="pre">UNKNOWN</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></span><a class="headerlink" href="#docx_from_pdf.common.share.TextAlignment.UNKNOWN" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="docx_from_pdf.common.share.TextAlignment.LEFT">
+<span class="sig-name descname"><span class="pre">LEFT</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></span><a class="headerlink" href="#docx_from_pdf.common.share.TextAlignment.LEFT" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="docx_from_pdf.common.share.TextAlignment.CENTER">
+<span class="sig-name descname"><span class="pre">CENTER</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></span><a class="headerlink" href="#docx_from_pdf.common.share.TextAlignment.CENTER" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="docx_from_pdf.common.share.TextAlignment.RIGHT">
+<span class="sig-name descname"><span class="pre">RIGHT</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></span><a class="headerlink" href="#docx_from_pdf.common.share.TextAlignment.RIGHT" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="docx_from_pdf.common.share.TextAlignment.JUSTIFY">
+<span class="sig-name descname"><span class="pre">JUSTIFY</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">4</span></span><a class="headerlink" href="#docx_from_pdf.common.share.TextAlignment.JUSTIFY" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="docx_from_pdf.common.share.IText">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">docx_from_pdf.common.share.</span></span><span class="sig-name descname"><span class="pre">IText</span></span><a class="headerlink" href="#docx_from_pdf.common.share.IText" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Text related interface considering text direction.</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="docx_from_pdf.common.share.IText.text_direction">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">text_direction</span></span><a class="headerlink" href="#docx_from_pdf.common.share.IText.text_direction" title="Link to this definition"></a></dt>
+<dd><p>Text direction is from left to right by default.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="docx_from_pdf.common.share.IText.is_horizontal_text">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">is_horizontal_text</span></span><a class="headerlink" href="#docx_from_pdf.common.share.IText.is_horizontal_text" title="Link to this definition"></a></dt>
+<dd><p>Check whether text direction is from left to right.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="docx_from_pdf.common.share.IText.is_vertical_text">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">is_vertical_text</span></span><a class="headerlink" href="#docx_from_pdf.common.share.IText.is_vertical_text" title="Link to this definition"></a></dt>
+<dd><p>Check whether text direction is from bottom to top.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="docx_from_pdf.common.share.IText.is_mix_text">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">is_mix_text</span></span><a class="headerlink" href="#docx_from_pdf.common.share.IText.is_mix_text" title="Link to this definition"></a></dt>
+<dd><p>Check whether text direction is either from left to
+right or from bottom to top.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="docx_from_pdf.common.share.lazyproperty">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">docx_from_pdf.common.share.</span></span><span class="sig-name descname"><span class="pre">lazyproperty</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#docx_from_pdf.common.share.lazyproperty" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Calculate only once and cache property value.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="docx_from_pdf.common.share.is_number">
+<span class="sig-prename descclassname"><span class="pre">docx_from_pdf.common.share.</span></span><span class="sig-name descname"><span class="pre">is_number</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">str_number</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#docx_from_pdf.common.share.is_number" title="Link to this definition"></a></dt>
+<dd><p>Whether can be converted to a float.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="docx_from_pdf.common.share.flatten">
+<span class="sig-prename descclassname"><span class="pre">docx_from_pdf.common.share.</span></span><span class="sig-name descname"><span class="pre">flatten</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">items</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">klass</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#docx_from_pdf.common.share.flatten" title="Link to this definition"></a></dt>
+<dd><p>Yield items from any nested iterable.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="docx_from_pdf.common.share.lower_round">
+<span class="sig-prename descclassname"><span class="pre">docx_from_pdf.common.share.</span></span><span class="sig-name descname"><span class="pre">lower_round</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ndigits</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#docx_from_pdf.common.share.lower_round" title="Link to this definition"></a></dt>
+<dd><p>Round number to lower bound with specified digits, e.g. lower_round(1.26, 1)=1.2</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>number</strong> (<em>float</em>)</p></li>
+<li><p><strong>ndigits</strong> (<em>int</em>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="docx_from_pdf.common.share.decode">
+<span class="sig-prename descclassname"><span class="pre">docx_from_pdf.common.share.</span></span><span class="sig-name descname"><span class="pre">decode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#docx_from_pdf.common.share.decode" title="Link to this definition"></a></dt>
+<dd><p>Try to decode a unicode string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>s</strong> (<em>str</em>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="docx_from_pdf.common.share.rgb_component_from_name">
+<span class="sig-prename descclassname"><span class="pre">docx_from_pdf.common.share.</span></span><span class="sig-name descname"><span class="pre">rgb_component_from_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#docx_from_pdf.common.share.rgb_component_from_name" title="Link to this definition"></a></dt>
+<dd><p>Get a named RGB color or a random color.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="docx_from_pdf.common.share.rgb_component">
+<span class="sig-prename descclassname"><span class="pre">docx_from_pdf.common.share.</span></span><span class="sig-name descname"><span class="pre">rgb_component</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">srgb</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#docx_from_pdf.common.share.rgb_component" title="Link to this definition"></a></dt>
+<dd><p>srgb value to R,G,B components, e.g. 16711680 -&gt; (255, 0, 0).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>srgb</strong> (<em>int</em>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="docx_from_pdf.common.share.rgb_to_value">
+<span class="sig-prename descclassname"><span class="pre">docx_from_pdf.common.share.</span></span><span class="sig-name descname"><span class="pre">rgb_to_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rgb</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#docx_from_pdf.common.share.rgb_to_value" title="Link to this definition"></a></dt>
+<dd><p>RGB components to decimal value, e.g. (1,0,0) -&gt; 16711680.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>rgb</strong> (<em>list</em>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="docx_from_pdf.common.share.cmyk_to_rgb">
+<span class="sig-prename descclassname"><span class="pre">docx_from_pdf.common.share.</span></span><span class="sig-name descname"><span class="pre">cmyk_to_rgb</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmyk_scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#docx_from_pdf.common.share.cmyk_to_rgb" title="Link to this definition"></a></dt>
+<dd><p>CMYK components to GRB value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>c</strong> (<em>float</em>)</p></li>
+<li><p><strong>m</strong> (<em>float</em>)</p></li>
+<li><p><strong>y</strong> (<em>float</em>)</p></li>
+<li><p><strong>k</strong> (<em>float</em>)</p></li>
+<li><p><strong>cmyk_scale</strong> (<em>float</em>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="docx_from_pdf.common.share.rgb_value">
+<span class="sig-prename descclassname"><span class="pre">docx_from_pdf.common.share.</span></span><span class="sig-name descname"><span class="pre">rgb_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">components</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#docx_from_pdf.common.share.rgb_value" title="Link to this definition"></a></dt>
+<dd><p>Gray/RGB/CMYK mode components to color value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>components</strong> (<em>list</em>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="docx_from_pdf.common.share.new_page">
+<span class="sig-prename descclassname"><span class="pre">docx_from_pdf.common.share.</span></span><span class="sig-name descname"><span class="pre">new_page</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#docx_from_pdf.common.share.new_page" title="Link to this definition"></a></dt>
+<dd><p>Insert a new page with given title.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>PDF document</em>) – pdf document object.</p></li>
+<li><p><strong>width</strong> (<em>float</em>) – Page width.</p></li>
+<li><p><strong>height</strong> (<em>float</em>) – Page height.</p></li>
+<li><p><strong>title</strong> (<em>str</em>) – Page title shown in page.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="docx_from_pdf.common.share.debug_plot">
+<span class="sig-prename descclassname"><span class="pre">docx_from_pdf.common.share.</span></span><span class="sig-name descname"><span class="pre">debug_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">title</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#docx_from_pdf.common.share.debug_plot" title="Link to this definition"></a></dt>
+<dd><p>Plot the returned objects of inner function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>title</strong> (<em>str</em>) – Page title.</p></li>
+<li><p><strong>show</strong> (<em>bool</em><em>, </em><em>optional</em>) – Don’t plot if show==False. Default to True.</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<dl class="simple">
+<dt>Prerequisite of the inner function:</dt><dd><ul class="simple">
+<li><p>the first argument is a <a class="reference internal" href="docx_from_pdf.page.BasePage.html#module-docx_from_pdf.page.BasePage" title="docx_from_pdf.page.BasePage"><code class="xref py py-class docutils literal notranslate"><span class="pre">BasePage</span></code></a> instance.</p></li>
+<li><p>the last argument is configuration parameters in <code class="docutils literal notranslate"><span class="pre">dict</span></code> type.</p></li>
+</ul>
+</dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="docx_from_pdf.common.share.is_list_item">
+<span class="sig-prename descclassname"><span class="pre">docx_from_pdf.common.share.</span></span><span class="sig-name descname"><span class="pre">is_list_item</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bullets</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numbers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#docx_from_pdf.common.share.is_list_item" title="Link to this definition"></a></dt>
+<dd><p>Returns <cite>text</cite> if <cite>bullets</cite> is true and <cite>text</cite> is a bullet character, or
+<cite>numbers</cite> is true and <cite>text</cite> is not empty and consists entirely of digits
+0-9. Otherwise returns None.</p>
+<p>If <cite>bullets</cite> is True we use an internal list of bullet characters;
+otherwise it should be a list of integer Unicode values.</p>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="docx_from_pdf.common.geometry.html" class="btn btn-neutral float-left" title="docx_from_pdf.common.geometry module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="docx_from_pdf.font.html" class="btn btn-neutral float-right" title="docx_from_pdf.font package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Michael Ellis.</p>
+  </div>
+
+
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,7 @@
+docx\_from\_pdf.page.RawPagePdfium module
+=========================================
+
+.. automodule:: docx_from_pdf.page.RawPagePdfium
+   :members:
+   :show-inheritance:
+   :undoc-members:

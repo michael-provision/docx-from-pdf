@@ -1,7 +1,0 @@
-pdf2docx.converter module
-=========================
-
-.. automodule:: pdf2docx.converter
-   :members:
-   :undoc-members:
-   :show-inheritance:

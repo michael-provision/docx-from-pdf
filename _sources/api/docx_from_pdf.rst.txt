@@ -1,0 +1,32 @@
+docx\_from\_pdf package
+=======================
+
+.. automodule:: docx_from_pdf
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   docx_from_pdf.backend
+   docx_from_pdf.common
+   docx_from_pdf.font
+   docx_from_pdf.image
+   docx_from_pdf.layout
+   docx_from_pdf.page
+   docx_from_pdf.shape
+   docx_from_pdf.table
+   docx_from_pdf.text
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   docx_from_pdf.converter
+   docx_from_pdf.main

@@ -1,0 +1,310 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>docx_from_pdf.table.TableStructure module &mdash; docx-from-pdf documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+
+
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=92734c54"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="docx_from_pdf.table.TablesConstructor module" href="docx_from_pdf.table.TablesConstructor.html" />
+    <link rel="prev" title="docx_from_pdf.table.TableBlock module" href="docx_from_pdf.table.TableBlock.html" />
+</head>
+
+<body class="wy-body-for-nav">
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+
+
+          <a href="../index.html" class="icon icon-home">
+            docx-from-pdf
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">docx_from_pdf</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="docx_from_pdf.html">docx_from_pdf package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="docx_from_pdf.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="docx_from_pdf.backend.html">docx_from_pdf.backend package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="docx_from_pdf.common.html">docx_from_pdf.common package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="docx_from_pdf.font.html">docx_from_pdf.font package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="docx_from_pdf.image.html">docx_from_pdf.image package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="docx_from_pdf.layout.html">docx_from_pdf.layout package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="docx_from_pdf.page.html">docx_from_pdf.page package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="docx_from_pdf.shape.html">docx_from_pdf.shape package</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="docx_from_pdf.table.html">docx_from_pdf.table package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="docx_from_pdf.text.html">docx_from_pdf.text package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="docx_from_pdf.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">docx-from-pdf</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">docx_from_pdf</a></li>
+          <li class="breadcrumb-item"><a href="docx_from_pdf.html">docx_from_pdf package</a></li>
+          <li class="breadcrumb-item"><a href="docx_from_pdf.table.html">docx_from_pdf.table package</a></li>
+      <li class="breadcrumb-item active">docx_from_pdf.table.TableStructure module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/docx_from_pdf.table.TableStructure.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+
+  <section id="module-docx_from_pdf.table.TableStructure">
+<span id="docx-from-pdf-table-tablestructure-module"></span><h1>docx_from_pdf.table.TableStructure module<a class="headerlink" href="#module-docx_from_pdf.table.TableStructure" title="Link to this heading"></a></h1>
+<p>Parsing table structure based on strokes and fills.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="docx_from_pdf.table.TableStructure.CellStructure">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">docx_from_pdf.table.TableStructure.</span></span><span class="sig-name descname"><span class="pre">CellStructure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bbox</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#docx_from_pdf.table.TableStructure.CellStructure" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Cell structure with properties bbox, borders, shading, etc.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>bbox</strong> (<em>list</em>)</p>
+</dd>
+</dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="docx_from_pdf.table.TableStructure.CellStructure.is_merged">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">is_merged</span></span><a class="headerlink" href="#docx_from_pdf.table.TableStructure.CellStructure.is_merged" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="docx_from_pdf.table.TableStructure.CellStructure.is_merging">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">is_merging</span></span><a class="headerlink" href="#docx_from_pdf.table.TableStructure.CellStructure.is_merging" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="docx_from_pdf.table.TableStructure.CellStructure.parse_borders">
+<span class="sig-name descname"><span class="pre">parse_borders</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">h_strokes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_strokes</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#docx_from_pdf.table.TableStructure.CellStructure.parse_borders" title="Link to this definition"></a></dt>
+<dd><p>Parse cell borders from strokes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>h_strokes</strong> (<em>dict</em>) – A dict of y-coordinate v.s. horizontal strokes, e.g.
+<code class="docutils literal notranslate"><span class="pre">{y0:</span> <span class="pre">[h1,h2,..],</span> <span class="pre">y1:</span> <span class="pre">[h3,h4,...]}</span></code></p></li>
+<li><p><strong>v_strokes</strong> (<em>dict</em>) – A dict of x-coordinates v.s. vertical strokes, e.g.
+<code class="docutils literal notranslate"><span class="pre">{x0:</span> <span class="pre">[v1,v2,..],</span> <span class="pre">x1:</span> <span class="pre">[v3,v4,...]}</span></code></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="docx_from_pdf.table.TableStructure.CellStructure.parse_shading">
+<span class="sig-name descname"><span class="pre">parse_shading</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fills</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#docx_from_pdf.table.TableStructure.CellStructure.parse_shading" title="Link to this definition"></a></dt>
+<dd><p>Parse cell shading from fills.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>fills</strong> (<a class="reference internal" href="docx_from_pdf.shape.Shapes.html#docx_from_pdf.shape.Shapes.Shapes" title="docx_from_pdf.shape.Shapes.Shapes"><em>Shapes</em></a>) – Fill shapes representing cell shading.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="docx_from_pdf.table.TableStructure.TableStructure">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">docx_from_pdf.table.TableStructure.</span></span><span class="sig-name descname"><span class="pre">TableStructure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">strokes</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">settings</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#docx_from_pdf.table.TableStructure.TableStructure" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Parsing table structure based on strokes/fills.</p>
+<p>Steps to parse table structure:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="n">x0</span>        <span class="n">x1</span>       <span class="n">x2</span>        <span class="n">x3</span>
+<span class="n">y0</span>  <span class="o">+----</span><span class="n">h1</span><span class="o">---+---</span><span class="n">h2</span><span class="o">---+----</span><span class="n">h3</span><span class="o">---+</span>
+    <span class="o">|</span>         <span class="o">|</span>        <span class="o">|</span>         <span class="o">|</span>
+    <span class="n">v1</span>        <span class="n">v2</span>       <span class="n">v3</span>        <span class="n">v4</span>
+    <span class="o">|</span>         <span class="o">|</span>        <span class="o">|</span>         <span class="o">|</span>
+<span class="n">y1</span>  <span class="o">+----</span><span class="n">h4</span><span class="o">------------+----</span><span class="n">h5</span><span class="o">---+</span>
+    <span class="o">|</span>                  <span class="o">|</span>         <span class="o">|</span>
+    <span class="n">v5</span>                 <span class="n">v6</span>        <span class="n">v7</span>
+    <span class="o">|</span>                  <span class="o">|</span>         <span class="o">|</span>
+<span class="n">y2</span>  <span class="o">+--------</span><span class="n">h6</span><span class="o">--------+----</span><span class="n">h7</span><span class="o">---+</span>
+</pre></div>
+</div>
+<ol class="arabic">
+<li><p>Group horizontal and vertical strokes:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">h_strokes</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">y0</span> <span class="p">:</span> <span class="p">[</span><span class="n">h1</span><span class="p">,</span> <span class="n">h2</span><span class="p">,</span> <span class="n">h3</span><span class="p">],</span>
+    <span class="n">y1</span> <span class="p">:</span> <span class="p">[</span><span class="n">h4</span><span class="p">,</span> <span class="n">h5</span><span class="p">],</span>
+    <span class="n">y2</span> <span class="p">:</span> <span class="p">[</span><span class="n">h6</span><span class="p">,</span> <span class="n">h7</span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<p>These <code class="docutils literal notranslate"><span class="pre">[x0,</span> <span class="pre">x1,</span> <span class="pre">x2,</span> <span class="pre">x3]</span> <span class="pre">x</span> <span class="pre">[y0,</span> <span class="pre">y1,</span> <span class="pre">y2]</span></code> forms table lattices, i.e. 2 rows x 3 cols.</p>
+<ol class="arabic simple" start="2">
+<li><p>Check merged cells in row/column direction.</p></li>
+</ol>
+<p>Let horizontal line <code class="docutils literal notranslate"><span class="pre">y=(y0+y1)/2</span></code> cross through table, it gets intersection with
+<code class="docutils literal notranslate"><span class="pre">v1</span></code>, <code class="docutils literal notranslate"><span class="pre">v2</span></code> and <code class="docutils literal notranslate"><span class="pre">v3</span></code>, indicating no merging exists for cells in the first row.</p>
+<p>When <code class="docutils literal notranslate"><span class="pre">y=(y1+y2)/2</span></code>, it has no intersection with vertical strokes at <code class="docutils literal notranslate"><span class="pre">x=x1</span></code>, i.e.
+merging status is <code class="docutils literal notranslate"><span class="pre">[1,</span> <span class="pre">0,</span> <span class="pre">1]</span></code>, indicating <code class="docutils literal notranslate"><span class="pre">Cell(2,2)</span></code> is merged into <code class="docutils literal notranslate"><span class="pre">Cell(2,1)</span></code>.</p>
+<p>So, the final merging status in this case:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span>
+    <span class="p">[(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)],</span>
+    <span class="p">[(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)]</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>strokes</strong> (<a class="reference internal" href="docx_from_pdf.shape.Shapes.html#docx_from_pdf.shape.Shapes.Shapes" title="docx_from_pdf.shape.Shapes.Shapes"><em>Shapes</em></a>)</p>
+</dd>
+</dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="docx_from_pdf.table.TableStructure.TableStructure.bbox">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">bbox</span></span><a class="headerlink" href="#docx_from_pdf.table.TableStructure.TableStructure.bbox" title="Link to this definition"></a></dt>
+<dd><p>Table boundary bbox.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bbox of table.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="docx_from_pdf.common.geometry.html#docx_from_pdf.common.geometry.Rect" title="docx_from_pdf.common.geometry.Rect">Rect</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="docx_from_pdf.table.TableStructure.TableStructure.num_rows">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">num_rows</span></span><a class="headerlink" href="#docx_from_pdf.table.TableStructure.TableStructure.num_rows" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="docx_from_pdf.table.TableStructure.TableStructure.num_cols">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">num_cols</span></span><a class="headerlink" href="#docx_from_pdf.table.TableStructure.TableStructure.num_cols" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="docx_from_pdf.table.TableStructure.TableStructure.y_rows">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">y_rows</span></span><a class="headerlink" href="#docx_from_pdf.table.TableStructure.TableStructure.y_rows" title="Link to this definition"></a></dt>
+<dd><p>Top y-coordinate <code class="docutils literal notranslate"><span class="pre">y0</span></code> of each row.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>y-coordinates of each row.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="docx_from_pdf.table.TableStructure.TableStructure.x_cols">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">x_cols</span></span><a class="headerlink" href="#docx_from_pdf.table.TableStructure.TableStructure.x_cols" title="Link to this definition"></a></dt>
+<dd><p>Left x-coordinate <code class="docutils literal notranslate"><span class="pre">x0</span></code> of each column.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>x-coordinates of each column.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="docx_from_pdf.table.TableStructure.TableStructure.parse">
+<span class="sig-name descname"><span class="pre">parse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fills</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#docx_from_pdf.table.TableStructure.TableStructure.parse" title="Link to this definition"></a></dt>
+<dd><p>Parse table structure.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>fills</strong> (<a class="reference internal" href="docx_from_pdf.shape.Shapes.html#docx_from_pdf.shape.Shapes.Shapes" title="docx_from_pdf.shape.Shapes.Shapes"><em>Shapes</em></a>) – Fill shapes representing cell shading.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="docx_from_pdf.table.TableStructure.TableStructure.to_table_block">
+<span class="sig-name descname"><span class="pre">to_table_block</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#docx_from_pdf.table.TableStructure.TableStructure.to_table_block" title="Link to this definition"></a></dt>
+<dd><p>Convert parsed table structure to <code class="docutils literal notranslate"><span class="pre">TableBlock</span></code> instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Parsed table block instance.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="docx_from_pdf.table.TableBlock.html#docx_from_pdf.table.TableBlock.TableBlock" title="docx_from_pdf.table.TableBlock.TableBlock">TableBlock</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="docx_from_pdf.table.TableBlock.html" class="btn btn-neutral float-left" title="docx_from_pdf.table.TableBlock module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="docx_from_pdf.table.TablesConstructor.html" class="btn btn-neutral float-right" title="docx_from_pdf.table.TablesConstructor module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Michael Ellis.</p>
+  </div>
+
+
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+</body>
+</html>

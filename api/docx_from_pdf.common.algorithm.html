@@ -1,0 +1,286 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>docx_from_pdf.common.algorithm module &mdash; docx-from-pdf documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+
+
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=92734c54"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="docx_from_pdf.common.constants module" href="docx_from_pdf.common.constants.html" />
+    <link rel="prev" title="docx_from_pdf.common.Element module" href="docx_from_pdf.common.Element.html" />
+</head>
+
+<body class="wy-body-for-nav">
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+
+
+          <a href="../index.html" class="icon icon-home">
+            docx-from-pdf
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">docx_from_pdf</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="docx_from_pdf.html">docx_from_pdf package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="docx_from_pdf.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="docx_from_pdf.backend.html">docx_from_pdf.backend package</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="docx_from_pdf.common.html">docx_from_pdf.common package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="docx_from_pdf.font.html">docx_from_pdf.font package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="docx_from_pdf.image.html">docx_from_pdf.image package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="docx_from_pdf.layout.html">docx_from_pdf.layout package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="docx_from_pdf.page.html">docx_from_pdf.page package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="docx_from_pdf.shape.html">docx_from_pdf.shape package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="docx_from_pdf.table.html">docx_from_pdf.table package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="docx_from_pdf.text.html">docx_from_pdf.text package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="docx_from_pdf.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">docx-from-pdf</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">docx_from_pdf</a></li>
+          <li class="breadcrumb-item"><a href="docx_from_pdf.html">docx_from_pdf package</a></li>
+          <li class="breadcrumb-item"><a href="docx_from_pdf.common.html">docx_from_pdf.common package</a></li>
+      <li class="breadcrumb-item active">docx_from_pdf.common.algorithm module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/docx_from_pdf.common.algorithm.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+
+  <section id="module-docx_from_pdf.common.algorithm">
+<span id="docx-from-pdf-common-algorithm-module"></span><h1>docx_from_pdf.common.algorithm module<a class="headerlink" href="#module-docx_from_pdf.common.algorithm" title="Link to this heading"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="docx_from_pdf.common.algorithm.get_area">
+<span class="sig-prename descclassname"><span class="pre">docx_from_pdf.common.algorithm.</span></span><span class="sig-name descname"><span class="pre">get_area</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bbox_1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bbox_2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#docx_from_pdf.common.algorithm.get_area" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bbox_1</strong> (<em>tuple</em>)</p></li>
+<li><p><strong>bbox_2</strong> (<em>tuple</em>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="docx_from_pdf.common.algorithm.graph_bfs">
+<span class="sig-prename descclassname"><span class="pre">docx_from_pdf.common.algorithm.</span></span><span class="sig-name descname"><span class="pre">graph_bfs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#docx_from_pdf.common.algorithm.graph_bfs" title="Link to this definition"></a></dt>
+<dd><p>Breadth First Search graph (may be disconnected graph).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>graph</strong> (<em>list</em>) – GRAPH represented by adjacent list, [set(1,2,3), set(…), …]</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of connected components</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="docx_from_pdf.common.algorithm.solve_rects_intersection">
+<span class="sig-prename descclassname"><span class="pre">docx_from_pdf.common.algorithm.</span></span><span class="sig-name descname"><span class="pre">solve_rects_intersection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">V</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index_groups</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#docx_from_pdf.common.algorithm.solve_rects_intersection" title="Link to this definition"></a></dt>
+<dd><p>Implementation of solving Rectangle-Intersection Problem.</p>
+<p>Performance:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">O</span><span class="p">(</span><span class="n">nlog</span> <span class="n">n</span> <span class="o">+</span> <span class="n">k</span><span class="p">)</span> <span class="n">time</span> <span class="ow">and</span> <span class="n">O</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="n">space</span><span class="p">,</span> <span class="n">where</span> <span class="n">k</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">count</span> <span class="n">of</span> <span class="n">intersection</span> <span class="n">pairs</span><span class="o">.</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>V</strong> (<em>list</em>) – Rectangle-related x-edges data, [(index, Rect, x), (…), …].</p></li>
+<li><p><strong>num</strong> (<em>int</em>) – Count of V instances, equal to len(V).</p></li>
+<li><p><strong>index_groups</strong> (<em>list</em>) – Target adjacent list for connectivity between rects.</p></li>
+</ul>
+</dd>
+</dl>
+<p>Procedure <code class="docutils literal notranslate"><span class="pre">detect(V,</span> <span class="pre">H,</span> <span class="pre">m)</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>if m &lt; 2 then return else
+- let V1 be the first ⌊m/2⌋ and let V2 be the rest of the vertical edges in V in the sorted order;
+- let S11 and S22 be the set of rectangles represented only in V1 and V2 but not spanning V2 and V1, respectively;
+- let S12 be the set of rectangles represented only in V1 and spanning V2;
+- let S21 be the set of rectangles represented only in V2 and spanning V1
+- let H1 and H2 be the list of y-intervals corresponding to the elements of V1 and V2 respectively
+- stab(S12, S22); stab(S21, S11); stab(S12, S21)
+- detect(V1, H1, ⌊m/2⌋); detect(V2, H2, m − ⌊m/2⌋)
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="docx_from_pdf.common.algorithm.recursive_xy_cut">
+<span class="sig-prename descclassname"><span class="pre">docx_from_pdf.common.algorithm.</span></span><span class="sig-name descname"><span class="pre">recursive_xy_cut</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img_binary</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_w</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_h</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_dx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">15.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_dy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">15.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#docx_from_pdf.common.algorithm.recursive_xy_cut" title="Link to this definition"></a></dt>
+<dd><p>Split image with recursive xy-cut algorithm.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>img_binary</strong> (<em>np.array</em>) – Binarized image with interesting region (255) and empty region (0).</p></li>
+<li><p><strong>min_w</strong> (<em>float</em>) – Ignore bbox if the width is less than this value.</p></li>
+<li><p><strong>min_h</strong> (<em>float</em>) – Ignore bbox if the height is less than this value.</p></li>
+<li><p><strong>min_dx</strong> (<em>float</em>) – Merge two bbox-es if the x-gap is less than this value.</p></li>
+<li><p><strong>min_dy</strong> (<em>float</em>) – Merge two bbox-es if the y-gap is less than this value.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>bbox (x0, y0, x1, y1) of split blocks.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="docx_from_pdf.common.algorithm.inner_contours">
+<span class="sig-prename descclassname"><span class="pre">docx_from_pdf.common.algorithm.</span></span><span class="sig-name descname"><span class="pre">inner_contours</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img_binary</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bbox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_w</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_h</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#docx_from_pdf.common.algorithm.inner_contours" title="Link to this definition"></a></dt>
+<dd><p>Inner contours of current region, especially level 2 contours of the default opencv tree hirerachy.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>img_binary</strong> (<em>np.array</em>) – Binarized image with interesting region (255) and empty region (0).</p></li>
+<li><p><strong>bbox</strong> (<em>tuple</em>) – The external bbox.</p></li>
+<li><p><strong>min_w</strong> (<em>float</em>) – Ignore contours if the bbox width is less than this value.</p></li>
+<li><p><strong>min_h</strong> (<em>float</em>) – Ignore contours if the bbox height is less than this value.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of bbox-es of inner contours.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="docx_from_pdf.common.algorithm.xy_project_profile">
+<span class="sig-prename descclassname"><span class="pre">docx_from_pdf.common.algorithm.</span></span><span class="sig-name descname"><span class="pre">xy_project_profile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img_source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">img_binary</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dw</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#docx_from_pdf.common.algorithm.xy_project_profile" title="Link to this definition"></a></dt>
+<dd><p>Projection profile along x and y direction.</p>
+<dl>
+<dt><a href="#id1"><span class="problematic" id="id2">``</span></a><a href="#id3"><span class="problematic" id="id4">`</span></a></dt><dd><blockquote>
+<div><p>┌────────────────┐</p>
+</div></blockquote>
+<dl>
+<dt>dh │                │</dt><dd><blockquote>
+<div><dl class="simple">
+<dt>└────────────────┘</dt><dd><p>gap</p>
+</dd>
+</dl>
+<p>┌────────────────┐ ┌───┐
+│                │ │   │</p>
+</div></blockquote>
+<dl>
+<dt>h │     image      │ │   │</dt><dd><p>│                │ │   │
+└────────────────┘ └───┘</p>
+<blockquote>
+<div><p>w           dw</p>
+</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+</dl>
+<p><a href="#id5"><span class="problematic" id="id6">``</span></a><a href="#id7"><span class="problematic" id="id8">`</span></a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>img_source</strong> (<em>np.array</em>) – Source image, e.g. RGB mode.</p></li>
+<li><p><strong>img_binary</strong> (<em>np.array</em>) – Binarized image.</p></li>
+<li><p><strong>gap</strong> (<em>int</em><em>, </em><em>optional</em>) – Gap between sub-graph. Defaults to 5.</p></li>
+<li><p><strong>dw</strong> (<em>int</em><em>, </em><em>optional</em>) – Graph height of x projection profile. Defaults to None.</p></li>
+<li><p><strong>dh</strong> (<em>int</em><em>, </em><em>optional</em>) – Graph height of y projection profile. Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The combined graph data.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="docx_from_pdf.common.Element.html" class="btn btn-neutral float-left" title="docx_from_pdf.common.Element module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="docx_from_pdf.common.constants.html" class="btn btn-neutral float-right" title="docx_from_pdf.common.constants module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Michael Ellis.</p>
+  </div>
+
+
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+</body>
+</html>

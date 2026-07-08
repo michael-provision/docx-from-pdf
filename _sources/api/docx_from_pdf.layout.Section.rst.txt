@@ -1,0 +1,7 @@
+docx\_from\_pdf.layout.Section module
+=====================================
+
+.. automodule:: docx_from_pdf.layout.Section
+   :members:
+   :show-inheritance:
+   :undoc-members:

@@ -1,0 +1,22 @@
+docx\_from\_pdf.common package
+==============================
+
+.. automodule:: docx_from_pdf.common
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   docx_from_pdf.common.Block
+   docx_from_pdf.common.Collection
+   docx_from_pdf.common.Element
+   docx_from_pdf.common.algorithm
+   docx_from_pdf.common.constants
+   docx_from_pdf.common.docx
+   docx_from_pdf.common.geometry
+   docx_from_pdf.common.share
