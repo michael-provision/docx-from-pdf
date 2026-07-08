@@ -11,7 +11,13 @@ Chromium, or Google.
 
 ## Install
 
-Install from this repository:
+Install from PyPI:
+
+```bash
+pip install docx-from-pdf
+```
+
+Install from source:
 
 ```bash
 pip install git+https://github.com/michael-provision/docx-from-pdf.git
@@ -20,7 +26,8 @@ pip install git+https://github.com/michael-provision/docx-from-pdf.git
 Install local development dependencies:
 
 ```bash
-pip install -r requirements.txt
+uv venv
+uv pip install -r requirements.txt
 ```
 
 ## Usage
@@ -56,7 +63,7 @@ converter.close()
 Run the test suite:
 
 ```bash
-PYTHONPATH=. pytest -q test/test.py
+PYTHONPATH=. uv run --no-project --with-requirements requirements.txt --with pytest pytest -q test/test.py
 ```
 
 Some visual-comparison tests render DOCX files through LibreOffice on non-Windows
