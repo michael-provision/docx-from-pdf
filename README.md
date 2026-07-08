@@ -1,32 +1,64 @@
-# pdf2docx
+# PDF to DOCX Converter
 
+A Python library and CLI for converting PDF files into editable DOCX documents.
 
-![python-version](https://img.shields.io/badge/python->=3.6-green.svg)
-![pypi-downloads](https://img.shields.io/pypi/dm/pdf2docx)
+This fork uses PDFium for PDF parsing and rendering. It keeps the original layout
+pipeline for text blocks, tables, images, vector paths, sections, and DOCX
+generation, but removes the PyMuPDF runtime dependency.
 
-## ⚠️ Project Status
+## Install
 
-**pdf2docx is no longer actively maintained by Artifex.**
+Install from this repository:
 
-The repository will remain available and has been **relicensed under the MIT License** so that the community can freely use, fork, and maintain the project.
+```bash
+pip install git+https://github.com/michael-provision/pdf2docx.git
+```
 
-Pull requests from the community are welcome, but [Artifex](https://artifex.com) no longer provides active development or maintenance.
+Install local development dependencies:
 
----
+```bash
+pip install -r requirements.txt
+```
 
-If you are looking for a **full-featured PDF processing library**, consider using [PDFium](https://pdfium.googlesource.com/pdfium/) or [MuPDF.NET](https://github.com/ArtifexSoftware/MuPDF.NET).
+## Usage
 
-## Documentation
+Convert a PDF from Python:
 
-- [Installation](https://pdf2docx.readthedocs.io/en/latest/installation.html)
-- [Quickstart](https://pdf2docx.readthedocs.io/en/latest/quickstart.html)
-    - [Convert PDF](https://pdf2docx.readthedocs.io/en/latest/quickstart.convert.html)
-    - [Extract table](https://pdf2docx.readthedocs.io/en/latest/quickstart.table.html)
-    - [Command Line Interface](https://pdf2docx.readthedocs.io/en/latest/quickstart.cli.html)
-    - [Graphic User Interface](https://pdf2docx.readthedocs.io/en/latest/quickstart.gui.html)
-- [Technical Documentation (In Chinese)](https://pdf2docx.readthedocs.io/en/latest/techdoc.html)
-- [API Documentation](https://pdf2docx.readthedocs.io/en/latest/modules.html)
+```python
+from pdf2docx import Converter
 
-## Sample
+converter = Converter("input.pdf")
+converter.convert("output.docx")
+converter.close()
+```
 
-![sample_compare.png](https://s1.ax1x.com/2020/08/04/aDryx1.png)
+Convert a PDF from the CLI:
+
+```bash
+pdf2docx convert input.pdf output.docx
+```
+
+Extract tables:
+
+```python
+from pdf2docx import Converter
+
+converter = Converter("input.pdf")
+tables = converter.extract_tables()
+converter.close()
+```
+
+## Development
+
+Run the test suite:
+
+```bash
+PYTHONPATH=. pytest -q test/test.py
+```
+
+Some visual-comparison tests render DOCX files through LibreOffice on non-Windows
+systems, so LibreOffice must be installed for the full suite.
+
+## License
+
+MIT
