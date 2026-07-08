@@ -3,7 +3,7 @@
 import os
 from setuptools import find_packages, setup
 
-DESCRIPTION = 'Open source Python library converting pdf to docx.'
+DESCRIPTION = 'Python library and CLI for converting PDF files to DOCX.'
 EXCLUDE_FROM_PACKAGES = ["build", "dist", "test"]
 
 
@@ -36,16 +36,15 @@ def load_requirements(fname):
 
 
 setup(
-    name="pdf2docx",
+    name="docx-from-pdf",
     version=get_version("version.txt"),
-    keywords=["pdf-to-word", "pdf-to-docx"],
+    keywords=["pdf-to-word", "pdf-to-docx", "docx-from-pdf"],
     description=DESCRIPTION,
     long_description=load_long_description("README.md"),
     long_description_content_type="text/markdown",
     license="MIT",
-    author='Artifex',
-    author_email='support@artifex.com',
-    url='https://artifex.com/',
+    author='Michael Ellis',
+    url='https://github.com/michael-provision/docx-from-pdf/',
     packages=find_packages(exclude=EXCLUDE_FROM_PACKAGES),
     include_package_data=True,
     zip_safe=False,
@@ -53,6 +52,6 @@ setup(
     python_requires=">=3.10",
     entry_points={
         "console_scripts": [
-            "pdf2docx=pdf2docx.main:main"
+            "docx-from-pdf=docx_from_pdf.main:main"
             ]},
 )

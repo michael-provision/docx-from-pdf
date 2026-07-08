@@ -1,9 +1,0 @@
-rst2pdf
-
-# define sphinx versioning
-sphinx
-autodoc
-furo
-sphinx_copybutton
-sphinxcontrib.apidoc
-sphinx_markdown_builder

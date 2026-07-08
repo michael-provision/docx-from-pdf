@@ -1,6 +1,6 @@
 name: Bug Report
 description: |
-  Create a bug report for pdf2docx.
+  Create a bug report for docx-from-pdf.
   Please use English only in posts and issues to aid maintainers and benefit all users. We will immediately reject and close non-English posts.
 
 # We omit `title: "..."` so that the field defaults to blank. If we set it to
@@ -31,7 +31,7 @@ body:
         * If applicable, add screenshots to help explain the problem.
         * Include any other information that could be relevant, for example information about the Python environment.
         
-        For problems when building or installing pdf2docx:
+        For problems when building or installing docx-from-pdf:
         * Give the **exact** build/install commands that were run.
         * Give the **complete** output from these commands.
   
@@ -46,7 +46,7 @@ body:
   - type: dropdown
     id: version
     attributes:
-      label: pdf2docx version
+      label: docx-from-pdf version
       options:
         - 0.5.13
         - 0.5.12
@@ -65,8 +65,8 @@ body:
         - 0.4.6
         - Built from source
       description: |
-        *`Version` from `pip show pdf2docx`.
-        * We generally only look at bugs in the most recent release of pdf2docx.
+        *`Version` from `pip show docx-from-pdf`.
+        * We generally only look at bugs in the most recent release of docx-from-pdf.
     validations:
       required: true
 
