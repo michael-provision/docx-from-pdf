@@ -10,15 +10,23 @@ from pathlib import Path
 import pypdfium2 as pdfium
 import pypdfium2.raw as pdfium_c
 
-from ..common.geometry import Matrix, Rect
+from ..common.geometry import Matrix, Point, Rect
+from ..common.share import RectType
+
+INVISIBLE_TEXT_RENDER_MODE = pdfium_c.FPDF_TEXTRENDERMODE_INVISIBLE
 
 
 class PdfiumDocument:
     """Document wrapper exposing the subset of behavior used by the converter."""
 
     def __init__(self, pdf_file: str | None = None, password: str | None = None, stream: bytes | None = None):
-        self._document = pdfium.PdfDocument(stream if stream is not None else Path(pdf_file), password=password or None)
+        self._source = stream if stream is not None else Path(pdf_file)
         self.needs_pass = False
+        try:
+            self._document = pdfium.PdfDocument(self._source, password=password or None)
+        except pdfium.PdfiumError:
+            self._document = None
+            self.needs_pass = True
 
     def __len__(self):
         return len(self._document)
@@ -31,10 +39,16 @@ class PdfiumDocument:
         return PdfiumPage(self, page_index)
 
     def authenticate(self, password: str):
+        try:
+            self._document = pdfium.PdfDocument(self._source, password=password or None)
+        except pdfium.PdfiumError:
+            return False
+        self.needs_pass = False
         return True
 
     def close(self):
-        self._document.close()
+        if self._document is not None:
+            self._document.close()
 
 
 class PdfiumPage:
@@ -46,19 +60,35 @@ class PdfiumPage:
         self._page = document._document[page_index]
         self._pdf_cropbox = self._page.get_cropbox()
         crop_left, crop_bottom, crop_right, crop_top = self._pdf_cropbox
-        self.width = crop_right - crop_left
-        self.height = crop_top - crop_bottom
+        unrotated_width = crop_right - crop_left
+        unrotated_height = crop_top - crop_bottom
+        self._unrotated_height = unrotated_height
+        self.rotation = self._page.get_rotation()
+        self.rotation_matrix = self._build_rotation_matrix(unrotated_width, unrotated_height)
+        if self.rotation in (90, 270):
+            self.width, self.height = unrotated_height, unrotated_width
+        else:
+            self.width, self.height = unrotated_width, unrotated_height
         self.rect = Rect(0.0, 0.0, self.width, self.height)
         self.cropbox = self.rect
-        self.rotation = self._page.get_rotation()
-        self.rotation_matrix = Matrix()
+
+    def _build_rotation_matrix(self, width: float, height: float):
+        """Map un-rotated top-left page coordinates to the visible (rotated) page CS."""
+        if self.rotation == 90:
+            return Matrix(0.0, 1.0, -1.0, 0.0, height, 0.0)
+        if self.rotation == 180:
+            return Matrix(-1.0, 0.0, 0.0, -1.0, width, height)
+        if self.rotation == 270:
+            return Matrix(0.0, -1.0, 1.0, 0.0, 0.0, width)
+        return Matrix()
 
     def close(self):
         self._page.close()
 
-    def extract_text_blocks(self, sort=None):
+    def extract_text_blocks(self, sort=None, include: str = "visible"):
         text_page = self._page.get_textpage()
-        chars = self._extract_chars(text_page)
+        invisible_rects = self._invisible_text_object_rects()
+        chars = self._extract_chars(text_page, invisible_rects, include)
         if sort:
             chars.sort(key=lambda char: (char["bbox"][1], char["bbox"][0]))
         lines = self._group_chars_into_lines(chars)
@@ -70,22 +100,52 @@ class PdfiumPage:
             bbox = self._pdf_bounds_to_page_rect(image_object.get_bounds())
             if bbox.get_area() <= 4:
                 continue
-            image_bytes, width, height = self.render_clip_to_png(
-                bbox,
-                zoom=clip_image_res_ratio,
-                rm_text=True,
-                rm_image=False,
-            )
+            pil_image = image_object.get_bitmap(render=True).to_pil()
+            if self.rotation:
+                pil_image = pil_image.rotate(-self.rotation, expand=True)
+            output = BytesIO()
+            pil_image.save(output, format="PNG")
             images.append(
                 {
                     "type": 1,
                     "bbox": tuple(bbox),
-                    "width": width,
-                    "height": height,
-                    "image": image_bytes,
+                    "width": pil_image.width,
+                    "height": pil_image.height,
+                    "image": output.getvalue(),
                 }
             )
         return images
+
+    def extract_hyperlinks(self):
+        links = []
+        start_position = c_int(0)
+        link_annotation = pdfium_c.FPDF_LINK()
+        document_handle = self.parent._document.raw
+        while pdfium_c.FPDFLink_Enumerate(self._page.raw, byref(start_position), byref(link_annotation)):
+            action = pdfium_c.FPDFLink_GetAction(link_annotation)
+            if not action or pdfium_c.FPDFAction_GetType(action) != pdfium_c.PDFACTION_URI:
+                continue
+            length = pdfium_c.FPDFAction_GetURIPath(document_handle, action, None, 0)
+            if length <= 1:
+                continue
+            buffer = create_string_buffer(length)
+            pdfium_c.FPDFAction_GetURIPath(document_handle, action, buffer, length)
+            uri = buffer.value.decode("utf-8", errors="ignore")
+            if not uri:
+                continue
+            rect = pdfium_c.FS_RECTF()
+            if not pdfium_c.FPDFLink_GetAnnotRect(link_annotation, byref(rect)):
+                continue
+            bbox = self._pdf_bounds_to_page_rect((rect.left, rect.bottom, rect.right, rect.top)) * self.rotation_matrix
+            links.append({"type": RectType.HYPERLINK.value, "bbox": tuple(bbox), "uri": uri})
+        return links
+
+    def _invisible_text_object_rects(self):
+        rects = []
+        for text_object in self._page.get_objects(filter=[pdfium_c.FPDF_PAGEOBJ_TEXT], max_depth=3):
+            if pdfium_c.FPDFTextObj_GetTextRenderMode(text_object) == INVISIBLE_TEXT_RENDER_MODE:
+                rects.append(self._pdf_bounds_to_page_rect(text_object.get_bounds()))
+        return rects
 
     def extract_paths(self):
         paths = []
@@ -136,7 +196,7 @@ class PdfiumPage:
             for page_object in deactivated_objects:
                 pdfium_c.FPDFPageObj_SetIsActive(page_object, 1)
 
-    def _extract_chars(self, text_page):
+    def _extract_chars(self, text_page, invisible_rects, include: str):
         chars = []
         for char_index in range(text_page.count_chars()):
             character = self._xml_compatible_text(text_page.get_text_range(char_index, 1))
@@ -144,6 +204,11 @@ class PdfiumPage:
                 continue
             bbox = self._pdf_bounds_to_page_rect(text_page.get_charbox(char_index, loose=True))
             if bbox.is_empty:
+                continue
+            is_hidden = any(self._rect_intersection_ratio(bbox, rect) >= 0.5 for rect in invisible_rects)
+            if include == "hidden" and not is_hidden:
+                continue
+            if include == "visible" and is_hidden:
                 continue
             origin_x = c_double()
             origin_y = c_double()
@@ -155,7 +220,7 @@ class PdfiumPage:
                 {
                     "c": character,
                     "bbox": tuple(bbox),
-                    "origin": (float(origin_x.value), self.height - float(origin_y.value)),
+                    "origin": (float(origin_x.value), self._unrotated_height - float(origin_y.value)),
                     "dir": self._text_direction(text_page, char_index),
                     "font": font_name,
                     "size": font_size,
@@ -291,12 +356,20 @@ class PdfiumPage:
         page_x = x * matrix.a + y * matrix.c + matrix.e
         page_y = x * matrix.b + y * matrix.d + matrix.f
         crop_left, _, _, crop_top = self._pdf_cropbox
-        return (float(page_x - crop_left), float(crop_top - page_y))
+        visible_point = Point(float(page_x - crop_left), float(crop_top - page_y)) * self.rotation_matrix
+        return (visible_point.x, visible_point.y)
 
     def _pdf_bounds_to_page_rect(self, bounds):
         left, bottom, right, top = bounds
         crop_left, _, _, crop_top = self._pdf_cropbox
         return Rect(left - crop_left, crop_top - top, right - crop_left, crop_top - bottom)
+
+    @staticmethod
+    def _rect_intersection_ratio(source, target):
+        source_area = source.get_area()
+        if not source_area:
+            return 0.0
+        return (source & target).get_area() / source_area
 
     @staticmethod
     def _effective_font_size(text_page, char_index: int):
