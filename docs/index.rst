@@ -4,7 +4,7 @@ Welcome to pdf2docx
 ====================================
 
 :title:`pdf2docx` is a **Python** library
-to extract data from **PDF** with PyMuPDF_, parse layout with rule, and
+to extract data from **PDF** with pdfplumber/pdfminer, parse layout with rule, and
 generate **docx** files with ``python-docx``.
 
 
@@ -53,5 +53,3 @@ Indices and tables
    });
    </script>
 
-
-.. _PyMuPDF: https://pymupdf.io

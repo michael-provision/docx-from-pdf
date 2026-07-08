@@ -23,7 +23,7 @@ Command Line Interface
         Convert pdf file to docx file.
 
       debug
-        Convert one PDF page and plot layout information for debugging.
+        Convert one PDF page and serialize layout information for debugging.
 
       table
         Extract table content from pdf pages.
@@ -70,16 +70,5 @@ Convert the first, third and 5th pages::
 
   $ pdf2docx convert test.pdf test.docx --pages=0,2,4
 
-
-Multi-Processing
---------------------------
-
-Turn on multi-processing with default count of CPU::
-
-  $ pdf2docx convert test.pdf test.docx --multi_processing=True
-
-Specify the count of CPUs::
-
-  $ pdf2docx convert test.pdf test.docx --multi_processing=True --cpu_count=4
 
 .. include:: footer.rst

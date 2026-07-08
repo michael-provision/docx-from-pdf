@@ -1,481 +1,309 @@
-'''PDF to Docx Converter.'''
+"""PDF to DOCX converter using pdfplumber/pdfminer.
+
+This fork keeps the public ``Converter`` API but replaces the previous
+PDF-specific layout engine with pdfplumber/pdfminer extraction and python-docx
+generation. It is intentionally conservative: the output is editable text laid
+out with page sections, paragraph offsets, indentation, tab stops, and basic
+font styling. It does not attempt to reconstruct vector drawings or image-only
+pages yet.
+"""
+
+from __future__ import annotations
+
 import json
 import logging
 import os
-from multiprocessing import Pool, cpu_count
+from io import BytesIO
 from time import perf_counter
-from typing import AnyStr, IO, Union
+from typing import AnyStr, IO, Iterable, Union
 
-import fitz
+import pdfplumber
 from docx import Document
+from docx.enum.section import WD_SECTION
+from docx.shared import Pt
 
-from .page.Page import Page
-from .page.Pages import Pages
+logging.basicConfig(level=logging.INFO, format="[%(levelname)s] %(message)s")
 
-# check PyMuPDF version
-# 1.19.0 <= v <= 1.23.8, or v>=1.23.16
-v = list(map(int, fitz.VersionBind.split(".")))
-if v < [1,19,0] or [1,23,8]<v<[1,23,16]:
-    raise SystemExit("1.19.0 <= PyMuPDF <= 1.23.8, or PyMuPDF>=1.23.16 is required for pdf2docx.")
-
-# logging
-logging.basicConfig(
-    level=logging.INFO, 
-    format="[%(levelname)s] %(message)s")
+DEFAULT_LINE_TOLERANCE = 3.0
+DEFAULT_GAP_TOLERANCE = 8.0
 
 
 class Converter:
-    '''The ``PDF`` to ``docx`` converter.
-    
-    * Read PDF file with ``PyMuPDF`` to get raw layout data page by page, including text,
-      image, drawing and its properties, e.g. boundary box, font, size, image width, height.
-    * Analyze layout in document level, e.g. page header, footer and margin.
-    * Parse page layout to docx structure, e.g. paragraph and its properties like indentation, 
-      spacing, text alignment; table and its properties like border, shading, merging. 
-    * Finally, generate docx with ``python-docx``.
-    '''
+    """Convert PDF pages to DOCX using permissively licensed PDF tooling."""
 
     def __init__(
-        self, pdf_file: str = None, password: str = None, stream: bytes = None
+        self,
+        pdf_file: str | None = None,
+        password: str | None = None,
+        stream: bytes | None = None,
     ):
-        '''Initialize fitz object with given pdf file path.
-
-        Args:
-            pdf_file (str): pdf file path.
-            stream   (bytes): pdf file in memory.
-            password (str): Password for encrypted pdf. Default to None if not encrypted.
-        '''
-        # fitz object
-        self.filename_pdf = pdf_file
-        self.password = str(password or "")
-
         if not pdf_file and not stream:
             raise ValueError("Either pdf_file or stream must be given.")
-
-        if stream:
-            self._fitz_doc = fitz.Document(stream=stream)
-
-        else:
-            self._fitz_doc = fitz.Document(pdf_file)
-
-        # initialize empty pages container
-        self._pages = Pages()
-
+        self.filename_pdf = pdf_file
+        self.password = str(password or "")
+        self._stream = stream
+        self._last_result: dict = {}
+        self._last_page_indexes: list[int] | None = None
 
     @property
-    def fitz_doc(self): return self._fitz_doc    
-
-    @property
-    def pages(self): return self._pages
-
-
-    def close(self): self._fitz_doc.close()
-
-
-    @property
-    def default_settings(self):
-        '''Default parsing parameters.'''
+    def default_settings(self) -> dict:
         return {
-            'debug'                          : False,  # plot layout if True
-            'ocr'                            : 0,      # ocr status: 0 - no ocr; 1 - to do ocr; 2 - ocr-ed pdf
-            'ignore_page_error'              : True,   # not break the conversion process due to failure of a certain page if True
-            'multi_processing'               : False,  # convert pages with multi-processing if True
-            'cpu_count'                      : 0,      # working cpu count when convert pages with multi-processing
-            'min_section_height'             : 20.0,   # The minimum height of a valid section.
-            'connected_border_tolerance'     : 0.5,    # two borders are intersected if the gap lower than this value
-            'max_border_width'               : 6.0,    # max border width
-            'min_border_clearance'           : 2.0,    # the minimum allowable clearance of two borders
-            'float_image_ignorable_gap'      : 5.0,    # float image if the intersection exceeds this value
-            'page_margin_factor_top'         : 0.5,    # [0,1] reduce top margin by factor
-            'page_margin_factor_bottom'      : 0.5,    # [0,1] reduce bottom margin by factor
-            'shape_min_dimension'            : 2.0,    # ignore shape if both width and height is lower than this value
-            'max_line_spacing_ratio'         : 1.5,    # maximum line spacing ratio: line spacing / line height
-            'line_overlap_threshold'         : 0.9,    # [0,1] delete line if the intersection to other lines exceeds this value
-            'line_break_width_ratio'         : 0.5,    # break line if the ratio of line width to entire layout bbox is lower than this value
-            'line_break_free_space_ratio'    : 0.1,    # break line if the ratio of free space to entire line exceeds this value
-            'line_separate_threshold'        : 5.0,    # two separate lines if the x-distance exceeds this value
-            'new_paragraph_free_space_ratio' : 0.85,   # new paragraph if the ratio of free space to line height exceeds this value
-            'lines_left_aligned_threshold'   : 1.0,    # left aligned if d_x0 of two lines is lower than this value (Pt)
-            'lines_right_aligned_threshold'  : 1.0,    # right aligned if d_x1 of two lines is lower than this value (Pt)
-            'lines_center_aligned_threshold' : 2.0,    # center aligned if delta center of two lines is lower than this value
-            'clip_image_res_ratio'           : 4.0,    # resolution ratio (to 72dpi) when clipping page image
-            'min_svg_gap_dx'                 : 15.0,   # merge adjacent vector graphics if the horizontal gap is less than this value
-            'min_svg_gap_dy'                 : 2.0,    # merge adjacent vector graphics if the vertical gap is less than this value
-            'min_svg_w'                      : 2.0,    # ignore vector graphics if the bbox width is less than this value
-            'min_svg_h'                      : 2.0,    # ignore vector graphics if the bbox height is less than this value
-            'extract_stream_table'           : False,  # don't consider stream table when extracting tables
-            'parse_lattice_table'            : True,   # whether parse lattice table or not; may destroy the layout if set False
-            'parse_stream_table'             : True,   # whether parse stream table or not; may destroy the layout if set False
-            'delete_end_line_hyphen'         : False,  # delete hyphen at the end of a line
-            'raw_exceptions'                 : False,  # Don't swallow exceptions
-            'list_not_table'                 : True,   # Avoid treating bullet list as table.
+            "line_tolerance": DEFAULT_LINE_TOLERANCE,
+            "gap_tolerance": DEFAULT_GAP_TOLERANCE,
+            "preserve_page_size": True,
+            "raw_exceptions": False,
+            "multi_processing": False,
+            "zero_based_index": True,
         }
 
-    # -----------------------------------------------------------------------
-    # Parsing process: load -> analyze document -> parse pages -> make docx
-    # -----------------------------------------------------------------------
+    @property
+    def pages(self) -> list[dict]:
+        return self._last_result.get("pages", [])
 
-    def parse(self, start:int=0, end:int=None, pages:list=None, **kwargs):
-        '''Parse pages in three steps:
-        * open PDF file with ``PyMuPDF``
-        * analyze whole document, e.g. page section, header/footer and margin
-        * parse specified pages, e.g. paragraph, image and table
+    def close(self) -> None:
+        """Retained for API compatibility; pdfplumber files are opened per call."""
 
-        Args:
-            start (int, optional): First page to process. Defaults to 0, the first page.
-            end (int, optional): Last page to process. Defaults to None, the last page.
-            pages (list, optional): Range of page indexes to parse. Defaults to None.
-            kwargs (dict, optional): Configuration parameters. 
-        '''
-        return self.load_pages(start, end, pages) \
-            .parse_document(**kwargs) \
-            .parse_pages(**kwargs)
-
-
-    def load_pages(self, start:int=0, end:int=None, pages:list=None):
-        '''Step 1 of converting process: open PDF file with ``PyMuPDF``, 
-        especially for password encrypted file.
-        
-        Args:
-            start (int, optional): First page to process. Defaults to 0, the first page.
-            end (int, optional): Last page to process. Defaults to None, the last page.
-            pages (list, optional): Range of page indexes to parse. Defaults to None.
-        '''
-        logging.info(self._color_output('[1/4] Opening document...'))
-
-        # encrypted pdf ?
-        if self._fitz_doc.needs_pass:
-            if not self.password:
-                raise ConversionException(f'Require password for {self.filename_pdf}.')
-
-            elif not self._fitz_doc.authenticate(self.password):
-                raise ConversionException('Incorrect password.')
-
-        # initialize empty pages
-        num = len(self._fitz_doc)
-        self._pages.reset([Page(id=i, skip_parsing=True) for i in range(num)])
-
-        # set pages to parse
-        page_indexes = self._page_indexes(start, end, pages, num)
-        for i in page_indexes:
-            self._pages[i].skip_parsing = False
-
-        return self
-    
-
-    def parse_document(self, **kwargs):
-        '''Step 2 of converting process: analyze whole document, e.g. page section,
-        header/footer and margin.'''
-        logging.info(self._color_output('[2/4] Analyzing document...'))
-        
-        self._pages.parse(self.fitz_doc, **kwargs)
-        return self
-
-    
-    def parse_pages(self, **kwargs):
-        '''Step 3 of converting process: parse pages, e.g. paragraph, image and table.'''
-        logging.info(self._color_output('[3/4] Parsing pages...'))
-
-        pages = [page for page in self._pages if not page.skip_parsing]
-        num_pages = len(pages)
-        for i, page in enumerate(pages, start=1):
-            pid = page.id + 1
-            logging.info('(%d/%d) Page %d', i, num_pages, pid)
-            try:
-                page.parse(**kwargs)
-            except Exception as e:
-                if kwargs['raw_exceptions']:
-                    raise
-                if not kwargs['debug'] and kwargs['ignore_page_error']:
-                    logging.error('Ignore page %d due to parsing page error: %s', pid, e)
-                else:
-                    raise ConversionException(f'Error when parsing page {pid}: {e}')
-
-        return self
-
-
-    def make_docx(self, filename_or_stream=None, **kwargs):
-        '''Step 4 of converting process: create docx file with converted pages.
-        
-        Args:
-            filename_or_stream (str, file-like): docx file to write.
-            kwargs (dict, optional): Configuration parameters.
-        '''
-        logging.info(self._color_output('[4/4] Creating pages...'))
-
-        # check parsed pages
-        parsed_pages = list(filter(
-            lambda page: page.finalized, self._pages
-        ))
-        if not parsed_pages:
-            raise ConversionException('No parsed pages. Please parse page first.')
-
-        if not filename_or_stream:
-            if self.filename_pdf:
-                filename_or_stream = f'{self.filename_pdf[0:-len(".pdf")]}.docx'
-                # remove existing file
-                if os.path.exists(filename_or_stream): os.remove(filename_or_stream)
-            else:
-                raise ConversionException("Please specify a docx file name or a file-like object to write.")
-
-        # create page by page        
-        docx_file = Document() 
-        num_pages = len(parsed_pages)
-        for i, page in enumerate(parsed_pages, start=1):
-            if not page.finalized: continue # ignore unparsed pages
-            pid = page.id + 1
-            logging.info('(%d/%d) Page %d', i, num_pages, pid)
-            try:
-                page.make_docx(docx_file)
-            except Exception as e:
-                if kwargs['raw_exceptions']:
-                    raise
-                if not kwargs['debug'] and kwargs['ignore_page_error']:
-                    logging.error('Ignore page %d due to making page error: %s', pid, e)
-                else:
-                    raise MakedocxException(f'Error when make page {pid}: {e}')
-
-        # save docx
-        docx_file.save(filename_or_stream)
-
-
-    # -----------------------------------------------------------------------
-    # Store / restore parsed results
-    # -----------------------------------------------------------------------
-
-    def store(self):
-        '''Store parsed pages in dict format.'''
-        return {
-            'filename': os.path.basename(self.filename_pdf),
-            'page_cnt': len(self._pages), # count of all pages
-            'pages'   : [page.store() for page in self._pages if page.finalized], # parsed pages only
-        }
-
-
-    def restore(self, data:dict):
-        '''Restore pages from parsed results.'''
-        # init empty pages if necessary
-        if not self._pages:
-            num = data.get('page_cnt', 100)
-            self._pages.reset([Page(id=i, skip_parsing=True) for i in range(num)])
-        
-        # restore pages
-        for raw_page in data.get('pages', []):
-            idx = raw_page.get('id', -1)
-            self._pages[idx].restore(raw_page)
-
-
-    def serialize(self, filename:str):
-        '''Write parsed pages to specified JSON file.'''
-        with open(filename, 'w', encoding='utf-8') as f:
-            f.write(json.dumps(self.store(), indent=4))
-    
-
-    def deserialize(self, filename:str):
-        '''Load parsed pages from specified JSON file.'''
-        with open(filename, 'r') as f:
-            data = json.load(f)
-        self.restore(data)
-
-
-    # -----------------------------------------------------------------------
-    # high level methods, e.g. convert, extract table
-    # -----------------------------------------------------------------------
-
-    def debug_page(self, i:int, docx_filename:str=None, debug_pdf:str=None, layout_file:str=None, **kwargs):
-        '''Parse, create and plot single page for debug purpose.
-        
-        Args:
-            i (int): Page index to convert.
-            docx_filename (str): docx filename to write to.
-            debug_pdf (str): New pdf file storing layout information. Default to add prefix ``debug_``.
-            layout_file (str): New json file storing parsed layout data. Default to ``layout.json``.
-        '''
-        # include debug information
-        # fitz object in debug mode: plot page layout
-        # file path for this debug pdf: demo.pdf -> debug_demo.pdf
-        path, filename = os.path.split(self.filename_pdf)
-        if not debug_pdf: debug_pdf = os.path.join(path, f'debug_{filename}')
-        if not layout_file: layout_file  = os.path.join(path, 'layout.json')
-        kwargs.update({
-            'debug'         : True,
-            'debug_doc'     : fitz.Document(),
-            'debug_filename': debug_pdf
-        })
-
-        # parse and create docx
-        self.convert(docx_filename, pages=[i], **kwargs)
-        
-        # layout information for debugging
-        self.serialize(layout_file)
-
-    def convert(self, docx_filename: Union[str, IO[AnyStr]] = None, start: int = 0, end: int = None, pages: list = None,
-                **kwargs):
-        """Convert specified PDF pages to docx file.
-
-        Args:
-            docx_filename (str, file-like, optional): docx file to write. Defaults to None.
-            start (int, optional): First page to process. Defaults to 0, the first page.
-            end (int, optional): Last page to process. Defaults to None, the last page.
-            pages (list, optional): Range of page indexes. Defaults to None.
-            kwargs (dict, optional): Configuration parameters. Defaults to None.
-        
-        Refer to :py:meth:`~pdf2docx.converter.Converter.default_settings` for detail of 
-        configuration parameters.
-        
-        .. note::
-            Change extension from ``pdf`` to ``docx`` if ``docx_file`` is None.
-        
-        .. note::
-            * ``start`` and ``end`` is counted from zero if ``--zero_based_index=True`` (by default).
-            * Start from the first page if ``start`` is omitted.
-            * End with the last page if ``end`` is omitted.
-        
-        .. note::
-            ``pages`` has a higher priority than ``start`` and ``end``. ``start`` and ``end`` works only
-            if ``pages`` is omitted.
-
-        .. note::
-            Multi-processing works only for continuous pages specified by ``start`` and ``end`` only.
-        """
-        t0 = perf_counter()
-        logging.info('Start to convert %s', self.filename_pdf)
+    def convert(
+        self,
+        docx_filename: Union[str, IO[AnyStr], None] = None,
+        start: int = 0,
+        end: int | None = None,
+        pages: list | None = None,
+        **kwargs,
+    ) -> None:
+        """Convert specified PDF pages to a DOCX file."""
+        start_time = perf_counter()
+        logging.info("Start to convert %s", self.filename_pdf or "<stream>")
         settings = self.default_settings
         settings.update(kwargs)
+        if settings["multi_processing"]:
+            raise ConversionException("multi_processing is not supported by this backend.")
 
-        # input check
-        if pages and settings['multi_processing']:
-            raise ConversionException('Multi-processing works for continuous pages '
-                                    'specified by "start" and "end" only.')
-        
-        # convert page by page
-        if settings['multi_processing']:
-            self._convert_with_multi_processing(docx_filename, start, end, **settings)
-        else:
-            self.parse(start, end, pages, **settings).make_docx(docx_filename, **settings)
+        if docx_filename is None:
+            docx_filename = self._default_docx_filename()
 
-        logging.info('Terminated in %.2fs.', perf_counter()-t0)        
+        with self._open_pdf() as pdf:
+            page_indexes = self._page_indexes(start, end, pages, len(pdf.pages))
+            self._last_page_indexes = page_indexes
+            document = Document()
+            summaries = []
+            for output_page_number, page_index in enumerate(page_indexes):
+                page = pdf.pages[page_index]
+                logging.info("(%d/%d) Page %d", output_page_number + 1, len(page_indexes), page_index + 1)
+                try:
+                    summary = self._append_pdf_page(document, page, output_page_number, settings)
+                except Exception as exc:
+                    if settings["raw_exceptions"]:
+                        raise
+                    logging.error("Ignore page %d due to conversion error: %s", page_index + 1, exc)
+                    continue
+                summaries.append(summary | {"id": page_index})
 
+            document.save(docx_filename)
+            self._last_result = {
+                "filename": os.path.basename(self.filename_pdf or "stream.pdf"),
+                "page_cnt": len(pdf.pages),
+                "pages": summaries,
+            }
+        logging.info("Terminated in %.2fs.", perf_counter() - start_time)
 
-    def extract_tables(self, start:int=0, end:int=None, pages:list=None, **kwargs):
-        '''Extract table contents from specified PDF pages.
-
-        Args:
-            start (int, optional): First page to process. Defaults to 0, the first page.
-            end (int, optional): Last page to process. Defaults to None, the last page.
-            pages (list, optional): Range of page indexes. Defaults to None.
-            kwargs (dict, optional): Configuration parameters. Defaults to None.
-        
-        Returns:
-            list: A list of parsed table content.
-        '''
-        # parsing pages first
+    def parse(self, start: int = 0, end: int | None = None, pages: list | None = None, **kwargs):
+        """Collect page extraction summaries for compatibility with old callers."""
         settings = self.default_settings
         settings.update(kwargs)
-        self.parse(start, end, pages, **settings)
+        with self._open_pdf() as pdf:
+            page_indexes = self._page_indexes(start, end, pages, len(pdf.pages))
+            self._last_page_indexes = page_indexes
+            summaries = []
+            for page_index in page_indexes:
+                page = pdf.pages[page_index]
+                words = self._extract_words(page)
+                summaries.append(
+                    {
+                        "id": page_index,
+                        "width": page.width,
+                        "height": page.height,
+                        "word_count": len(words),
+                        "line_count": len(self._cluster_lines(words, settings["line_tolerance"])),
+                    }
+                )
+            self._last_result = {
+                "filename": os.path.basename(self.filename_pdf or "stream.pdf"),
+                "page_cnt": len(pdf.pages),
+                "pages": summaries,
+            }
+        return self
 
-        # get parsed tables
+    def make_docx(self, filename_or_stream=None, **kwargs) -> None:
+        """Create a DOCX from the original source; parse-tree replay is not supported."""
+        if self._last_page_indexes is not None and "pages" not in kwargs:
+            kwargs["pages"] = self._last_page_indexes
+        self.convert(filename_or_stream, **kwargs)
+
+    def extract_tables(
+        self,
+        start: int = 0,
+        end: int | None = None,
+        pages: list | None = None,
+        **kwargs,
+    ) -> list:
+        settings = self.default_settings
+        settings.update(kwargs)
         tables = []
-        for page in self._pages:
-            if page.finalized: tables.extend(page.extract_tables(**settings))
-
+        with self._open_pdf() as pdf:
+            page_indexes = self._page_indexes(start, end, pages, len(pdf.pages))
+            for page_index in page_indexes:
+                tables.extend(pdf.pages[page_index].extract_tables() or [])
         return tables
 
-    
-    def _convert_with_multi_processing(self, docx_filename:str, start:int, end:int, **kwargs):
-        '''Parse and create pages based on page indexes with multi-processing.
+    def debug_page(
+        self,
+        i: int,
+        docx_filename: str | None = None,
+        debug_pdf: str | None = None,
+        layout_file: str | None = None,
+        **kwargs,
+    ) -> None:
+        """Convert one page and serialize the lightweight extraction summary."""
+        self.convert(docx_filename, pages=[i], **kwargs)
+        if layout_file:
+            self.serialize(layout_file)
 
-        Reference:
+    def store(self) -> dict:
+        return self._last_result
 
-            https://pymupdf.readthedocs.io/en/latest/faq.html#multiprocessing
-        '''
-        # make vectors of arguments for the processes
-        cpu = min(kwargs['cpu_count'], cpu_count()) if kwargs['cpu_count'] else cpu_count()        
-        prefix = 'pages' # json file writing parsed pages per process
-        vectors = [(i, cpu, start, end, self.filename_pdf, self.password, 
-                            kwargs, f'{prefix}-{i}.json') for i in range(cpu)]
+    def restore(self, data: dict):
+        self._last_result = data
+        return self
 
-        # start parsing processes
-        pool = Pool()
-        pool.map(self._parse_pages_per_cpu, vectors, 1)
-        
-        # restore parsed page data
-        for i in range(cpu):
-            filename = f'{prefix}-{i}.json'
-            if not os.path.exists(filename): continue            
-            self.deserialize(filename)
-            os.remove(filename)
-        
-        # create docx file
-        self.make_docx(docx_filename, **kwargs)
+    def serialize(self, filename: str) -> None:
+        with open(filename, "w", encoding="utf-8") as file:
+            json.dump(self.store(), file, indent=4)
 
+    def deserialize(self, filename: str):
+        with open(filename, "r", encoding="utf-8") as file:
+            self.restore(json.load(file))
+        return self
 
-    @staticmethod
-    def _parse_pages_per_cpu(vector):
-        '''Render a page range of a document.
-        
-        Args:
-            vector (list): A list containing required parameters.
-                * 0  : segment number for current process                
-                * 1  : count of CPUs
-                * 2,3: whole pages range to process
-                * 4  : pdf filename
-                * 5  : password for encrypted pdf
-                * 6  : configuration parameters
-                * 7  : json filename storing parsed results
-        '''        
-        # recreate the arguments
-        idx, cpu, s, e, pdf_filename, password, kwargs, json_filename = vector
+    def _open_pdf(self):
+        if self._stream is not None:
+            return pdfplumber.open(BytesIO(self._stream), password=self.password or None)
+        return pdfplumber.open(self.filename_pdf, password=self.password or None)
 
-        # open pdf to get page count: all pages are marked to parse temporarily 
-        # since don't know which pages to parse for this moment
-        cv = Converter(pdf_filename, password)
-        cv.load_pages()
+    def _default_docx_filename(self) -> str:
+        if not self.filename_pdf:
+            raise ConversionException("Please specify a docx file name for stream input.")
+        return f"{self.filename_pdf[0:-len('.pdf')]}.docx"
 
-        # the specified pages to process
-        e = e or len(cv.fitz_doc)
-        all_indexes = range(s, e)
-        num_pages = len(all_indexes)
-
-        # page segment processed by this cpu
-        m = int(num_pages/cpu)
-        n = num_pages % cpu
-        seg_size = m + int(idx<n)
-        seg_from = (m+1)*idx + min(n-idx, 0)
-        seg_to = min(seg_from + seg_size, num_pages)
-        page_indexes = [all_indexes[i] for i in range(seg_from, seg_to)]
-
-        # now, mark the right pages
-        for page in cv.pages: page.skip_parsing = True
-        for i in page_indexes: 
-            cv.pages[i].skip_parsing = False
-
-        # parse pages and serialize data for further processing
-        cv.parse_document(**kwargs) \
-            .parse_pages(**kwargs) \
-            .serialize(json_filename)
-        cv.close()
-
+    def _append_pdf_page(self, document: Document, page, output_page_number: int, settings: dict) -> dict:
+        self._configure_section(document, output_page_number, page, settings)
+        words = self._extract_words(page)
+        lines = self._cluster_lines(words, settings["line_tolerance"])
+        previous_bottom = 0.0
+        for line in lines:
+            paragraph = document.add_paragraph()
+            self._format_paragraph(paragraph, line, previous_bottom, settings)
+            self._append_line_runs(paragraph, line, settings)
+            previous_bottom = line["bottom"]
+        return {
+            "width": page.width,
+            "height": page.height,
+            "word_count": len(words),
+            "line_count": len(lines),
+        }
 
     @staticmethod
-    def _page_indexes(start, end, pages, pdf_len):
-        '''Parsing arguments.'''
-        if pages: 
-            indexes = [int(x) for x in pages]
+    def _configure_section(document: Document, output_page_number: int, page, settings: dict) -> None:
+        if output_page_number == 0:
+            section = document.sections[0]
         else:
-            end = end or pdf_len
-            s = slice(int(start), int(end))
-            indexes = range(pdf_len)[s]
-        
-        return indexes
+            section = document.add_section(WD_SECTION.NEW_PAGE)
+        if settings["preserve_page_size"]:
+            section.page_width = Pt(page.width)
+            section.page_height = Pt(page.height)
+        section.top_margin = Pt(0)
+        section.bottom_margin = Pt(0)
+        section.left_margin = Pt(0)
+        section.right_margin = Pt(0)
+        section.header_distance = Pt(0)
+        section.footer_distance = Pt(0)
 
-    
     @staticmethod
-    def _color_output(msg): return f'\033[1;36m{msg}\033[0m'
+    def _extract_words(page) -> list[dict]:
+        return page.extract_words(
+            extra_attrs=["fontname", "size"],
+            keep_blank_chars=False,
+            use_text_flow=False,
+        )
+
+    @staticmethod
+    def _cluster_lines(words: Iterable[dict], line_tolerance: float) -> list[dict]:
+        lines: list[dict] = []
+        for word in sorted(words, key=lambda item: (item["top"], item["x0"])):
+            for line in reversed(lines[-6:]):
+                if abs(line["top"] - word["top"]) <= line_tolerance:
+                    line["words"].append(word)
+                    line["top"] = min(line["top"], word["top"])
+                    line["bottom"] = max(line["bottom"], word["bottom"])
+                    break
+            else:
+                lines.append({"top": word["top"], "bottom": word["bottom"], "words": [word]})
+        for line in lines:
+            line["words"].sort(key=lambda item: item["x0"])
+        return sorted(lines, key=lambda item: (item["top"], item["words"][0]["x0"]))
+
+    @staticmethod
+    def _format_paragraph(paragraph, line: dict, previous_bottom: float, settings: dict) -> None:
+        first_word = line["words"][0]
+        paragraph_format = paragraph.paragraph_format
+        paragraph_format.space_before = Pt(max(0.0, line["top"] - previous_bottom))
+        paragraph_format.space_after = Pt(0)
+        paragraph_format.left_indent = Pt(max(0.0, first_word["x0"]))
+        paragraph_format.line_spacing = 1
+
+    @staticmethod
+    def _append_line_runs(paragraph, line: dict, settings: dict) -> None:
+        words = line["words"]
+        line_left = words[0]["x0"]
+        previous_x1 = line_left
+        for word_index, word in enumerate(words):
+            if word_index:
+                gap = word["x0"] - previous_x1
+                if gap > settings["gap_tolerance"]:
+                    paragraph.paragraph_format.tab_stops.add_tab_stop(
+                        Pt(max(0.0, word["x0"] - line_left))
+                    )
+                    paragraph.add_run("\t")
+                else:
+                    paragraph.add_run(" ")
+            run = paragraph.add_run(word["text"])
+            Converter._style_run(run, word)
+            previous_x1 = word["x1"]
+
+    @staticmethod
+    def _style_run(run, word: dict) -> None:
+        size = word.get("size")
+        if size:
+            run.font.size = Pt(float(size))
+        font_name = word.get("fontname") or ""
+        run.bold = "Bold" in font_name or "Black" in font_name
+        run.italic = "Italic" in font_name or "Oblique" in font_name
+
+    @staticmethod
+    def _page_indexes(start, end, pages, pdf_len: int):
+        if pages:
+            return [int(index) for index in pages]
+        actual_end = end if end is not None else pdf_len
+        return list(range(pdf_len)[slice(int(start), int(actual_end))])
+
+    @staticmethod
+    def _color_output(msg: str) -> str:
+        return f"\033[1;36m{msg}\033[0m"
 
 
-class ConversionException(Exception): 
+class ConversionException(Exception):
     pass
 
-class MakedocxException(ConversionException): 
+
+class MakedocxException(ConversionException):
     pass

@@ -14,7 +14,9 @@ Pull requests from the community are welcome, but [Artifex](https://artifex.com)
 
 ---
 
-If you are looking for a **full-featured PDF processing library**, consider using [PyMuPDF](https://github.com/pymupdf/PyMuPDF) or [MuPDF.NET](https://github.com/ArtifexSoftware/MuPDF.NET).
+This fork uses a pdfplumber/pdfminer extraction backend and python-docx output
+generation. It is focused on editable text conversion with permissive runtime
+dependencies.
 
 ## Documentation
 

@@ -5,8 +5,7 @@ Convert PDF
 
 We can use either the :py:class:`~pdf2docx.converter.Converter` class, or 
 a wrapped method :py:meth:`~pdf2docx.main.parse` to convert all/specified 
-pdf pages to docx. Multi-processing is supported in case pdf file with a
-large number of pages. 
+pdf pages to docx.
 
 
 Example 1: convert all pages
@@ -64,24 +63,7 @@ Example 2: convert specified pages
 
 
 
-Example 3: multi-Processing
---------------------------------
-
-Turn on multi-processing with default count of CPU::
-
-  cv.convert(docx_file, multi_processing=True)
-
-Specify the count of CPUs::
-
-  cv.convert(docx_file, multi_processing=True, cpu_count=4)
-
-
-.. note::
-  Multi-processing works for continuous pages specified by ``start`` and ``end`` only.
-
-
-
-Example 4: convert encrypted pdf
+Example 3: convert encrypted pdf
 ---------------------------------------
 
 Provide ``password`` to open and convert password protected pdf::
@@ -92,4 +74,3 @@ Provide ``password`` to open and convert password protected pdf::
 
 
 .. include:: footer.rst
-
