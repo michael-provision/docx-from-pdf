@@ -215,6 +215,8 @@ class TextBlock(Block):
         self.lines.parse_line_break(bbox, 
             line_break_width_ratio, 
             line_break_free_space_ratio)
+        if self.parent.__class__.__name__ == 'Cell' and not any(self.parent.border_width):
+            self.lines.preserve_table_cell_line_breaks()
 
 
     def parse_relative_line_spacing(self):
@@ -273,11 +275,22 @@ class TextBlock(Block):
         block_height = spacing_lines.bbox[idx+2]-spacing_lines.bbox[idx]
         
         # average line spacing
-        count = len(spacing_lines.group_by_physical_rows()) # count of rows
+        rows = spacing_lines.group_by_physical_rows(sorted=True)
+        count = len(rows) # count of rows
+        preserve_borderless_cell_spacing = (
+            self.parent.__class__.__name__ == 'Cell' and
+            not any(self.parent.border_width)
+        )
         if count > 1:
             line_space = (block_height-first_line_height)/(count-1)
         else:
             line_space = block_height        
+        if preserve_borderless_cell_spacing and count > 1:
+            row_spacings = [
+                abs(rows[row_index+1].bbox[idx] - rows[row_index].bbox[idx])
+                for row_index in range(count-1)
+            ]
+            line_space = max(line_space, max(row_spacings))
         self.line_space = line_space
 
         # since the line height setting in docx may affect the original bbox in pdf, 
@@ -287,7 +300,8 @@ class TextBlock(Block):
 
         # if before spacing is negative, set to zero and adjust calculated line spacing accordingly
         if self.before_space < 0:
-            self.line_space += self.before_space / count
+            if not preserve_borderless_cell_spacing:
+                self.line_space += self.before_space / count
             self.before_space = 0.0
 
 
@@ -391,6 +405,12 @@ class TextBlock(Block):
             for line in image_only_lines:
                 line.make_docx(p, float_images=True)
             for line in text_lines:
+                if not line.tab_stop and self.tab_stops:
+                    line_offset = round(line.bbox.x0-self.bbox.x0, 1)
+                    line.tab_stop = sum(
+                        1 for tab_stop in self.tab_stops
+                        if tab_stop <= line_offset
+                    )
                 line.make_docx(p)
         else:
             for line in self.lines:

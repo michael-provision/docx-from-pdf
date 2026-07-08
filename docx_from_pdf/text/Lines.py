@@ -238,6 +238,19 @@ class Lines(ElementCollection):
         for line in rows[-1]: line.line_break = 0
 
 
+    def preserve_table_cell_line_breaks(self):
+        '''Preserve physical row endings inside fixed table cells.'''
+        rows = self.group_by_physical_rows(sorted=True)
+        if not rows: return
+
+        for row in rows:
+            row.sort_in_line_order()
+            for line in row: line.line_break = 0
+
+        for row in rows[:-1]:
+            row[-1].line_break = 1
+
+
     def parse_tab_stop(self, line_separate_threshold:float):
         '''Calculate tab stops for parent block and whether add TAB stop before each line. 
 

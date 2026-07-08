@@ -130,13 +130,13 @@ class Paths(Collection):
                 iso_shapes.extend(paths.to_shapes())
                 for svg_bbox in inner_bboxes:
                     images.append(ie.clip_page_to_dict(bbox=Rect(svg_bbox),
-                                                        rm_image=True,
+                                                        rm_image=False,
                                                         clip_image_res_ratio=clip_image_res_ratio))
 
             # otherwise, it's a svg
             else:
                 images.append(ie.clip_page_to_dict(bbox=Rect(bbox),
-                                                   rm_image=True,
+                                                   rm_image=False,
                                                    clip_image_res_ratio=clip_image_res_ratio))
 
         return iso_shapes, images
