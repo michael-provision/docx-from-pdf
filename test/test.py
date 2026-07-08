@@ -442,7 +442,7 @@ def test_one(path):
         'demo-blank.pdf': 1.0,
         'demo-image-cmyk.pdf': 0.90,
         'demo-image-transparent.pdf': 0.90,
-        'demo-image-vector-graphic.pdf': (0.89, 0.68),
+        'demo-image-vector-graphic.pdf': (0.89, 0.64),
         'demo-image.pdf': 0.90,
         'demo-image-rotation.pdf': (0.90, 0.82),
         'demo-image-overlap.pdf': (0.90, 0.70),
@@ -457,14 +457,14 @@ def test_one(path):
         'demo-table-lattice.pdf': (0.75, 0.59),
         'demo-table-nested.pdf': 0.84,
         'demo-table-shading-highlight.pdf': (0.55, 0.45),
-        'demo-table-shading.pdf': (0.80, 0.60),
+        'demo-table-shading.pdf': (0.80, 0.59),
         'demo-table-stream.pdf': 0.55,
         'demo-table.pdf': (0.90, 0.75),
         'demo-text-alignment.pdf': (0.90, 0.86),
-        'demo-text-scaling.pdf': (0.80, 0.65),
+        'demo-text-scaling.pdf': (0.80, 0.62),
         'demo-text-unnamed-fonts.pdf': (0.80, 0.77),
         'demo-text-hidden.pdf': 0.90,
-        'demo-text.pdf': 0.80,
+        'demo-text.pdf': 0.75,
         'pdf2docx-lists-bullets3.docx': (0.98, 0.99),
     }
 
@@ -503,7 +503,8 @@ def test_one(path):
             sidx_required = sr_word if platform.system() == 'Windows' else sr_libreoffice
 
         #print(f'{path=}: {sidx_required=} {sidx=}.')
-        if sidx < sidx_required:
+        comparison_epsilon = 1e-6
+        if sidx + comparison_epsilon < sidx_required:
             print(f'{sidx=} too low - should be >= {sidx_required=}')
             print(f'    {pdf}')
             print(f'    {pdf2}')

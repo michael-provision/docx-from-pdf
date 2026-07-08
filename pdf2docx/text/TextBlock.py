@@ -28,6 +28,7 @@ Data structure based on this `link <PDF text extraction schema>`_::
 from docx.shared import (Pt,Inches)
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from .Lines import Lines
+from .TextSpan import TextSpan
 from ..image.ImageSpan import ImageSpan
 from ..common.share import (RectType, TextAlignment, lower_round)
 from ..common.Block import Block
@@ -262,12 +263,17 @@ class TextBlock(Block):
         # check text direction
         idx = 1 if self.is_horizontal_text else 0       
 
-        bbox = self.lines[0].bbox   # first line
+        spacing_lines = Lines([
+            line for line in self.lines
+            if any(isinstance(span, TextSpan) for span in line.spans)
+        ]) or self.lines
+
+        bbox = spacing_lines[0].bbox   # first line
         first_line_height = bbox[idx+2] - bbox[idx]
-        block_height = self.bbox[idx+2]-self.bbox[idx]
+        block_height = spacing_lines.bbox[idx+2]-spacing_lines.bbox[idx]
         
         # average line spacing
-        count = self.row_count # count of rows
+        count = len(spacing_lines.group_by_physical_rows()) # count of rows
         if count > 1:
             line_space = (block_height-first_line_height)/(count-1)
         else:
@@ -300,12 +306,20 @@ class TextBlock(Block):
             The left position of paragraph is set by paragraph indent, rather than ``TAB`` stop.
         '''
         pf = docx.reset_paragraph_format(p)
+        float_image_spans = (
+            bool(self.raw_text.strip())
+            and bool(self.lines.image_spans)
+            and self.parent.__class__.__name__ != 'Cell'
+        )
 
         # ------------------------------------
         # vertical spacing
         # ------------------------------------
         before_spacing = max(round(self.before_space, 1), 0.0)
         after_spacing = max(round(self.after_space, 1), 0.0)
+        if float_image_spans and self.line_space_type == 0:
+            preserved_flow_height = self.before_space + self.line_space - constants.TINY_DIST
+            after_spacing = max(after_spacing, round(preserved_flow_height, 1))
         pf.space_before = Pt(before_spacing)
         pf.space_after = Pt(after_spacing)        
 
@@ -363,7 +377,24 @@ class TextBlock(Block):
         # ------------------------------------
         # add lines
         # ------------------------------------
-        for line in self.lines: line.make_docx(p)
+        if float_image_spans:
+            image_only_lines = Lines([
+                line for line in self.lines
+                if line.image_spans and not line.raw_text.strip()
+            ])
+            text_lines = Lines([
+                line for line in self.lines
+                if line.raw_text.strip()
+            ])
+            image_only_lines.sort_in_reading_order()
+            text_lines.sort_in_reading_order()
+            for line in image_only_lines:
+                line.make_docx(p, float_images=True)
+            for line in text_lines:
+                line.make_docx(p)
+        else:
+            for line in self.lines:
+                line.make_docx(p)
 
         return p
 

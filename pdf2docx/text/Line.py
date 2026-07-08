@@ -164,7 +164,7 @@ class Line(Element):
         return line
 
 
-    def make_docx(self, p):
+    def make_docx(self, p, float_images=False):
         '''Create docx line, i.e. a run in ``python-docx``.'''
         # tab stop before this line to ensure horizontal position
         # Note it might need more than one tabs if multi-tabs are set for current paragraph
@@ -172,7 +172,11 @@ class Line(Element):
             for _ in range(self.tab_stop): p.add_run().add_tab()
 
         # create span -> run in paragraph
-        for span in self.spans: span.make_docx(p)            
+        for span in self.spans:
+            if isinstance(span, ImageSpan):
+                span.make_docx(p, floating=float_images)
+            else:
+                span.make_docx(p)
 
         # line break
         if self.line_break: p.add_run('\n')
