@@ -41,9 +41,8 @@ class RawPagePdfium(RawPage):
     def _preprocess_text(self, **settings):
         if settings["ocr"] == 1:
             raise SystemExit("OCR feature is planned but not implemented yet.")
-        if settings["ocr"] == 2:
-            return []
-        return self.page_engine.extract_text_blocks(sort=settings.get("sort"))
+        include = "hidden" if settings["ocr"] == 2 else "visible"
+        return self.page_engine.extract_text_blocks(sort=settings.get("sort"), include=include)
 
     def _preprocess_images(self, **settings):
         if settings["ocr"] == 2:
@@ -65,7 +64,7 @@ class RawPagePdfium(RawPage):
         return Paths(parent=self).restore(self.page_engine.extract_paths())
 
     def _preprocess_hyperlinks(self):
-        return []
+        return self.page_engine.extract_hyperlinks()
 
     @staticmethod
     def _remove_images_covered_by_rendered_regions(image_blocks, rendered_regions):

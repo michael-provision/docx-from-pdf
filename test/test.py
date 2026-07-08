@@ -47,6 +47,7 @@ import pytest
 from docx_from_pdf.backend.pdfium import PdfiumDocument
 from docx_from_pdf.common.share import BlockType
 from docx_from_pdf.page.RawPagePdfium import RawPagePdfium
+from docx_from_pdf.shape.Path import Path
 from docx_from_pdf.table.Cell import Cell
 from docx_from_pdf.text.TextBlock import TextBlock
 
@@ -550,6 +551,95 @@ class TestConversion:
         text_block.make_docx(paragraph)
 
         assert len(paragraph._element.xpath('.//w:tab')) == 1
+
+    @staticmethod
+    def _page_text(blocks):
+        return ''.join(
+            char['c']
+            for block in blocks
+            for line in block['lines']
+            for span in line['spans']
+            for char in span['chars']
+        )
+
+    def test_invisible_text_layer_is_dropped(self):
+        '''With ocr=0, render-mode-3 (invisible) OCR text behind an image is ignored.'''
+        doc = PdfiumDocument(os.path.join(sample_path, 'demo-text-hidden.pdf'))
+        page = doc[0]
+        try:
+            visible = page.extract_text_blocks(include='visible')
+        finally:
+            page.close()
+            doc.close()
+
+        text = self._page_text(visible)
+        assert 'displayed text' in text
+        assert 'encouraged to read widely' not in text
+
+    def test_ocr_mode_extracts_only_hidden_text(self):
+        '''include="hidden" returns only the invisible OCR layer (ocr=2 parity).'''
+        doc = PdfiumDocument(os.path.join(sample_path, 'demo-text-hidden.pdf'))
+        page = doc[0]
+        try:
+            hidden = page.extract_text_blocks(include='hidden')
+        finally:
+            page.close()
+            doc.close()
+
+        text = self._page_text(hidden)
+        assert 'encouraged to read widely' in text
+        assert 'displayed text' not in text
+
+    def test_rotated_page_uses_visual_dimensions(self):
+        '''A /Rotate 90 page reports portrait (visible) dimensions and a real rotation matrix.'''
+        doc = PdfiumDocument(os.path.join(sample_path, 'demo-image-rotation.pdf'))
+        page = doc[0]
+        try:
+            assert page.rotation == 90
+            assert page.width < page.height
+            assert bool(page.rotation_matrix)
+        finally:
+            page.close()
+            doc.close()
+
+    def test_native_image_preserves_source_resolution(self):
+        '''Images are extracted at native resolution, not capped to a low-DPI raster clip.'''
+        doc = PdfiumDocument(os.path.join(sample_path, 'demo-image-colorspace.pdf'))
+        page = doc[0]
+        try:
+            images = page.extract_images()
+        finally:
+            page.close()
+            doc.close()
+
+        assert images
+        assert max(image['width'] for image in images) >= 1000
+
+    def test_hyperlinks_are_extracted(self):
+        '''URI link annotations are recovered as hyperlink shapes.'''
+        doc = PdfiumDocument(os.path.join(sample_path, 'demo-image.pdf'))
+        page = doc[0]
+        try:
+            links = page.extract_hyperlinks()
+        finally:
+            page.close()
+            doc.close()
+
+        assert links
+        assert all(link['uri'].startswith('http') for link in links)
+
+    def test_path_with_undefined_color_does_not_crash(self):
+        '''A path whose stroke/fill color is undefined falls back to white instead of crashing.'''
+        path = Path({
+            'type': 'fs',
+            'items': [('l', (0.0, 0.0), (10.0, 0.0)), ('l', (10.0, 0.0), (10.0, 10.0)), ('close',)],
+            'width': 1.0,
+            'color': None,
+            'fill': None,
+            'closePath': True,
+        })
+
+        assert path.to_shapes()
 
 
 # We make a separate pytest test for each sample file.

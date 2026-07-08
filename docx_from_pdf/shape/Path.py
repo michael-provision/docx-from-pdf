@@ -328,13 +328,13 @@ class Path:
         # convert to strokes
         white = (1,1,1)
         if self.is_stroke:
-            stroke_color = self.raw.get('color', white) # white stroke by default
+            stroke_color = self.raw.get('color') or white # white stroke by default
             width = self.raw.get('width', 0.0)
             iso_shapes.extend(self._to_strokes(width, stroke_color))
 
         # convert to rectangular fill
         if self.is_fill:
-            fill_color = self.raw.get('fill', white) # white filling by default
+            fill_color = self.raw.get('fill') or white # white filling by default
             iso_shapes.extend(self._to_fills(fill_color))
 
         return iso_shapes
