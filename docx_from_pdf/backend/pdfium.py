@@ -148,7 +148,8 @@ class PdfiumPage:
             origin_x = c_double()
             origin_y = c_double()
             pdfium_c.FPDFText_GetCharOrigin(text_page, char_index, byref(origin_x), byref(origin_y))
-            font_name = self._font_name(text_page, char_index)
+            raw_font_name = self._raw_font_name(text_page, char_index)
+            font_name = self._normalize_font_name(raw_font_name) or "Arial"
             font_size = self._effective_font_size(text_page, char_index)
             chars.append(
                 {
@@ -159,7 +160,7 @@ class PdfiumPage:
                     "font": font_name,
                     "size": font_size,
                     "color": self._text_color(text_page, char_index),
-                    "flags": self._font_flags(text_page, char_index, font_name),
+                    "flags": self._font_flags(text_page, char_index, raw_font_name),
                 }
             )
         return chars
@@ -307,11 +308,20 @@ class PdfiumPage:
         return font_size * vertical_scale if vertical_scale else font_size
 
     @staticmethod
-    def _font_name(text_page, char_index: int):
+    def _raw_font_name(text_page, char_index: int):
         buffer = create_string_buffer(512)
         flags = c_int()
         length = pdfium_c.FPDFText_GetFontInfo(text_page, char_index, buffer, len(buffer), byref(flags))
-        return buffer.value[:length].decode("utf-8", errors="ignore").split("+")[-1] or "Arial"
+        return buffer.value[:length].decode("utf-8", errors="ignore").split("+")[-1]
+
+    @staticmethod
+    def _normalize_font_name(font_name: str):
+        if "-" not in font_name:
+            return font_name
+        family_name, style_name = font_name.rsplit("-", 1)
+        if style_name in {"Regular", "Bold", "Italic", "Oblique", "BoldItalic", "BoldOblique"}:
+            return family_name
+        return font_name
 
     @staticmethod
     def _font_flags(text_page, char_index: int, font_name: str):
