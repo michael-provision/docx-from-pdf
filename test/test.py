@@ -3,7 +3,7 @@ The test framework: pytest, pytest-cov.
 
 We have a set of PDF files as test inputs.
 
-For a test file foo.pdf, we convert it into a file foo.pdf.docx using pdf2docx.
+For a test file foo.pdf, we convert it into a file foo.pdf.docx.
 
 To check whether this has worked as expected, we use Python package docx2pdf
 (which uses Word) on Windows, or Libreoffice command line on other platforms,
@@ -36,14 +36,14 @@ import numpy as np
 import cv2 as cv
 import pypdfium2 as pdfium
 from docx import Document
-from pdf2docx import Converter, parse
+from docx_from_pdf import Converter, parse
 import subprocess
 import time
 import shutil
 import platform
 import pytest
 
-from pdf2docx.backend.pdfium import PdfiumDocument
+from docx_from_pdf.backend.pdfium import PdfiumDocument
 
 
 root_path = os.path.abspath(f'{__file__}/../..')
@@ -424,11 +424,11 @@ def _find_paths():
 g_paths = _find_paths()
 
 # We create a separate pytest for each sample file, paramaterised using the
-# path of the sample file relative to the pdf2docx directory.
+# path of the sample file relative to the repository root.
 #
 # So one can run a specific test with:
 #
-# pytest pdf2docx/test/test.py::test_one[test/samples/demo-whisper_2_3.pdf]
+# pytest test/test.py::test_one[test/samples/demo-whisper_2_3.pdf]
 
 @pytest.mark.parametrize('path', g_paths)
 def test_one(path):
@@ -465,7 +465,7 @@ def test_one(path):
         'demo-text-unnamed-fonts.pdf': (0.80, 0.77),
         'demo-text-hidden.pdf': 0.90,
         'demo-text.pdf': 0.75,
-        'pdf2docx-lists-bullets3.docx': (0.98, 0.99),
+        'docx-from-pdf-lists-bullets3.docx': (0.98, 0.99),
     }
 
     print(f'# Looking at: {path}')

@@ -15,14 +15,14 @@ on:
 
 # -----------------------------------------------------------------------------------------------------
 # To leverage the benefit of Github Action, the testing process is divided into three jobs:
-#   1. pdf2docx: convert sample pdf to docx -> linux runner
+#   1. docx-from-pdf: convert sample pdf to docx -> linux runner
 #   2. docx2pdf: convert generated docx to pdf for comparing -> specific runner with MS Word installed
 #   3. check_quality: convert page to image and compare similarity with python-opencv -> linux runner
 # However, keep step 1 only, considering the difficulty to get a specific runner with MS Word installed.
 # -----------------------------------------------------------------------------------------------------
 jobs:
   
-  pdf2docx-docker:
+  docx-from-pdf-docker:
     
     runs-on: ubuntu-latest
     
@@ -46,11 +46,11 @@ jobs:
           pytest -v ./test/test.py::TestConversion
 
 
-  pdf2docx-ubuntu:
+  docx-from-pdf-ubuntu:
 
     runs-on: ubuntu-latest
 
-    needs: pdf2docx-docker
+    needs: docx-from-pdf-docker
 
     strategy:
       matrix:
@@ -75,7 +75,7 @@ jobs:
 
       - name: Run unit test
         run: |
-          pytest -v ./test/test.py::TestConversion --cov=./pdf2docx --cov-report=xml
+          pytest -v ./test/test.py::TestConversion --cov=./docx_from_pdf --cov-report=xml
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3

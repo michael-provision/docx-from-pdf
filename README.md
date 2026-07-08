@@ -1,17 +1,20 @@
-# PDF to DOCX Converter
+# docx-from-pdf
 
 A Python library and CLI for converting PDF files into editable DOCX documents.
 
-This fork uses PDFium for PDF parsing and rendering. It keeps the original layout
-pipeline for text blocks, tables, images, vector paths, sections, and DOCX
-generation, but removes the PyMuPDF runtime dependency.
+`docx-from-pdf` uses PDFium for PDF parsing and rendering. It converts text,
+tables, images, vector paths, and section layout into DOCX output with
+permissive runtime dependencies.
+
+This project uses PDFium through `pypdfium2`; it is not affiliated with PDFium,
+Chromium, or Google.
 
 ## Install
 
 Install from this repository:
 
 ```bash
-pip install git+https://github.com/michael-provision/pdf2docx.git
+pip install git+https://github.com/michael-provision/docx-from-pdf.git
 ```
 
 Install local development dependencies:
@@ -25,7 +28,7 @@ pip install -r requirements.txt
 Convert a PDF from Python:
 
 ```python
-from pdf2docx import Converter
+from docx_from_pdf import Converter
 
 converter = Converter("input.pdf")
 converter.convert("output.docx")
@@ -35,13 +38,13 @@ converter.close()
 Convert a PDF from the CLI:
 
 ```bash
-pdf2docx convert input.pdf output.docx
+docx-from-pdf convert input.pdf output.docx
 ```
 
 Extract tables:
 
 ```python
-from pdf2docx import Converter
+from docx_from_pdf import Converter
 
 converter = Converter("input.pdf")
 tables = converter.extract_tables()
