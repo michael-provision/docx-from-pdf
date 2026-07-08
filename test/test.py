@@ -31,6 +31,7 @@ object. Did not convert`, it might be necessary to follow the instructions at:
 import glob
 import os
 import io
+import base64
 from io import BytesIO
 import numpy as np
 import cv2 as cv
@@ -44,6 +45,10 @@ import platform
 import pytest
 
 from docx_from_pdf.backend.pdfium import PdfiumDocument
+from docx_from_pdf.common.share import BlockType
+from docx_from_pdf.page.RawPagePdfium import RawPagePdfium
+from docx_from_pdf.table.Cell import Cell
+from docx_from_pdf.text.TextBlock import TextBlock
 
 
 root_path = os.path.abspath(f'{__file__}/../..')
@@ -79,6 +84,81 @@ def build_pdf_bytes(content_stream):
     pdf.extend(b'startxref\n')
     pdf.extend(f'{xref_offset}\n%%EOF\n'.encode())
     return bytes(pdf)
+
+
+def build_table_cell_with_two_text_rows(border_width=(0, 0, 0, 0)):
+    return Cell({
+        'bbox': (0, 0, 400, 100),
+        'border_width': border_width,
+        'blocks': [{
+            'type': BlockType.TEXT.value,
+            'lines': [
+                {
+                    'bbox': (10, 10, 220, 30),
+                    'wmode': 0,
+                    'dir': (1.0, 0.0),
+                    'spans': [{
+                        'bbox': (10, 10, 220, 30),
+                        'font': 'Arial',
+                        'size': 12.0,
+                        'color': 0,
+                        'flags': 0,
+                        'chars': [{'c': 'First line', 'bbox': (10, 10, 220, 30)}],
+                    }],
+                },
+                {
+                    'bbox': (10, 34, 200, 46),
+                    'wmode': 0,
+                    'dir': (1.0, 0.0),
+                    'spans': [{
+                        'bbox': (10, 34, 200, 46),
+                        'font': 'Arial',
+                        'size': 10.0,
+                        'color': 0,
+                        'flags': 0,
+                        'chars': [{'c': 'Second line', 'bbox': (10, 34, 200, 46)}],
+                    }],
+                },
+            ],
+        }],
+    })
+
+
+def build_mixed_image_text_block():
+    png_bytes = base64.b64decode(
+        'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/p9sAAAAASUVORK5CYII='
+    )
+    return TextBlock({
+        'line_space': 10.0,
+        'line_space_type': 0,
+        'tab_stops': [123.0],
+        'lines': [
+            {
+                'bbox': (54, 43, 172, 68),
+                'wmode': 0,
+                'dir': (1.0, 0.0),
+                'spans': [{
+                    'bbox': (54, 43, 172, 68),
+                    'width': 118,
+                    'height': 25,
+                    'image': png_bytes,
+                }],
+            },
+            {
+                'bbox': (177, 61, 490, 71),
+                'wmode': 0,
+                'dir': (1.0, 0.0),
+                'spans': [{
+                    'bbox': (177, 61, 490, 71),
+                    'font': 'Arial',
+                    'size': 10.0,
+                    'color': 0,
+                    'flags': 0,
+                    'text': 'Subtitle',
+                }],
+            },
+        ],
+    })
 
 
 def get_page_similarity(page_a, page_b, diff_img_filename='diff.png'):
@@ -405,6 +485,71 @@ class TestConversion:
         )
         assert first_char['bbox'][0] == pytest.approx(66.83, abs=0.01)
         assert first_char['bbox'][1] == pytest.approx(41.18, abs=0.01)
+
+    def test_rendered_region_filters_covered_images(self):
+        '''Test standalone images covered by rendered regions are removed.'''
+        image_blocks = [
+            {'bbox': (10, 10, 20, 20), 'image': b'a'},
+            {'bbox': (40, 40, 60, 60), 'image': b'b'},
+        ]
+        rendered_regions = [
+            {'bbox': (0, 0, 30, 30), 'image': b'rendered'},
+        ]
+
+        filtered_images = RawPagePdfium._remove_images_covered_by_rendered_regions(
+            image_blocks,
+            rendered_regions,
+        )
+
+        assert filtered_images == [image_blocks[1]]
+
+    def test_borderless_table_cell_preserves_physical_line_breaks(self):
+        '''Test borderless table cells preserve source row boundaries.'''
+        borderless_cell = build_table_cell_with_two_text_rows()
+        text_block = borderless_cell.blocks[0]
+
+        text_block.parse_horizontal_spacing(
+            borderless_cell.working_bbox,
+            5.0,
+            0.5,
+            0.1,
+            1.0,
+            1.0,
+            2.0,
+        )
+        text_block.parse_exact_line_spacing()
+
+        assert [line.line_break for line in text_block.lines] == [1, 0]
+        assert text_block.line_space == pytest.approx(24.0)
+
+    def test_bordered_table_cell_keeps_flow_line_breaks(self):
+        '''Test bordered table cells keep normal flowing line-break behavior.'''
+        bordered_cell = build_table_cell_with_two_text_rows(border_width=(1, 1, 1, 1))
+        text_block = bordered_cell.blocks[0]
+
+        text_block.parse_horizontal_spacing(
+            bordered_cell.working_bbox,
+            5.0,
+            0.5,
+            0.1,
+            1.0,
+            1.0,
+            2.0,
+        )
+        text_block.parse_exact_line_spacing()
+
+        assert [line.line_break for line in text_block.lines] == [0, 0]
+        assert text_block.line_space == pytest.approx(16.0)
+
+    def test_mixed_float_image_text_block_preserves_text_offset(self):
+        '''Test text to the right of a floated image keeps its source x-offset.'''
+        document = Document()
+        paragraph = document.add_paragraph()
+        text_block = build_mixed_image_text_block()
+
+        text_block.make_docx(paragraph)
+
+        assert len(paragraph._element.xpath('.//w:tab')) == 1
 
 
 # We make a separate pytest test for each sample file.

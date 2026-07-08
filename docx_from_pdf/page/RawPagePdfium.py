@@ -4,6 +4,7 @@
 
 from .RawPage import RawPage
 from ..common.Element import Element
+from ..common.geometry import Rect
 from ..common.share import debug_plot
 from ..image.ImagesExtractor import ImagesExtractor
 from ..shape.Paths import Paths
@@ -24,11 +25,12 @@ class RawPagePdfium(RawPage):
         text_blocks = self._preprocess_text(**settings)
         raw_dict["blocks"] = text_blocks
 
-        image_blocks = self._preprocess_images(**settings)
-        raw_dict["blocks"].extend(image_blocks)
-
         shapes, images = self._preprocess_shapes(**settings)
         raw_dict["shapes"] = shapes
+
+        image_blocks = self._preprocess_images(**settings)
+        image_blocks = self._remove_images_covered_by_rendered_regions(image_blocks, images)
+        raw_dict["blocks"].extend(image_blocks)
         raw_dict["blocks"].extend(images)
 
         raw_dict["shapes"].extend(self._preprocess_hyperlinks())
@@ -64,3 +66,27 @@ class RawPagePdfium(RawPage):
 
     def _preprocess_hyperlinks(self):
         return []
+
+    @staticmethod
+    def _remove_images_covered_by_rendered_regions(image_blocks, rendered_regions):
+        if not rendered_regions:
+            return image_blocks
+
+        rendered_bboxes = [Rect(image["bbox"]) for image in rendered_regions]
+        filtered_images = []
+        for image in image_blocks:
+            image_bbox = Rect(image["bbox"])
+            if any(
+                RawPagePdfium._intersection_ratio(image_bbox, rendered_bbox) >= 0.95
+                for rendered_bbox in rendered_bboxes
+            ):
+                continue
+            filtered_images.append(image)
+        return filtered_images
+
+    @staticmethod
+    def _intersection_ratio(source_bbox, target_bbox):
+        source_area = source_bbox.get_area()
+        if not source_area:
+            return 0.0
+        return (source_bbox & target_bbox).get_area() / source_area
