@@ -18,6 +18,72 @@ from .share import rgb_value
 from lxml import etree
 
 
+# Child order required by the WordprocessingML schema (ECMA-376 Part 1, 17.3 and 17.4).
+# Word tolerates out-of-order children, but strict validators reject the package.
+PARAGRAPH_PROPERTY_ORDER = (
+    'w:pStyle', 'w:keepNext', 'w:keepLines', 'w:pageBreakBefore', 'w:framePr',
+    'w:widowControl', 'w:numPr', 'w:suppressLineNumbers', 'w:pBdr', 'w:shd', 'w:tabs',
+    'w:suppressAutoHyphens', 'w:kinsoku', 'w:wordWrap', 'w:overflowPunct',
+    'w:topLinePunct', 'w:autoSpaceDE', 'w:autoSpaceDN', 'w:bidi', 'w:adjustRightInd',
+    'w:snapToGrid', 'w:spacing', 'w:ind', 'w:contextualSpacing', 'w:mirrorIndents',
+    'w:suppressOverlap', 'w:jc', 'w:textDirection', 'w:textAlignment',
+    'w:textboxTightWrap', 'w:outlineLvl', 'w:divId', 'w:cnfStyle', 'w:rPr', 'w:sectPr',
+    'w:pPrChange',
+)
+RUN_PROPERTY_ORDER = (
+    'w:rStyle', 'w:rFonts', 'w:b', 'w:bCs', 'w:i', 'w:iCs', 'w:caps', 'w:smallCaps',
+    'w:strike', 'w:dstrike', 'w:outline', 'w:shadow', 'w:emboss', 'w:imprint',
+    'w:noProof', 'w:snapToGrid', 'w:vanish', 'w:webHidden', 'w:color', 'w:spacing',
+    'w:w', 'w:kern', 'w:position', 'w:sz', 'w:szCs', 'w:highlight', 'w:u', 'w:effect',
+    'w:bdr', 'w:shd', 'w:fitText', 'w:vertAlign', 'w:rtl', 'w:cs', 'w:em', 'w:lang',
+    'w:eastAsianLayout', 'w:specVanish', 'w:oMath',
+)
+TABLE_PROPERTY_ORDER = (
+    'w:tblStyle', 'w:tblpPr', 'w:tblOverlap', 'w:bidiVisual', 'w:tblStyleRowBandSize',
+    'w:tblStyleColBandSize', 'w:tblW', 'w:jc', 'w:tblCellSpacing', 'w:tblInd',
+    'w:tblBorders', 'w:shd', 'w:tblLayout', 'w:tblCellMar', 'w:tblLook', 'w:tblCaption',
+    'w:tblDescription', 'w:tblPrChange',
+)
+CELL_PROPERTY_ORDER = (
+    'w:cnfStyle', 'w:tcW', 'w:gridSpan', 'w:hMerge', 'w:vMerge', 'w:tcBorders', 'w:shd',
+    'w:noWrap', 'w:tcMar', 'w:textDirection', 'w:tcFitText', 'w:vAlign', 'w:hideMark',
+    'w:headers', 'w:cellIns', 'w:cellDel', 'w:cellMerge', 'w:tcPrChange',
+)
+CELL_BORDER_ORDER = (
+    'w:top', 'w:start', 'w:bottom', 'w:end', 'w:insideH', 'w:insideV', 'w:tl2br',
+    'w:tr2bl',
+)
+CELL_MARGIN_ORDER = ('w:top', 'w:start', 'w:bottom', 'w:end')
+
+
+def set_child_in_order(parent, element, order:tuple):
+    '''Place ``element`` at its schema position in ``parent``, replacing a same-named child.
+
+    Args:
+        parent: ``lxml`` element receiving the child.
+        element: Child element whose tag is listed in ``order``.
+        order (tuple): Qualified tag names in the order the schema requires.
+
+    Returns:
+        The inserted element.
+    '''
+    tags = [qn(name) for name in order]
+    for existing in parent.findall(element.tag):
+        parent.remove(existing)
+    successors = set(tags[tags.index(element.tag)+1:])
+    for child in parent:
+        if child.tag in successors:
+            child.addprevious(element)
+            return element
+    parent.append(element)
+    return element
+
+
+def to_hex_color(srgb:int):
+    '''Six-digit RGB hex string, the only colour form ``ST_HexColor`` accepts.'''
+    return hex(srgb)[2:].zfill(6).upper()
+
+
 # ---------------------------------------------------------
 # section and paragraph
 # ---------------------------------------------------------
@@ -106,10 +172,10 @@ def reset_paragraph_format(p, line_spacing:float=1.05):
 
     # do not adjust spacing between Chinese and Latin/number
     xml = r'<w:autoSpaceDE {} w:val="0"/>'.format(nsdecls('w'))
-    p._p.get_or_add_pPr().insert(0, parse_xml(xml))
+    set_child_in_order(p._p.get_or_add_pPr(), parse_xml(xml), PARAGRAPH_PROPERTY_ORDER)
 
     xml = r'<w:autoSpaceDN {} w:val="0"/>'.format(nsdecls('w'))
-    p._p.get_or_add_pPr().insert(0, parse_xml(xml))
+    set_child_in_order(p._p.get_or_add_pPr(), parse_xml(xml), PARAGRAPH_PROPERTY_ORDER)
 
     return pf
 
@@ -145,8 +211,11 @@ def set_char_scaling(p_run, scale:float=1.0):
         p_run (docx.text.run.Run): Proxy object wrapping <w:r> element.
         scale (float, optional): scaling factor. Defaults to 1.0.
     '''
-    p_run._r.get_or_add_rPr().insert(0, 
-        parse_xml(r'<w:w {} w:val="{}"/>'.format(nsdecls('w'), 100*scale)))
+    # ST_TextScale is a whole percentage between 1 and 600
+    percent = min(max(round(100*scale), 1), 600)
+    set_child_in_order(p_run._r.get_or_add_rPr(),
+        parse_xml(r'<w:w {} w:val="{}"/>'.format(nsdecls('w'), percent)),
+        RUN_PROPERTY_ORDER)
 
 
 def set_char_spacing(p_run, space:float=0.0):
@@ -158,8 +227,9 @@ def set_char_spacing(p_run, space:float=0.0):
         p_run (docx.text.run.Run): Proxy object wrapping <w:r> element.
         space (float, optional): Spacing value in Pt. Expand if positive else condense. Defaults to 0.0.
     '''
-    p_run._r.get_or_add_rPr().insert(0, 
-        parse_xml(r'<w:spacing {} w:val="{}"/>'.format(nsdecls('w'), 20*space)))
+    set_child_in_order(p_run._r.get_or_add_rPr(),
+        parse_xml(r'<w:spacing {} w:val="{}"/>'.format(nsdecls('w'), round(20*space))),
+        RUN_PROPERTY_ORDER)
 
 
 def set_char_shading(p_run, srgb:int):
@@ -187,9 +257,9 @@ def set_char_shading(p_run, srgb:int):
 
     # set char shading
     else:
-        c = hex(srgb)[2:].zfill(6)
+        c = to_hex_color(srgb)
         xml = r'<w:shd {} w:val="clear" w:color="auto" w:fill="{}"/>'.format(nsdecls('w'), c)
-        p_run._r.get_or_add_rPr().insert(0, parse_xml(xml))
+        set_child_in_order(p_run._r.get_or_add_rPr(), parse_xml(xml), RUN_PROPERTY_ORDER)
 
 
 def set_char_underline(p_run, srgb:int):
@@ -199,9 +269,9 @@ def set_char_underline(p_run, srgb:int):
         p_run (docx.text.run.Run): Proxy object wrapping <w:r> element.
         srgb (int): Color value.
     '''
-    c = hex(srgb)[2:].zfill(6)
+    c = to_hex_color(srgb)
     xml = r'<w:u {} w:val="single" w:color="{}"/>'.format(nsdecls('w'), c)
-    p_run._r.get_or_add_rPr().insert(0, parse_xml(xml))
+    set_child_in_order(p_run._r.get_or_add_rPr(), parse_xml(xml), RUN_PROPERTY_ORDER)
 
 
 def add_hyperlink(paragraph, url, text):
@@ -480,9 +550,9 @@ def indent_table(table, indent:float):
     tbl_pr = table._element.xpath('w:tblPr')
     if tbl_pr:
         e = OxmlElement('w:tblInd')
-        e.set(qn('w:w'), str(20*indent)) # basic unit 1/20 pt for openxml 
+        e.set(qn('w:w'), str(round(20*indent))) # basic unit 1/20 pt for openxml
         e.set(qn('w:type'), 'dxa')
-        tbl_pr[0].append(e)
+        set_child_in_order(tbl_pr[0], e, TABLE_PROPERTY_ORDER)
 
 
 def set_cell_margins(cell:_Cell, **kwargs):
@@ -505,14 +575,14 @@ def set_cell_margins(cell:_Cell, **kwargs):
     tcPr = tc.get_or_add_tcPr()
     tcMar = OxmlElement('w:tcMar')
  
-    for m in ['top', 'start', 'bottom', 'end']:
-        if m in kwargs:
-            node = OxmlElement("w:{}".format(m))
-            node.set(qn('w:w'), str(kwargs.get(m)))
+    for m in CELL_MARGIN_ORDER:
+        if m[2:] in kwargs:
+            node = OxmlElement(m)
+            node.set(qn('w:w'), str(round(kwargs.get(m[2:]))))
             node.set(qn('w:type'), 'dxa')
             tcMar.append(node)
- 
-    tcPr.append(tcMar)
+
+    set_child_in_order(tcPr, tcMar, CELL_PROPERTY_ORDER)
 
 
 def set_cell_shading(cell:_Cell, srgb:int):
@@ -525,8 +595,10 @@ def set_cell_shading(cell:_Cell, srgb:int):
         cell (_Cell): ``python-docx`` Cell instance you want to modify
         srgb (int): RGB color value.
     '''
-    c = hex(srgb)[2:].zfill(6)
-    cell._tc.get_or_add_tcPr().append(parse_xml(r'<w:shd {} w:fill="{}"/>'.format(nsdecls('w'), c)))
+    c = to_hex_color(srgb)
+    set_child_in_order(cell._tc.get_or_add_tcPr(),
+        parse_xml(r'<w:shd {} w:val="clear" w:color="auto" w:fill="{}"/>'.format(nsdecls('w'), c)),
+        CELL_PROPERTY_ORDER)
 
 
 def set_cell_border(cell:_Cell, **kwargs):
@@ -544,8 +616,8 @@ def set_cell_border(cell:_Cell, **kwargs):
     
         set_cell_border(
             cell,
-            top={"sz": 12, "val": "single", "color": "#FF0000", "space": "0"},
-            bottom={"sz": 12, "color": "#00FF00", "val": "single"},
+            top={"sz": 12, "val": "single", "color": "FF0000", "space": "0"},
+            bottom={"sz": 12, "color": "00FF00", "val": "single"},
             start={"sz": 24, "val": "dashed", "shadow": "true"},
             end={"sz": 12, "val": "dashed"},
         )
@@ -556,20 +628,16 @@ def set_cell_border(cell:_Cell, **kwargs):
     # check for tag existence, if none found, then create one
     tcBorders = tcPr.first_child_found_in("w:tcBorders")
     if tcBorders is None:
-        tcBorders = OxmlElement('w:tcBorders')
-        tcPr.append(tcBorders)
+        tcBorders = set_child_in_order(tcPr, OxmlElement('w:tcBorders'), CELL_PROPERTY_ORDER)
 
     # list over all available tags
-    for edge in ('start', 'top', 'end', 'bottom', 'insideH', 'insideV'):
-        edge_data = kwargs.get(edge)
+    for tag in CELL_BORDER_ORDER:
+        edge_data = kwargs.get(tag[2:])
         if edge_data:
-            tag = 'w:{}'.format(edge)
-
             # check for tag existence, if none found, then create one
             element = tcBorders.find(qn(tag))
             if element is None:
-                element = OxmlElement(tag)
-                tcBorders.append(element)
+                element = set_child_in_order(tcBorders, OxmlElement(tag), CELL_BORDER_ORDER)
 
             # looks like order of attributes is important
             for key in ["sz", "val", "color", "space", "shadow"]:
@@ -590,4 +658,4 @@ def set_vertical_cell_direction(cell:_Cell, direction:str='btLr'):
     tcPr = tc.get_or_add_tcPr()
     textDirection = OxmlElement('w:textDirection')
     textDirection.set(qn('w:val'), direction)  # btLr tbRl
-    tcPr.append(textDirection)
+    set_child_in_order(tcPr, textDirection, CELL_PROPERTY_ORDER)
