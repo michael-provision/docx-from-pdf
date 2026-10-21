@@ -53,6 +53,7 @@ from docx_from_pdf.common.share import BlockType, rgb_value
 from docx_from_pdf.page.RawPagePdfium import RawPagePdfium
 from docx_from_pdf.shape.Path import Path
 from docx_from_pdf.table.Cell import Cell
+from docx_from_pdf.table.Row import Row
 from docx_from_pdf.text.TextBlock import TextBlock
 
 
@@ -812,6 +813,23 @@ class TestConversion:
 
         assert block.tab_stops == [331.6]
         assert [line.tab_stop for line in block.lines] == [0, 1]
+
+    def test_empty_cell_takes_row_text_spacing(self):
+        '''A bare cell copies the row text's spacing and size; a cell holding a run keeps its own.'''
+        table = Document().add_table(rows=1, cols=3)
+        text, empty, image = table.rows[0].cells
+        paragraph = text.paragraphs[0]
+        docx_helpers.reset_paragraph_format(paragraph, Pt(8.5))
+        paragraph.add_run('Exclude sales tax').font.size = Pt(8.5)
+        image.paragraphs[0].add_run()
+
+        Row._match_empty_cells_to_row_text(table.rows[0])
+
+        spacing = empty.paragraphs[0]._p.pPr.find(qn('w:spacing'))
+        assert (spacing.get(qn('w:line')), spacing.get(qn('w:lineRule')), spacing.get(qn('w:after'))) == ('170', 'exact', '0')
+        assert empty.paragraphs[0]._p.pPr.find(f"{qn('w:rPr')}/{qn('w:sz')}").get(qn('w:val')) == '17'
+        assert_schema_order(empty.paragraphs[0]._p.pPr, docx_helpers.PARAGRAPH_PROPERTY_ORDER)
+        assert image.paragraphs[0]._p.pPr is None
 
     def test_text_after_list_marker_gap_is_not_tabbed(self):
         '''A gap narrower than a column (e.g. after "a.") stays a space, so flowing text keeps its wrap.'''
