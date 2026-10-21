@@ -813,6 +813,21 @@ class TestConversion:
         assert block.tab_stops == [331.6]
         assert [line.tab_stop for line in block.lines] == [0, 1]
 
+    def test_text_after_list_marker_gap_is_not_tabbed(self):
+        '''A gap narrower than a column (e.g. after "a.") stays a space, so flowing text keeps its wrap.'''
+        def line(x0, x1, text):
+            return {'bbox': (x0, 73.5, x1, 83.4), 'wmode': 0, 'dir': (1.0, 0.0), 'spans': [{
+                'bbox': (x0, 73.5, x1, 83.4), 'font': 'Arial', 'size': 10.0, 'color': 0, 'flags': 0,
+                'chars': [{'c': text, 'bbox': (x0, 73.5, x1, 83.4)}],
+            }]}
+        # 41.8 - 26.6 is 15.1999... in floating point, just short of the 15.2 stop
+        block = TextBlock({'lines': [line(26.6, 36.6, 'a.'), line(41.8, 300.0, 'Eastern and southern')]})
+
+        block.lines.parse_tab_stop(5.0)
+
+        assert block.tab_stops == [15.2]
+        assert [line.tab_stop for line in block.lines] == [0, 0]
+
 
 # We make a separate pytest test for each sample file.
 

@@ -288,10 +288,14 @@ class Lines(ElementCollection):
         in_row = False
         for i, line in enumerate(self._instances):
             # left indentation implemented with tab; a line continuing its row after a
-            # gap (e.g. a right-hand label) must reach the stop at its own start
+            # column-wide gap (e.g. a right-hand label) must reach the stop at its own
+            # start. A narrower gap (e.g. after a list marker) stays a space in flowing
+            # text, because a tab there can push the rest of the line past the margin.
             distance = line.bbox[idx0] - ref
+            font_size = max((getattr(span, 'size', 0) for span in line.spans), default=0)
+            column_gap = in_row and distance > 2 * font_size
             if distance>line_separate_threshold:
-                line.tab_stop = tab_position(line.bbox[idx0], rounded=in_row)-tab_position(ref, rounded=in_row)
+                line.tab_stop = tab_position(line.bbox[idx0], rounded=column_gap)-tab_position(ref, rounded=column_gap)
 
             # update stop reference position
             if line==self._instances[-1]: break
