@@ -20,9 +20,11 @@ Terms definition:
 '''
 
 from ..common import constants
+from ..common.share import rgb_value
 from ..common.Element import Element
 from ..common.Collection import Collection
 from ..layout.Blocks import Blocks
+from ..shape.Shape import Stroke
 from ..shape.Shapes import Shapes
 from ..text.Lines import Lines
 from .TableStructure import TableStructure
@@ -91,6 +93,10 @@ class TablesConstructor:
         for strokes in grouped_strokes:
             # potential shadings in this table region
             group_fills = fills.contained_in_bbox(strokes.bbox)
+
+            # a change of shading inside a table is a row or column boundary
+            strokes = Shapes(list(strokes) + self._fill_edge_strokes(
+                strokes, group_fills, min_border_clearance))
 
             # parse table structure
             table = TableStructure(strokes, **settings).parse(group_fills).to_table_block()
@@ -205,6 +211,52 @@ class TablesConstructor:
         # assign blocks/shapes to each table
         self._blocks.assign_to_tables(tables)
         self._shapes.assign_to_tables(tables)
+
+
+    @staticmethod
+    def _fill_edge_strokes(strokes:Shapes, fills:Shapes, min_border_clearance:float):
+        '''Invisible borders at fill edges that no stroke already marks.
+
+        A coloured band (e.g. a header) often has no ruling of its own, so without
+        these the row containing it would also take in the differently shaded row
+        below, and no single fill could shade the merged cell.
+
+        Args:
+            strokes (Shapes): Explicit border strokes of one lattice table.
+            fills (Shapes): Fills inside that table.
+            min_border_clearance (float): Edges closer than this to a stroke reuse it.
+
+        Returns:
+            list: Zero-width strokes, which are never drawn as visible borders.
+        '''
+        x0, y0, x1, y1 = strokes.bbox
+        h_lines = [stroke for stroke in strokes if stroke.horizontal]
+        v_lines = [stroke for stroke in strokes if stroke.vertical]
+
+        def is_marked(position, low, high, lines, horizontal):
+            for line in lines:
+                value = line.y0 if horizontal else line.x0
+                start, end = (line.x0, line.x1) if horizontal else (line.y0, line.y1)
+                if abs(value-position) <= min_border_clearance and start <= low + min_border_clearance \
+                    and end >= high - min_border_clearance:
+                    return True
+            return False
+
+        edges = []
+        for fill in fills:
+            if fill.color == rgb_value((1,1,1)): continue
+            fx0, fy0, fx1, fy1 = fill.bbox
+            left, right = max(fx0, x0), min(fx1, x1)
+            top, bottom = max(fy0, y0), min(fy1, y1)
+            for y in (fy0, fy1):
+                if y0 + min_border_clearance < y < y1 - min_border_clearance \
+                    and not is_marked(y, left, right, h_lines, True):
+                    edges.append(Stroke().update_bbox((left, y, right, y)))
+            for x in (fx0, fx1):
+                if x0 + min_border_clearance < x < x1 - min_border_clearance \
+                    and not is_marked(x, top, bottom, v_lines, False):
+                    edges.append(Stroke().update_bbox((x, top, x, bottom)))
+        return edges
 
 
     @staticmethod

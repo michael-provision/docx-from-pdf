@@ -14,6 +14,10 @@ from ..common.geometry import Matrix, Point, Rect
 from ..common.share import RectType
 
 INVISIBLE_TEXT_RENDER_MODE = pdfium_c.FPDF_TEXTRENDERMODE_INVISIBLE
+STROKED_FILL_RENDER_MODES = (
+    pdfium_c.FPDF_TEXTRENDERMODE_FILL_STROKE,
+    pdfium_c.FPDF_TEXTRENDERMODE_FILL_STROKE_CLIP,
+)
 
 
 class PdfiumDocument:
@@ -401,9 +405,35 @@ class PdfiumPage:
         flags = 0
         if "Italic" in font_name or "Oblique" in font_name:
             flags |= 2**1
-        if "Bold" in font_name or pdfium_c.FPDFText_GetFontWeight(text_page, char_index) >= 600:
+        if (
+            "Bold" in font_name
+            or pdfium_c.FPDFText_GetFontWeight(text_page, char_index) >= 600
+            or PdfiumPage._is_stroked_bold(text_page, char_index)
+        ):
             flags |= 2**4
         return flags
+
+    @staticmethod
+    def _is_stroked_bold(text_page, char_index: int):
+        '''Whether a regular font is emboldened by stroking its glyph outlines in the fill colour.
+
+        Spreadsheet and report exporters often draw bold this way instead of
+        embedding a bold font, so neither the font name nor its weight says bold.
+        '''
+        text_object = pdfium_c.FPDFText_GetTextObject(text_page, char_index)
+        if not text_object or pdfium_c.FPDFTextObj_GetTextRenderMode(text_object) not in STROKED_FILL_RENDER_MODES:
+            return False
+        width = c_float()
+        if not pdfium_c.FPDFPageObj_GetStrokeWidth(text_object, byref(width)) or width.value <= 0:
+            return False
+        fill = [c_uint() for _ in range(4)]
+        stroke = [c_uint() for _ in range(4)]
+        if not (
+            pdfium_c.FPDFPageObj_GetFillColor(text_object, *(byref(value) for value in fill))
+            and pdfium_c.FPDFPageObj_GetStrokeColor(text_object, *(byref(value) for value in stroke))
+        ):
+            return False
+        return [value.value for value in fill[:3]] == [value.value for value in stroke[:3]]
 
     @staticmethod
     def _text_direction(text_page, char_index: int):
