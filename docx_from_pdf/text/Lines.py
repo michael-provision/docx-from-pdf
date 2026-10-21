@@ -270,10 +270,12 @@ class Lines(ElementCollection):
         # no tab stop need
         if not block.tab_stops: return
 
-        def tab_position(pos): # tab stop index of given position
+        def tab_position(pos, rounded=False): # tab stop index of given position
             # 0   T0  <pos>  T1    T2
             i = 0
             pos -= block.bbox[idx0]
+            # stops are rounded above, so an unrounded start can fall just short of its own stop
+            if rounded: pos = round(abs(pos), 1)
             for t in tab_stops:
                 if pos<t: break
                 i += 1
@@ -283,12 +285,15 @@ class Lines(ElementCollection):
         # Note: it might need more than one tab stops
         # Upstream issue 157.
         ref = block.bbox[idx0]
+        in_row = False
         for i, line in enumerate(self._instances):
-            # left indentation implemented with tab
+            # left indentation implemented with tab; a line continuing its row after a
+            # gap (e.g. a right-hand label) must reach the stop at its own start
             distance = line.bbox[idx0] - ref
             if distance>line_separate_threshold:
-                line.tab_stop = tab_position(line.bbox[idx0])-tab_position(ref)
+                line.tab_stop = tab_position(line.bbox[idx0], rounded=in_row)-tab_position(ref, rounded=in_row)
 
             # update stop reference position
             if line==self._instances[-1]: break
-            ref = line.bbox[idx1] if line.in_same_row(self._instances[i+1]) else block.bbox[idx0]
+            in_row = line.in_same_row(self._instances[i+1])
+            ref = line.bbox[idx1] if in_row else block.bbox[idx0]

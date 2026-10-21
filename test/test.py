@@ -49,7 +49,7 @@ from docx.shared import Pt
 
 from docx_from_pdf.backend.pdfium import PdfiumDocument
 from docx_from_pdf.common import docx as docx_helpers
-from docx_from_pdf.common.share import BlockType
+from docx_from_pdf.common.share import BlockType, rgb_value
 from docx_from_pdf.page.RawPagePdfium import RawPagePdfium
 from docx_from_pdf.shape.Path import Path
 from docx_from_pdf.table.Cell import Cell
@@ -743,6 +743,75 @@ class TestConversion:
         })
 
         assert path.to_shapes()
+
+    def test_stroked_regular_font_is_bold(self):
+        '''Text emboldened by stroking a regular font in its fill colour is bold.'''
+        content_stream = (
+            b'BT /F1 12 Tf 72 720 Td (Plain) Tj ET '
+            b'0.3 w BT 2 Tr /F1 12 Tf 72 700 Td (Stroked) Tj ET '
+            b'0 0 1 RG BT 2 Tr /F1 12 Tf 72 680 Td (Outlined) Tj ET'
+        )
+        doc = PdfiumDocument(stream=build_pdf_bytes(content_stream))
+        page = doc[0]
+        try:
+            spans = {
+                ''.join(char['c'] for char in span['chars']).strip(): span['flags']
+                for block in page.extract_text_blocks()
+                for line in block['lines']
+                for span in line['spans']
+            }
+        finally:
+            page.close()
+            doc.close()
+
+        assert not spans['Plain'] & 2**4
+        assert spans['Stroked'] & 2**4
+        assert not spans['Outlined'] & 2**4
+
+    def test_fill_band_splits_lattice_row(self):
+        '''A shaded band without its own ruling becomes its own row, so each row keeps one shading.'''
+        rule = lambda x0, y0, x1, y1: f'0 0 0 rg {x0} {y0} {x1 - x0} {y1 - y0} re f '.encode()
+        content_stream = (
+            b'0.82 0.28 0.15 rg 50 660 500 40 re f '
+            b'0.84 0.82 0.80 rg 50 500 500 160 re f '
+            + rule(50, 699.6, 550, 700) + rule(50, 500, 550, 500.4)
+            + rule(50, 500, 50.4, 700) + rule(549.6, 500, 550, 700)
+            + rule(50, 640, 550, 640.4) + rule(300, 500, 300.4, 660)
+            + b'1 1 1 rg BT /F1 12 Tf 60 675 Td (HEADER) Tj ET '
+            b'0 0 0 rg BT /F1 10 Tf 60 645 Td (LEFT) Tj ET BT /F1 10 Tf 310 645 Td (RIGHT) Tj ET '
+            b'BT /F1 10 Tf 60 600 Td (BODY) Tj ET'
+        )
+        pdf_file = os.path.join(output_path, 'fill-band-table.pdf')
+        with open(pdf_file, 'wb') as f:
+            f.write(build_pdf_bytes(content_stream))
+        cv = Converter(pdf_file)
+        try:
+            cv.parse(**cv.default_settings)
+            table = cv.pages[0].store()['sections'][0]['columns'][0]['blocks'][0]
+        finally:
+            cv.close()
+
+        rows = table['rows']
+        assert [round(row['bbox'][3]) for row in rows] == [132, 152, 292]
+        assert rows[0]['cells'][0]['bg_color'] == rgb_value((0.82, 0.28, 0.15))
+        assert {cell['bg_color'] for row in rows[1:] for cell in row['cells'] if cell} == {
+            rgb_value((0.84, 0.82, 0.80))
+        }
+
+    def test_label_after_gap_in_row_reaches_its_tab_stop(self):
+        '''A right-hand label starting exactly at a tab stop is positioned by that stop.'''
+        def line(x0, x1, text):
+            return {'bbox': (x0, 73.5, x1, 83.4), 'wmode': 0, 'dir': (1.0, 0.0), 'spans': [{
+                'bbox': (x0, 73.5, x1, 83.4), 'font': 'Arial', 'size': 10.0, 'color': 0, 'flags': 0,
+                'chars': [{'c': text, 'bbox': (x0, 73.5, x1, 83.4)}],
+            }]}
+        # 358.2 - 26.6 is 331.5999... in floating point, just short of the 331.6 stop
+        block = TextBlock({'lines': [line(26.6, 137.9, 'TRADE SCOPE'), line(358.2, 396.6, 'Contact:')]})
+
+        block.lines.parse_tab_stop(5.0)
+
+        assert block.tab_stops == [331.6]
+        assert [line.tab_stop for line in block.lines] == [0, 1]
 
 
 # We make a separate pytest test for each sample file.
