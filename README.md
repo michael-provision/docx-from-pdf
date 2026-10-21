@@ -6,6 +6,12 @@ A Python library and CLI for converting PDF files into editable DOCX documents.
 tables, images, vector paths, and section layout into DOCX output with
 permissive runtime dependencies.
 
+Page headers and footers become Word headers and footers: rows at a page's top
+or bottom edge that repeat at the same place on another page (such as a
+letterhead), or, on a single page, an edge group carrying a page number that
+stands clear of the body. Page numbers that follow the document's own numbering
+become PAGE and NUMPAGES fields.
+
 This project uses PDFium through `pypdfium2`; it is not affiliated with PDFium,
 Chromium, or Google.
 

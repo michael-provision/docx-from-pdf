@@ -46,6 +46,10 @@ from ..common.share import debug_plot
 from .BasePage import BasePage
 from ..layout.Sections import Sections
 from ..image.ImageBlock import ImageBlock
+from ..common import constants
+from ..common.docx import reset_paragraph_format
+from .Furniture import (FurnitureContainer, FurnitureLayout, footer_settle,
+    insert_page_number_fields, remove_trailing_spacers)
 
 
 class Page(BasePage):
@@ -55,8 +59,8 @@ class Page(BasePage):
                         skip_parsing:bool=True,
                         width:float=0.0,
                         height:float=0.0,
-                        header:str=None,
-                        footer:str=None,
+                        header=None,
+                        footer=None,
                         margin:tuple=None,
                         sections:Sections=None,
                         float_images:BaseCollection=None):
@@ -67,8 +71,8 @@ class Page(BasePage):
             skip_parsing (bool, optional): Don't parse page if True. Defaults to True.
             width (float, optional): Page width. Defaults to 0.0.
             height (float, optional): Page height. Defaults to 0.0.
-            header (str, optional): Page header. Defaults to None.
-            footer (str, optional): Page footer. Defaults to None.
+            header (FurnitureLayout, optional): Page header layout. Defaults to None.
+            footer (FurnitureLayout, optional): Page footer layout. Defaults to None.
             margin (tuple, optional): Page margin. Defaults to None.
             sections (Sections, optional): Page contents. Defaults to None.
             float_images (BaseCollection, optional): Float images in th is page. Defaults to None.
@@ -86,8 +90,9 @@ class Page(BasePage):
         self.sections = sections or Sections(parent=self)
 
         # page header, footer
-        self.header = header or ''
-        self.footer = footer or ''
+        self.header = header
+        self.footer = footer
+        self.page_number_fields = False
 
         # floating images are separate node under page
         self.float_images = float_images or BaseCollection()
@@ -107,8 +112,9 @@ class Page(BasePage):
             'height'  : self.height,
             'margin'  : self.margin,
             'sections': self.sections.store(),
-            'header'  : self.header,
-            'footer'  : self.footer,
+            'header'  : self.header.store() if self.header else None,
+            'footer'  : self.footer.store() if self.footer else None,
+            'page_number_fields': self.page_number_fields,
             'floats'  : self.float_images.store()
         }
         return res
@@ -126,8 +132,9 @@ class Page(BasePage):
 
         # parsed layout
         self.sections.restore(data.get('sections', []))
-        self.header = data.get('header', '')
-        self.footer = data.get('footer', '')
+        self.header = FurnitureLayout.restore(data['header']) if data.get('header') else None
+        self.footer = FurnitureLayout.restore(data['footer']) if data.get('footer') else None
+        self.page_number_fields = data.get('page_number_fields', False)
 
         # float images
         self._restore_float_images(data.get('floats', []))
@@ -143,6 +150,8 @@ class Page(BasePage):
     def parse(self, **settings):
         '''Parse page layout.'''
         self.sections.parse(**settings)
+        for layout in (self.header, self.footer):
+            if layout: layout.parse(**settings)
         self._finalized = True
         return self.sections # for debug plot
 
@@ -182,8 +191,16 @@ class Page(BasePage):
             doc (Document): ``python-docx`` document object
         '''
         # new page
-        if doc.paragraphs:
+        # count pages rather than paragraphs: a page whose content all moved to its
+        # header and footer adds no body paragraph
+        pages_made = getattr(doc, '_docx_from_pdf_pages', 0)
+        doc._docx_from_pdf_pages = pages_made + 1
+        if pages_made:
             section = doc.add_section(WD_SECTION.NEW_PAGE)
+            # the paragraph holding the previous page's section break must not need room
+            # of its own, or a page filled to its footer spills onto an extra blank page
+            reset_paragraph_format(doc.paragraphs[-1], Pt(constants.MIN_LINE_SPACING))
+            remove_trailing_spacers(doc.paragraphs[-1]._p)
         else:
             section = doc.sections[0] # a default section is there when opening docx
 
@@ -198,8 +215,35 @@ class Page(BasePage):
         section.top_margin = Pt(top)
         section.bottom_margin = Pt(bottom)
 
+        # header and footer
+        self._make_furniture(doc, section, 'header')
+        self._make_furniture(doc, section, 'footer')
+
         # create flow layout: sections
         self.sections.make_docx(doc)
+
+
+    def _make_furniture(self, doc, section, name:str):
+        '''Write the page header or footer into the Word section that holds this page.'''
+        layout = getattr(self, name)
+        part = getattr(section, name)
+        if not layout:
+            # a section inherits the previous one's part unless it has its own
+            if any(not getattr(earlier, name).is_linked_to_previous for earlier in doc.sections[:-1]):
+                part.is_linked_to_previous = False
+            return
+        x0, y0, x1, y1 = layout.bbox
+        if name == 'header':
+            section.header_distance = Pt(y0)
+        else:
+            section.footer_distance = Pt(max(self.height - y1 - footer_settle(self.height, y1), 0))
+        part.is_linked_to_previous = False
+        placeholder = part.paragraphs[0]._p if part.paragraphs else None
+        layout.make_docx(FurnitureContainer(part, Pt(x1 - x0)))
+        if placeholder is not None and len(part._element) > 1 and not placeholder.xpath('.//w:t'):
+            part._element.remove(placeholder)
+        if self.page_number_fields:
+            insert_page_number_fields(part._element)
 
 
     def _restore_float_images(self, raws:list):
