@@ -64,6 +64,65 @@ sample_path = os.path.join(test_dir, 'samples')
 output_path = os.path.join(test_dir, 'outputs')
 
 
+def build_pages_pdf_bytes(content_streams):
+    '''A letter-size PDF with one Helvetica page per content stream.'''
+    count = len(content_streams)
+    kids = ' '.join(f'{3 + 2*i} 0 R' for i in range(count))
+    objects = [
+        b'<< /Type /Catalog /Pages 2 0 R >>',
+        f'<< /Type /Pages /Kids [{kids}] /Count {count} >>'.encode(),
+    ]
+    font = 3 + 2*count
+    for index, stream in enumerate(content_streams):
+        objects.append(
+            f'<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 {font} 0 R >> >> /Contents {4 + 2*index} 0 R >>'.encode())
+        objects.append(b'<< /Length ' + str(len(stream)).encode() + b' >>\nstream\n' + stream + b'\nendstream')
+    objects.append(b'<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>')
+    pdf = bytearray(b'%PDF-1.4\n')
+    offsets = [0]
+    for index, obj in enumerate(objects, start=1):
+        offsets.append(len(pdf))
+        pdf.extend(f'{index} 0 obj\n'.encode())
+        pdf.extend(obj)
+        pdf.extend(b'\nendobj\n')
+    xref_offset = len(pdf)
+    pdf.extend(f'xref\n0 {len(objects) + 1}\n'.encode())
+    pdf.extend(b'0000000000 65535 f \n')
+    for offset in offsets[1:]:
+        pdf.extend(f'{offset:010d} 00000 n \n'.encode())
+    pdf.extend(f'trailer\n<< /Size {len(objects) + 1} /Root 1 0 R >>\nstartxref\n{xref_offset}\n%%EOF\n'.encode())
+    return bytes(pdf)
+
+
+def text_at(x, y, text, size=10):
+    return f'BT /F1 {size} Tf {x} {y} Td ({text}) Tj ET '.encode()
+
+
+def convert_pages(tmp_name, content_streams):
+    pdf_file = os.path.join(output_path, f'{tmp_name}.pdf')
+    docx_file = os.path.join(output_path, f'{tmp_name}.docx')
+    with open(pdf_file, 'wb') as f:
+        f.write(build_pages_pdf_bytes(content_streams))
+    cv = Converter(pdf_file)
+    try:
+        cv.convert(docx_file, raw_exceptions=True)
+    finally:
+        cv.close()
+    return Document(docx_file)
+
+
+def body_text(document):
+    return ' '.join(paragraph.text for paragraph in document.paragraphs)
+
+
+def part_text(part):
+    return ' '.join(''.join(t.text or '' for t in paragraph._p.iter(qn('w:t'))) for paragraph in part.paragraphs)
+
+
+def page_fields(part):
+    return [field.get(qn('w:instr')).strip() for field in part._element.iter(qn('w:fldSimple'))]
+
+
 def build_pdf_bytes(content_stream):
     objects = [
         b'<< /Type /Catalog /Pages 2 0 R >>',
@@ -813,6 +872,61 @@ class TestConversion:
 
         assert block.tab_stops == [331.6]
         assert [line.tab_stop for line in block.lines] == [0, 1]
+
+    def test_repeated_letterhead_and_page_numbers_move_to_header_and_footer(self):
+        '''Furniture repeated across pages becomes the Word header and footer.'''
+        pages = [
+            text_at(72, 750, 'ACME BUILDERS LETTERHEAD') + text_at(72, 600, body) + text_at(280, 40, f'Page {n} of 2')
+            for n, body in ((1, 'First page scope'), (2, 'Second page scope'))
+        ]
+        document = convert_pages('furniture-repeated', pages)
+
+        assert 'ACME' not in body_text(document) and 'Page 1 of 2' not in body_text(document)
+        for section in document.sections:
+            assert 'ACME BUILDERS LETTERHEAD' in part_text(section.header)
+            assert page_fields(section.footer) == ['PAGE', 'NUMPAGES']
+        assert 'First page scope' in body_text(document)
+
+    def test_single_page_footer_needs_a_page_number(self):
+        '''A lone page keeps a closing line in the body unless its edge group shows a page number.'''
+        plain = convert_pages('furniture-plain', [text_at(72, 700, 'Scope item') + text_at(72, 40, 'Prepared by the estimating team')])
+        numbered = convert_pages('furniture-numbered', [text_at(72, 700, 'Scope item') + text_at(500, 40, 'PAGE 1 OF 1')])
+
+        assert 'Prepared by the estimating team' in body_text(plain)
+        assert not part_text(plain.sections[0].footer).strip()
+        assert 'PAGE 1 OF 1' not in body_text(numbered)
+        assert page_fields(numbered.sections[0].footer) == ['PAGE', 'NUMPAGES']
+
+    def test_bundle_page_numbers_stay_text(self):
+        '''Numbering that restarts per enclosed document cannot be a document field.'''
+        pages = [text_at(72, 700, f'Document {n} scope') + text_at(280, 40, 'Page 1 of 1') for n in (1, 2)]
+        document = convert_pages('furniture-bundle', pages)
+
+        for section in document.sections:
+            assert 'Page 1 of 1' in part_text(section.footer)
+            assert page_fields(section.footer) == []
+
+    def test_footer_rows_stay_separate_paragraphs(self):
+        '''A right-hand page number above a left-hand date keeps both positions.'''
+        content = text_at(72, 700, 'Scope item') + text_at(500, 40, 'PAGE 1 OF 1', 6) + text_at(55, 30, 'PRINTED: 6/7/2023', 6)
+        footer = convert_pages('furniture-rows', [content]).sections[0].footer
+
+        texts = [''.join(t.text or '' for t in p._p.iter(qn('w:t'))) for p in footer.paragraphs]
+        assert [t for t in texts if t.strip()] == ['PAGE 1 OF 1', 'PRINTED: 6/7/2023']
+
+    def test_full_pages_do_not_spill_blank_pages(self):
+        '''The paragraph holding each page's section break needs no room of its own.'''
+        pages = [text_at(72, 750, 'LETTERHEAD') + text_at(72, 600, f'Scope {n}') + text_at(280, 40, f'Page {n} of 3') for n in (1, 2, 3)]
+        document = convert_pages('furniture-breaks', pages)
+
+        # titles that differ only by a number are body text, not a repeated header
+        assert all(f'Scope {n}' in body_text(document) for n in (1, 2, 3))
+        breaks = [p for p in document.paragraphs if p._p.find(f"{qn('w:pPr')}/{qn('w:sectPr')}") is not None]
+        assert len(breaks) == 2
+        for break_paragraph in breaks:
+            assert break_paragraph._p.pPr.find(qn('w:spacing')).get(qn('w:lineRule')) == 'exact'
+            previous = break_paragraph._p.getprevious()
+            assert previous.tag != qn('w:p') or previous.find(qn('w:r')) is not None
 
     def test_empty_cell_takes_row_text_spacing(self):
         '''A bare cell copies the row text's spacing and size; a cell holding a run keeps its own.'''

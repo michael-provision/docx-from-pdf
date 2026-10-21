@@ -4,6 +4,7 @@
 
 import logging
 
+from .Furniture import FurnitureLayout, detect_furniture, footer_settle
 from .RawPageFactory import RawPageFactory
 from ..common.Collection import BaseCollection
 from ..font.Fonts import Fonts
@@ -64,27 +65,48 @@ class Pages(BaseCollection):
         # 2. parse structure in document/pages level
         # ---------------------------------------------
         # NOTE: blocks structure might be changed in this step, e.g. promote page header/footer,
-        # so blocks structure based process, e.g. calculating margin, parse section should be 
+        # so blocks structure based process, e.g. calculating margin, parse section should be
         # run after this step.
-        header, footer = Pages._parse_document(raw_pages)
+        furniture = detect_furniture(raw_pages)
 
 
         # ---------------------------------------------
         # 3. parse structure in page level, e.g. page margin, section
         # ---------------------------------------------
         # parse sections
-        for page, raw_page in zip(pages, raw_pages):
-            # page margin
-            margin = raw_page.calculate_margin(**settings)
-            raw_page.margin = page.margin = margin
+        for page, raw_page, page_furniture in zip(pages, raw_pages, furniture):
+            # left/right margins still cover the header and footer, which align to them
+            left, right, _, _ = raw_page.calculate_margin(**settings)
+            Pages._promote_furniture(page, raw_page, page_furniture)
+            _, _, top, bottom = raw_page.calculate_margin(**settings)
+            if page.header:
+                top = max(top, page.header.bbox[3])
+            if page.footer:
+                settle = footer_settle(raw_page.height, page.footer.bbox[3])
+                bottom = max(bottom, raw_page.height - page.footer.bbox[1] - settle)
+            raw_page.margin = page.margin = (left, right, top, bottom)
+            for layout in (page.header, page.footer):
+                if layout:
+                    layout.set_horizontal_bounds(left, raw_page.width-right)
 
             # page section
             sections = raw_page.parse_section(**settings)
             page.sections.extend(sections)
-    
+
 
     @staticmethod
-    def _parse_document(raw_pages:list):
-        '''Parse structure in document/pages level, e.g. header, footer'''
-        # TODO
-        return '', ''
+    def _promote_furniture(page, raw_page, furniture):
+        '''Move header and footer lines and shapes out of the page body into their own layouts.'''
+        moved = {id(element) for element in (
+            list(furniture.header_lines) + list(furniture.footer_lines)
+            + list(furniture.header_shapes) + list(furniture.footer_shapes))}
+        page.page_number_fields = furniture.page_number_fields
+        for name, lines, shapes in (
+            ('header', furniture.header_lines, furniture.header_shapes),
+            ('footer', furniture.footer_lines, furniture.footer_shapes),
+        ):
+            if not lines:
+                continue
+            setattr(page, name, FurnitureLayout.from_elements(lines, shapes))
+        raw_page.blocks.reset([line for line in raw_page.blocks if id(line) not in moved])
+        raw_page.shapes.reset([shape for shape in raw_page.shapes if id(shape) not in moved])
