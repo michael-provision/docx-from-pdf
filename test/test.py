@@ -44,7 +44,11 @@ import shutil
 import platform
 import pytest
 
+from docx.oxml.ns import qn
+from docx.shared import Pt
+
 from docx_from_pdf.backend.pdfium import PdfiumDocument
+from docx_from_pdf.common import docx as docx_helpers
 from docx_from_pdf.common.share import BlockType
 from docx_from_pdf.page.RawPagePdfium import RawPagePdfium
 from docx_from_pdf.shape.Path import Path
@@ -85,6 +89,12 @@ def build_pdf_bytes(content_stream):
     pdf.extend(b'startxref\n')
     pdf.extend(f'{xref_offset}\n%%EOF\n'.encode())
     return bytes(pdf)
+
+
+def assert_schema_order(parent, order):
+    tags = [qn(name) for name in order]
+    positions = [tags.index(child.tag) for child in parent if child.tag in tags]
+    assert positions == sorted(positions), [child.tag for child in parent]
 
 
 def build_table_cell_with_two_text_rows(border_width=(0, 0, 0, 0)):
@@ -551,6 +561,99 @@ class TestConversion:
         text_block.make_docx(paragraph)
 
         assert len(paragraph._element.xpath('.//w:tab')) == 1
+
+    def test_paragraph_format_keeps_schema_order(self):
+        '''Test paragraph properties stay in schema order and are not duplicated.'''
+        paragraph = Document().add_paragraph()
+        paragraph.paragraph_format.tab_stops.add_tab_stop(Pt(72))
+
+        docx_helpers.reset_paragraph_format(paragraph)
+        docx_helpers.reset_paragraph_format(paragraph)
+
+        assert_schema_order(paragraph._p.pPr, docx_helpers.PARAGRAPH_PROPERTY_ORDER)
+        assert len(paragraph._p.pPr.findall(qn('w:autoSpaceDE'))) == 1
+
+    def test_run_properties_are_schema_valid(self):
+        '''Test character scaling and spacing are whole numbers placed after fonts.'''
+        run = Document().add_paragraph().add_run('text')
+        run.font.name = 'Arial'
+        run.font.size = Pt(9)
+
+        docx_helpers.set_char_scaling(run, 0.8333)
+        docx_helpers.set_char_spacing(run, 0.37)
+        docx_helpers.set_char_underline(run, 0x123456)
+
+        rPr = run._r.rPr
+        assert_schema_order(rPr, docx_helpers.RUN_PROPERTY_ORDER)
+        assert rPr.find(qn('w:w')).get(qn('w:val')) == '83'
+        assert rPr.find(qn('w:spacing')).get(qn('w:val')) == '7'
+        assert rPr.find(qn('w:u')).get(qn('w:color')) == '123456'
+
+    def test_cell_properties_are_schema_valid(self):
+        '''Test cell borders, shading and margins validate whatever order they are set in.'''
+        table = Document().add_table(rows=1, cols=1)
+        cell = table.cell(0, 0)
+
+        docx_helpers.set_cell_margins(cell, start=0, end=0)
+        docx_helpers.set_cell_shading(cell, 0xD14727)
+        docx_helpers.set_cell_border(
+            cell,
+            start={'sz': 4, 'val': 'single', 'color': 'D14727'},
+            bottom={'sz': 4, 'val': 'single', 'color': 'D14727'},
+            top={'sz': 4, 'val': 'single', 'color': 'D14727'},
+        )
+        docx_helpers.indent_table(table, 3.65)
+
+        tcPr = cell._tc.tcPr
+        assert_schema_order(tcPr, docx_helpers.CELL_PROPERTY_ORDER)
+        assert_schema_order(tcPr.find(qn('w:tcBorders')), docx_helpers.CELL_BORDER_ORDER)
+        assert_schema_order(tcPr.find(qn('w:tcMar')), docx_helpers.CELL_MARGIN_ORDER)
+        assert tcPr.find(qn('w:shd')).get(qn('w:val')) == 'clear'
+        assert_schema_order(table._tbl.tblPr, docx_helpers.TABLE_PROPERTY_ORDER)
+        assert table._tbl.tblPr.find(qn('w:tblInd')).get(qn('w:w')) == '73'
+
+    def test_cell_border_values_are_schema_valid(self):
+        '''Test fractional PDF border widths become whole eighth-points and colours drop "#".'''
+        table = Document().add_table(rows=1, cols=1)
+        cell = build_table_cell_with_two_text_rows(border_width=(0.1, 0.5, 0.25, 20))
+        cell.border_color = (0x000000, 0xD14727, 0x5B9BD5, 0xFFFFFF)
+
+        cell.make_docx(table, (0, 0))
+
+        borders = table.cell(0, 0)._tc.tcPr.find(qn('w:tcBorders'))
+        assert_schema_order(borders, docx_helpers.CELL_BORDER_ORDER)
+        assert {
+            border.tag: (border.get(qn('w:sz')), border.get(qn('w:color')))
+            for border in borders
+        } == {
+            qn('w:top'): ('2', '000000'),
+            qn('w:end'): ('4', 'D14727'),
+            qn('w:bottom'): ('2', '5B9BD5'),
+            qn('w:start'): ('96', 'FFFFFF'),
+        }
+
+    @pytest.mark.parametrize('filename', [
+        'demo-table', 'demo-table-border-style', 'demo-table-shading',
+        'demo-table-shading-highlight', 'demo-text-scaling', 'demo-section',
+    ])
+    def test_converted_properties_keep_schema_order(self, filename):
+        '''Test every converted property element keeps the order the schema requires.'''
+        self.convert(filename)
+        document = Document(os.path.join(output_path, f'{filename}.docx'))
+        body = document.element.body
+        for tag, order in (
+            ('w:pPr', docx_helpers.PARAGRAPH_PROPERTY_ORDER),
+            ('w:rPr', docx_helpers.RUN_PROPERTY_ORDER),
+            ('w:tblPr', docx_helpers.TABLE_PROPERTY_ORDER),
+            ('w:tcPr', docx_helpers.CELL_PROPERTY_ORDER),
+            ('w:tcBorders', docx_helpers.CELL_BORDER_ORDER),
+        ):
+            for element in body.iter(qn(tag)):
+                assert_schema_order(element, order)
+        for border in body.iter(qn('w:tcBorders')):
+            for edge in border:
+                assert edge.get(qn('w:sz')).isdigit()
+                assert not edge.get(qn('w:color')).startswith('#')
 
     @staticmethod
     def _page_text(blocks):

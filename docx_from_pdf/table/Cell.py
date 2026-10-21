@@ -136,9 +136,9 @@ class Cell(Layout):
             # skip if width=0 -> will not show in docx
             if not w: continue
 
-            hex_c = f'#{hex(c)[2:].zfill(6)}'
             kwargs[k] = {
-                'sz': 8*w, 'val': 'single', 'color': hex_c.upper()
+                'sz': min(max(round(8*w), 2), 96), 'val': 'single',
+                'color': docx.to_hex_color(c)
             }
 
         # merged cells are assumed to have same borders with the main cell
